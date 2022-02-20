@@ -32,7 +32,7 @@ const main = async () => {
 			activities: [
 				{
 					type: 'PLAYING',
-					name: "d;help (doesn't exist yet)"
+					name: 'd;help'
 				}
 			]
 		});
