@@ -1,10 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, CommandOptions } from '@sapphire/framework';
+import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
 import type { Message } from 'discord.js';
 import { inspect } from 'util';
+import { SteveCommand } from '../../lib/extensions/SteveCommand';
 
 const ZWS = '\u200B';
 @ApplyOptions<CommandOptions>({
@@ -19,7 +20,7 @@ const ZWS = '\u200B';
 		extendedHelp: 'Only Ben can use this command'
 	}
 })
-export class UserCommand extends Command {
+export class UserCommand extends SteveCommand {
 	private SECRETS = process.env.DISCORD_TOKEN ? RegExp(process.env.DISCORD_TOKEN, 'g') : null;
 
 	public async messageRun(message: Message, args: Args) {
@@ -54,7 +55,7 @@ export class UserCommand extends Command {
 
 		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const [msg, client] = [message, message.client];
+		const [msg, client] = [message, this.client];
 
 		let success = true;
 		let result = null;
