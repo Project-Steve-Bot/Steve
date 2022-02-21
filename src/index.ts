@@ -1,9 +1,11 @@
 import './lib/setup';
-import { LogLevel, SapphireClient } from '@sapphire/framework';
+import { LogLevel } from '@sapphire/framework';
+import { SteveBoi } from './lib/extendables/SteveBoi';
 
-const client = new SapphireClient({
+const client = new SteveBoi({
 	defaultPrefix: 'd;',
 	regexPrefix: /^dave,( )?/i,
+	caseInsensitivePrefixes: true,
 	caseInsensitiveCommands: true,
 	logger: {
 		level: LogLevel.Debug
