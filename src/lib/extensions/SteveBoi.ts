@@ -1,14 +1,13 @@
 import { SapphireClient } from '@sapphire/framework';
 import { Collection, MongoClient } from 'mongodb';
 import type { ClientOptions } from 'discord.js';
-// import { gray } from 'colorette';
 import type { Reminder } from '../types/reminder';
 
-type SteveCollections = {
+export type SteveCollections = {
 	reminder: Collection<Reminder>;
 };
 
-export class SteveBoi extends SapphireClient {
+export class SteveBoi  extends SapphireClient {
 	public mongo: MongoClient;
 	public db: SteveCollections | null = null;
 
@@ -31,8 +30,8 @@ export class SteveBoi extends SapphireClient {
 		});
 	}
 
-	public destroy() {
-		this.mongo.close();
+	public async destroy() {
+		await this.mongo.close();
 		super.destroy();
 	}
 }

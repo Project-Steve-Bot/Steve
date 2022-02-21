@@ -1,6 +1,6 @@
 import './lib/setup';
 import { LogLevel } from '@sapphire/framework';
-import { SteveBoi } from './lib/extendables/SteveBoi';
+import { SteveBoi } from './lib/extensions/SteveBoi';
 
 const client = new SteveBoi({
 	defaultPrefix: 'd;',
