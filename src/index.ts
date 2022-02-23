@@ -13,6 +13,12 @@ const main = async () => {
 	const client = new SteveBoi({
 		defaultPrefix: 'd;',
 		regexPrefix: /^dave,( )?/i,
+		fetchPrefix: (msg) => {
+			if (msg.guild) {
+				return ['d;'];
+			}
+			return ['d;', ''];
+		},
 		caseInsensitivePrefixes: true,
 		caseInsensitiveCommands: true,
 		logger: {
