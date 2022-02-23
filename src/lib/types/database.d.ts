@@ -6,3 +6,10 @@ export interface Reminder {
 	channel: string;
 	mode: 'public' | 'private';
 }
+
+export interface Guild {
+	id: string;
+	channels?: {
+		reminder?: string;
+	}
+}

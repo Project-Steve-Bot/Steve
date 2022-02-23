@@ -7,7 +7,7 @@ export abstract class SteveCommand extends Command {
 	
 	public constructor(context: PieceContext, options: CommandOptions) {
 		super(context, options);
-		this.client = this.container.client;
+		this.client = this.container.client as SteveBoi;
 	}
 
 }

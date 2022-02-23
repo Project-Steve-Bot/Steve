@@ -1,37 +1,68 @@
 import { SapphireClient } from '@sapphire/framework';
-import { Collection, MongoClient } from 'mongodb';
+import type { Collection, MongoClient } from 'mongodb';
 import type { ClientOptions } from 'discord.js';
-import type { Reminder } from '../types/reminder';
+import type { Guild, Reminder } from '../types/database';
+import { schedule, ScheduledTask } from 'node-cron';
 
 export type SteveCollections = {
 	reminder: Collection<Reminder>;
+	guilds: Collection<Guild>;
 };
 
-export class SteveBoi  extends SapphireClient {
-	public mongo: MongoClient;
-	public db: SteveCollections | null = null;
+export class SteveBoi extends SapphireClient {
+	private mongo: MongoClient;
+	public db: SteveCollections;
 
-	public constructor(options: ClientOptions) {
+	private cronRunner: ScheduledTask;
+
+	public constructor(options: ClientOptions, mongo: MongoClient) {
 		super(options);
 
-		if (!process.env.MONGO_CONNECTION) {
-			throw new Error('No database connection string provided.');
-		}
-		this.mongo = new MongoClient(process.env.MONGO_CONNECTION);
+		this.mongo = mongo;
 
-		this.mongo.connect().then(() => {
-			const db = this.mongo.db(process.env.BOT_NAME);
+		const db = this.mongo.db(process.env.BOT_NAME);
 
-			this.db = {
-				reminder: db.collection<Reminder>('reminders')
-			};
+		this.db = {
+			reminder: db.collection<Reminder>('reminders'),
+			guilds: db.collection<Guild>('guilds')
+		};
 
-			this.logger.info('Connected to Mongo DB')
-		});
+		this.logger.info('Connected to Mongo DB');
+
+		this.cronRunner = schedule('*/30 * * * * *', (now) => this.runReminder(now));
 	}
 
 	public async destroy() {
 		await this.mongo.close();
+		this.cronRunner.stop();
 		super.destroy();
+	}
+
+	private async runReminder(now: Date) {
+		const reminders = await this.db.reminder
+			.find({
+				expires: { $lte: now }
+			})
+			.toArray();
+
+		reminders.forEach(async (reminder) => {
+			const channel = this.channels.cache.get(reminder.channel) ?? (await this.channels.fetch(reminder.channel));
+
+			if (!channel?.isText()) return;
+
+			channel.send(`<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`);
+
+			if (reminder.repeat) {
+				this.db.reminder.findOneAndReplace(
+					{ _id: reminder._id },
+					{
+						...reminder,
+						expires: new Date(now.getTime() + reminder.repeat)
+					}
+				);
+			} else {
+				this.db.reminder.findOneAndDelete({ _id: reminder._id });
+			}
+		});
 	}
 }

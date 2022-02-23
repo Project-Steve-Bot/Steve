@@ -1,4 +1,3 @@
-import type { MongoClient } from 'mongodb';
 import type { SteveCollections } from './extensions/SteveBoi';
 declare module '@sapphire/framework' {
 	export interface DetailedDescriptionCommandObject {
@@ -8,9 +7,8 @@ declare module '@sapphire/framework' {
 	}
 
 	export interface SapphireClient {
-		db: SteveCollections | null;
+		db: SteveCollections;
 		destroy(): Promise<void>;
-		mongo: MongoClient;
 	}
 }
 export default undefined;
