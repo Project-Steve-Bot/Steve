@@ -110,9 +110,16 @@ export class UserCommand extends Command {
 				if (details.examples) {
 					fields.push({
 						name: 'Examples',
-						value: `${prefixedName}${details.examples.join(`\n${prefixedName}`)}`,
+						value: `${prefixedName} ${details.examples.join(`\n${prefixedName} `)}`,
 						inline: false
 					});
+				}
+				if (details.extendedHelp) {
+					fields.push({
+						name: 'Extra Info',
+						value: details.extendedHelp,
+						inline: false
+					})
 				}
 			}
 
