@@ -5,6 +5,7 @@ import type { Message } from 'discord.js';
 import parse from 'parse-duration';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '../../lib/extensions/SteveCommand';
+import { dateToTimestamp } from '../../lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Create a new reminder',
@@ -46,7 +47,7 @@ export class UserCommand extends SteveCommand {
 			expires
 		});
 
-		return send(msg, `I'll remind you about that at <t:${Math.round(expires.valueOf() / 1e3)}>${
+		return send(msg, `I'll remind you about that at ${dateToTimestamp(expires)}${
 			repeat
 			? `and again every ${prettyMilliseconds(repeat, { verbose: true })}`
 			: ''
