@@ -1,9 +1,9 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, MessageEmbed, User } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import type { WithId } from 'mongodb';
 import { RandomLoadingMessage } from './constants';
-import type { Reminder } from './types/database';
+import type { Reminder, User } from './types/database';
 
 export function pickRandom<T>(array: readonly T[]): T {
 	const { length } = array;
@@ -30,3 +30,7 @@ export async function getUserReminders(user: User): Promise<WithId<Reminder>[]> 
 	const reminders = await container.client.db.reminder.find({ user: user.id }).toArray();
 	return reminders.sort((a, b) => a.expires.valueOf() - b.expires.valueOf());
 }
+
+// export async function getFaxUser(number:string): User {
+	
+// }

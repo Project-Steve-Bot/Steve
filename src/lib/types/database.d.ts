@@ -11,5 +11,16 @@ export interface Guild {
 	id: string;
 	channels?: {
 		reminder?: string;
-	}
+	};
+}
+
+export interface User {
+	id: string;
+	embedColor?: string;
+	fax?: {
+		number?: string;
+		channel?: string;
+		text?: string;
+		background?: string;
+	};
 }
