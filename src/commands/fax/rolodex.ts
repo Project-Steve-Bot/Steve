@@ -24,7 +24,6 @@ export class UserCommand extends SteveCommand {
 		}
 
 		const rows: MessageActionRow[] = [];
-		this.client.logger.debug(userMap.size);
 
 		const pages = chunk(
 			userMap.map((user, number) => {
