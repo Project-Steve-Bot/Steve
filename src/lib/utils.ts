@@ -1,6 +1,6 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, MessageEmbed } from 'discord.js';
+import { AnyChannel, Guild, Message, MessageEmbed } from 'discord.js';
 import type { WithId } from 'mongodb';
 import { RandomLoadingMessage } from './constants';
 import type { Reminder, User } from './types/database';
@@ -31,6 +31,11 @@ export async function getUserReminders(user: User): Promise<WithId<Reminder>[]> 
 	return reminders.sort((a, b) => a.expires.valueOf() - b.expires.valueOf());
 }
 
-// export async function getFaxUser(number:string): User {
-	
-// }
+export async function getGuild(guildId: string): Promise<Guild> {
+	return container.client.guilds.cache.get(guildId) ?? await container.client.guilds.fetch(guildId);
+}
+
+export async function getChannel(channelId: string): Promise<AnyChannel | null> {
+	return container.client.channels.cache.get(channelId) ?? await container.client.channels.fetch(channelId);
+}
+
