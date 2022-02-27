@@ -11,6 +11,7 @@ export interface Guild {
 	id: string;
 	channels?: {
 		reminder?: string;
+		fax?: string[];
 	};
 }
 
