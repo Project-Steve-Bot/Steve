@@ -17,7 +17,7 @@ export class UserCommand extends SteveCommand {
 			.toArray();
 
 		const dropdown = new MessageSelectMenu()
-			.setCustomId(`${msg.author.id}-${msg.id}|FaxSelect`)
+			.setCustomId(`${msg.author.id}-${msg.id}|FaxDeskSelect`)
 			.setPlaceholder('Select where you want your faxes to be sent.')
 			.addOptions([
 				{

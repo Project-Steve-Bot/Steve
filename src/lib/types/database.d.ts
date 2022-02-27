@@ -7,7 +7,7 @@ export interface Reminder {
 	mode: 'public' | 'private';
 }
 
-export interface Guild {
+export interface DbGuild {
 	id: string;
 	channels?: {
 		reminder?: string;
@@ -15,7 +15,7 @@ export interface Guild {
 	};
 }
 
-export interface User {
+export interface DbUser {
 	id: string;
 	embedColor?: string;
 	fax?: {

@@ -1,9 +1,9 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { AnyChannel, Guild, Message, MessageEmbed } from 'discord.js';
+import { AnyChannel, Guild, Message, MessageEmbed, User } from 'discord.js';
 import type { WithId } from 'mongodb';
 import { RandomLoadingMessage } from './constants';
-import type { Reminder, User } from './types/database';
+import type { Reminder, DbUser } from './types/database';
 
 export function pickRandom<T>(array: readonly T[]): T {
 	const { length } = array;
@@ -26,7 +26,7 @@ export function dateToTimestamp(date: Date, type: TimestampType = 't'): String {
 	return `<t:${Math.round(date.valueOf() / 1e3)}:${type}>`;
 }
 
-export async function getUserReminders(user: User): Promise<WithId<Reminder>[]> {
+export async function getUserReminders(user: DbUser): Promise<WithId<Reminder>[]> {
 	const reminders = await container.client.db.reminder.find({ user: user.id }).toArray();
 	return reminders.sort((a, b) => a.expires.valueOf() - b.expires.valueOf());
 }
@@ -39,3 +39,6 @@ export async function getChannel(channelId: string): Promise<AnyChannel | null> 
 	return container.client.channels.cache.get(channelId) ?? await container.client.channels.fetch(channelId);
 }
 
+export async function getUser(userId:string): Promise<User> {
+	return container.client.users.cache.get(userId) ?? await container.client.users.fetch(userId);
+}
