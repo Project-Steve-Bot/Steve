@@ -52,7 +52,7 @@ export class UserCommand extends SteveCommand {
 			.setColor('DARK_AQUA')
 			.setTimestamp();
 
-		await response.edit({ content: '', embeds: [coverEmbed], components: rows });
+		await response.edit({ content: ' ', embeds: [coverEmbed], components: rows });
 
 		const collector = response.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 60e3 });
 
@@ -64,7 +64,6 @@ export class UserCommand extends SteveCommand {
 
 			const selected = interaction.values[0];
 
-			// interaction.update(`You selected ${selected}`);
 			const user = userMap.get(selected);
 
 			if (!user) {
