@@ -21,17 +21,17 @@ export class UserCommand extends SteveCommand {
 		const response = await sendLoadingMessage(msg);
 
 		const reminders = await getUserReminders(msg.author);
-		
+
 		if (reminders.length < 1) {
-			return response.edit('It looks like you don\'t have any pending reminders mate.');
+			return response.edit("It looks like you don't have any pending reminders mate.");
 		}
-		
+
 		const color = 0xadcb27;
 
 		const pages = chunk(reminders, 5);
 
 		const paginator = new PaginatedMessage({
-			template: new MessageEmbed().setTitle('Your Pending Reminders').setColor(color)
+			template: { content: ' ', embeds: [new MessageEmbed().setTitle('Your Pending Reminders').setColor(color)] }
 		});
 
 		pages.forEach((page) => {
