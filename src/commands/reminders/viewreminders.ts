@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { Message, MessageEmbed } from 'discord.js';
+import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '../../lib/extensions/SteveCommand';
 import type { Reminder } from '../../lib/types/database';
@@ -25,8 +25,10 @@ export class UserCommand extends SteveCommand {
 		if (reminders.length < 1) {
 			return response.edit("It looks like you don't have any pending reminders mate.");
 		}
+		
+		const user = await this.client.db.users.findOne({ id: msg.author.id });
 
-		const color = 0xadcb27;
+		const color = user?.embedColor as ColorResolvable ?? '#adcb27' ;
 
 		const pages = chunk(reminders, 5);
 
