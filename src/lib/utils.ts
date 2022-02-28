@@ -1,6 +1,6 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { AnyChannel, Guild, Message, MessageEmbed, User } from 'discord.js';
+import type { AnyChannel, Guild, Message, User } from 'discord.js';
 import type { WithId } from 'mongodb';
 import { RandomLoadingMessage } from './constants';
 import type { Reminder, DbUser } from './types/database';
@@ -11,13 +11,7 @@ export function pickRandom<T>(array: readonly T[]): T {
 }
 
 export function sendLoadingMessage(message: Message): Promise<typeof message> {
-	return send(message, {
-		embeds: [
-			new MessageEmbed()
-				.setDescription(pickRandom(RandomLoadingMessage))
-				.setColor('#FF0000')
-		]
-	});
+	return send(message, pickRandom(RandomLoadingMessage));
 }
 
 export type TimestampType = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';

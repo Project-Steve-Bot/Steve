@@ -23,7 +23,7 @@ export class UserCommand extends SteveCommand {
 		const reminders = await getUserReminders(msg.author);
 		
 		if (reminders.length < 1) {
-			return response.edit({ content: 'It looks like you don\'t have any pending reminders mate.', embeds: [] });
+			return response.edit('It looks like you don\'t have any pending reminders mate.');
 		}
 		
 		const color = 0xadcb27;

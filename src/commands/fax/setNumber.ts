@@ -26,14 +26,11 @@ export class UserCommand extends SteveCommand {
 		const faxNumbers = faxUsers.map((user) => user.fax?.number).filter((number) => number);
 
 		if (faxNumbers.includes(number)) {
-			return response.edit({ content: `${number} is already in use`, embeds: [] });
+			return response.edit(`${number} is already in use`);
 		}
 
 		await this.client.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { 'fax.number': number } });
 
-		return response.edit({
-			content: `Your fax number is now ${number}. Be sure to set where you'll receive faxes with \`${ctx.prefix}setdesk\``,
-			embeds: []
-		});
+		return response.edit(`Your fax number is now ${number}. Be sure to set where you'll receive faxes with \`${ctx.prefix}setdesk\``);
 	}
 }

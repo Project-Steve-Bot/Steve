@@ -43,7 +43,7 @@ export class UserCommand extends SteveCommand {
 
 		const actionRow = new MessageActionRow().addComponents(dropdown);
 
-		await response.edit({ components: [actionRow], embeds: [] });
+		await response.edit({ content: 'You can send faxes to all these places!' ,components: [actionRow] });
 
 		const collector = response.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 60e3 });
 

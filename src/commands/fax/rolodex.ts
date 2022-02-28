@@ -52,7 +52,7 @@ export class UserCommand extends SteveCommand {
 			.setColor('DARK_AQUA')
 			.setTimestamp();
 
-		await response.edit({ embeds: [coverEmbed], components: rows });
+		await response.edit({ content: '', embeds: [coverEmbed], components: rows });
 
 		const collector = response.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 60e3 });
 

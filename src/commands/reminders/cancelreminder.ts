@@ -21,17 +21,17 @@ export class UserCommand extends SteveCommand {
 		const reminders = await getUserReminders(msg.author);
 
 		if (reminders.length < 1) {
-			return response.edit({ content: "It looks like you don't have any pending reminders mate.", embeds: [] });
+			return response.edit("It looks like you don't have any pending reminders mate.");
 		}
 
 		const reminder = reminders[remindNumber - 1];
 
 		if (!reminder) {
-			return response.edit({ content: "Sorry but it doesn't look like that reminder exists.", embeds: [] });
+			return response.edit("Sorry but it doesn't look like that reminder exists.");
 		}
 
 		await this.client.db.reminder.findOneAndDelete({ _id: reminder._id });
 
-		return response.edit({ content: `I have deleted ${reminder.mode === 'public' ? reminder.content : 'a private reminder.'}`, embeds: [] });
+		return response.edit(`I have deleted ${reminder.mode === 'public' ? reminder.content : 'a private reminder.'}`);
 	}
 }
