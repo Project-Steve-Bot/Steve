@@ -22,34 +22,27 @@ export class UserEvent extends Listener {
 		const choice = poll.choices[choiceId];
 
 		let newPoll: Poll;
+		let content: string;
 
 		if (!poll.allVoters.includes(voterId) || (poll.multiSelect && !choice.voters.includes(voterId))) {
 			newPoll = this.addVote(interaction, choiceId, poll);
-			await interaction.followUp({
-				content: `You have voted for **${choice.text}**. To remove your vote, vote for it again${
-					poll.multiSelect ? '' : ' or vote for another option'
-				}.`,
-				ephemeral: true
-			});
+			content = `You have voted for **${choice.text}**. To remove your vote, vote for it again${
+				poll.multiSelect ? '' : ' or vote for another option'
+			}.`;
 		} else if (choice.voters.includes(voterId)) {
 			newPoll = this.removeVote(interaction, choiceId, poll);
-			await interaction.followUp({
-				content: `Your vote for **${choice.text}** has been removed.`,
-				ephemeral: true
-			});
+			content = `Your vote for **${choice.text}** has been removed.`;
 		} else {
 			newPoll = this.changeVote(interaction, choiceId, poll);
-			await interaction.followUp({
-				content: `Your vote has been changed to **${choice.text}**.`,
-				ephemeral: true
-			});
+			content = `Your vote has been changed to **${choice.text}**.`;
 		}
 
 		await this.container.client.db.polls.findOneAndReplace({ _id: poll._id }, newPoll);
+		await interaction.followUp({ content, ephemeral: true });
 
 		const embed = new MessageEmbed(interaction.message.embeds[0]);
 		embed.setDescription(newPoll.choices.map((c) => `${c.text}${c.votes > 0 ? ` - ${c.votes} vote${c.votes === 1 ? '' : 's'}` : ''}`).join('\n'));
-		
+
 		return interaction.editReply({ embeds: [embed] });
 	}
 
@@ -75,7 +68,7 @@ export class UserEvent extends Listener {
 	}
 
 	private changeVote(interaction: ButtonInteraction, choiceId: number, poll: Poll): Poll {
-		const oldChoice = poll.choices.find(c => c.voters.includes(interaction.user.id));
+		const oldChoice = poll.choices.find((c) => c.voters.includes(interaction.user.id));
 		if (!oldChoice) {
 			throw new Error('Could not find old choice.');
 		}
