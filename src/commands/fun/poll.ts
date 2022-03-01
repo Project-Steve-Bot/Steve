@@ -50,7 +50,7 @@ export class UserCommand extends SteveCommand {
 			pair.forEach(choice => {
 				row.addComponents([
 					new MessageButton()
-					.setCustomId(`poll|${choices.indexOf(choice)}|0|${msg.id}`)
+					.setCustomId(`poll|${choices.indexOf(choice)}|${response.id}`)
 					.setStyle('PRIMARY')
 					.setLabel(choice.length < 80 ? choice : `${choice.substring(0, 77)}...`)
 				])
@@ -62,6 +62,7 @@ export class UserCommand extends SteveCommand {
 			messageId: response.id,
 			multiSelect: args.getFlags('multiselect', 'ms'),
 			expires,
+			allVoters: [],
 			choices: choices.map(choice => {
 				return {
 					text: choice,

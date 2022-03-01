@@ -35,4 +35,5 @@ export interface Poll {
 		voters: string[];
 	}[];
 	expires: Date | null;
+	allVoters: string[];
 }
