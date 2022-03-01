@@ -1,13 +1,14 @@
 import { SapphireClient } from '@sapphire/framework';
 import type { Collection, MongoClient } from 'mongodb';
 import type { ClientOptions } from 'discord.js';
-import type { DbGuild, Reminder, DbUser } from '../types/database';
+import type { DbGuild, Reminder, DbUser, Poll } from '../types/database';
 import { schedule, ScheduledTask } from 'node-cron';
 
 export type SteveCollections = {
 	reminder: Collection<Reminder>;
 	guilds: Collection<DbGuild>;
 	users: Collection<DbUser>;
+	polls: Collection<Poll>;
 };
 
 export class SteveBoi extends SapphireClient {
@@ -26,7 +27,8 @@ export class SteveBoi extends SapphireClient {
 		this.db = {
 			reminder: db.collection<Reminder>('reminders'),
 			guilds: db.collection<DbGuild>('guilds'),
-			users: db.collection<DbUser>('users')
+			users: db.collection<DbUser>('users'),
+			polls: db.collection<Poll>('polls')
 		};
 
 		this.logger.info('Connected to Mongo DB');

@@ -25,3 +25,14 @@ export interface DbUser {
 		background?: string;
 	};
 }
+
+export interface Poll {
+	messageId: string;
+	multiSelect: boolean;
+	choices:{
+		votes: number;
+		text: string;
+		voters: string[];
+	}[];
+	expires: Date | null;
+}
