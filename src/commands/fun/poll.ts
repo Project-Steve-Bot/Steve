@@ -32,7 +32,7 @@ export class UserCommand extends SteveCommand {
 		choices = choices.map(choice => `${emotes.shift()} ${choice}`);
 
 		const rawExpires = args.getOption('ends');
-		const expires = rawExpires ? new Date(parse(rawExpires) + Date.now()) : null;
+		const expires = new Date(Date.now() +  parse(rawExpires ?? '1d'));
 
 		const embed = new MessageEmbed()
 			.setTitle(question)
@@ -41,7 +41,7 @@ export class UserCommand extends SteveCommand {
 				name: `${msg.member?.displayName ?? msg.author.username} asks...`,
 				iconURL: msg.member?.displayAvatarURL({ dynamic: true }) ?? msg.author.displayAvatarURL({ dynamic: true })
 			})
-			.setDescription(`${choices.join('\n')}${expires ? `\n\nThis poll ends at ${dateToTimestamp(expires, 'f' )}` : ''}`);
+			.setDescription(`${choices.join('\n')}\n\nThis poll ends at ${dateToTimestamp(expires, 'f' )}`);
 
 		const components: MessageActionRow[] = [];
 
@@ -60,6 +60,7 @@ export class UserCommand extends SteveCommand {
 
 		await this.client.db.polls.insertOne({
 			messageId: response.id,
+			channelId: response.channel.id,
 			multiSelect: args.getFlags('multiselect', 'ms'),
 			expires,
 			allVoters: [],

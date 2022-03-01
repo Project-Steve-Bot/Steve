@@ -1,8 +1,9 @@
 import { SapphireClient } from '@sapphire/framework';
 import type { Collection, MongoClient } from 'mongodb';
-import type { ClientOptions } from 'discord.js';
+import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
 import type { DbGuild, Reminder, DbUser, Poll } from '../types/database';
 import { schedule, ScheduledTask } from 'node-cron';
+import { getChannel } from '../utils';
 
 export type SteveCollections = {
 	reminder: Collection<Reminder>;
@@ -33,13 +34,18 @@ export class SteveBoi extends SapphireClient {
 
 		this.logger.info('Connected to Mongo DB');
 
-		this.cronRunner = schedule('*/30 * * * * *', (now) => this.runReminder(now));
+		this.cronRunner = schedule('*/30 * * * * *', (now) => this.processCron(now));
 	}
 
 	public async destroy() {
 		await this.mongo.close();
 		this.cronRunner.stop();
 		super.destroy();
+	}
+
+	private async processCron(now: Date) {
+		this.runReminder(now);
+		this.closePoll(now);
 	}
 
 	private async runReminder(now: Date) {
@@ -67,6 +73,38 @@ export class SteveBoi extends SapphireClient {
 			} else {
 				this.db.reminder.findOneAndDelete({ _id: reminder._id });
 			}
+		});
+	}
+
+	private async closePoll(now: Date) {
+		const polls = await this.db.polls.find({ expires: { $lte: now } }).toArray();
+
+		polls.forEach(async (poll) => {
+			const channel = (await getChannel(poll.channelId)) as TextChannel;
+			const msg = await channel.messages.fetch(poll.messageId, { cache: true });
+
+			const components = msg.components;
+
+			components.forEach((row) => {
+				row.components.forEach((c) => {
+					c.setDisabled(true);
+				});
+			});
+
+			const maxVotes = Math.max(...poll.choices.map((c) => c.votes));
+
+			const choiceList = poll.choices.map((c) =>
+				c.votes >= maxVotes
+					? `**[${c.text} - ${c.votes} vote${c.votes === 1 ? '' : 's'}](https://tenor.com/view/im-the-best-racer-fox-sports-gif-5943746)**`
+					: `${c.text} - ${c.votes} vote${c.votes === 1 ? '' : 's'}`
+			).join('\n');
+
+			const embed = new MessageEmbed(msg.embeds[0])
+				.setDescription(`${choiceList}\n\nThis poll has ended.`);
+
+			await msg.edit({ components, embeds: [embed] });
+
+			this.db.polls.findOneAndDelete({ _id: poll._id });
 		});
 	}
 }

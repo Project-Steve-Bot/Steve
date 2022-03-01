@@ -2,6 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { ButtonInteraction, Interaction, MessageEmbed } from 'discord.js';
 import type { Poll } from '../lib/types/database';
+import { dateToTimestamp } from '../lib/utils';
 
 @ApplyOptions<Listener.Options>({
 	event: 'interactionCreate'
@@ -41,7 +42,11 @@ export class UserEvent extends Listener {
 		await interaction.followUp({ content, ephemeral: true });
 
 		const embed = new MessageEmbed(interaction.message.embeds[0]);
-		embed.setDescription(newPoll.choices.map((c) => `${c.text}${c.votes > 0 ? ` - ${c.votes} vote${c.votes === 1 ? '' : 's'}` : ''}`).join('\n'));
+		embed.setDescription(
+			`${newPoll.choices
+				.map((c) => `${c.text}${c.votes > 0 ? ` - ${c.votes} vote${c.votes === 1 ? '' : 's'}` : ''}`)
+				.join('\n')}\n\nThis poll ends at ${dateToTimestamp(poll.expires, 'f')}`
+		);
 
 		return interaction.editReply({ embeds: [embed] });
 	}

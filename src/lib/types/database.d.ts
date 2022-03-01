@@ -28,12 +28,13 @@ export interface DbUser {
 
 export interface Poll {
 	messageId: string;
+	channelId: string;
 	multiSelect: boolean;
 	choices:{
 		votes: number;
 		text: string;
 		voters: string[];
 	}[];
-	expires: Date | null;
+	expires: Date;
 	allVoters: string[];
 }
