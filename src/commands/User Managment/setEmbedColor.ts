@@ -10,21 +10,26 @@ import { SteveCommand } from '../../lib/extensions/SteveCommand';
 	detailedDescription: {
 		usage: '<color>',
 		examples: ['blue', '#000855'],
-		extendedHelp: 'Colors must follow [**The Rules of Color**](https://discord.js.org/#/docs/discord.js/stable/typedef/ColorResolvable)'
+		extendedHelp:
+			'Colors must follow [**The Rules of Color**](https://discord.js.org/#/docs/discord.js/stable/typedef/ColorResolvable)'
 	}
 })
 export class UserCommand extends SteveCommand {
+
 	public async messageRun(msg: Message, args: Args) {
 		const rawColor = await args.pick('string');
 
 		let color: ColorResolvable;
 
 		try {
-			color = Util.resolveColor(rawColor.toUpperCase() as ColorResolvable);
+			color = Util.resolveColor(
+				rawColor.toUpperCase() as ColorResolvable
+			);
 		} catch {
 			throw new UserError({
 				identifier: 'InvalidColor',
-				message: 'Colors must follow **The Rules of Color** (<https://discord.js.org/#/docs/discord.js/stable/typedef/ColorResolvable>)'
+				message:
+					'Colors must follow **The Rules of Color** (<https://discord.js.org/#/docs/discord.js/stable/typedef/ColorResolvable>)'
 			});
 		}
 
@@ -34,6 +39,13 @@ export class UserCommand extends SteveCommand {
 			{ upsert: true }
 		);
 
-		send(msg, { embeds: [new MessageEmbed().setColor(color).setDescription('This is your new embed color!')] });
+		send(msg, {
+			embeds: [
+				new MessageEmbed()
+					.setColor(color)
+					.setDescription('This is your new embed color!')
+			]
+		});
 	}
+
 }

@@ -16,23 +16,38 @@ export function sendLoadingMessage(message: Message): Promise<typeof message> {
 
 export type TimestampType = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
 
-export function dateToTimestamp(date: Date, type: TimestampType = 't'): String {
+export function dateToTimestamp(date: Date, type: TimestampType = 't'): string {
 	return `<t:${Math.round(date.valueOf() / 1e3)}:${type}>`;
 }
 
-export async function getUserReminders(user: DbUser): Promise<WithId<Reminder>[]> {
-	const reminders = await container.client.db.reminder.find({ user: user.id }).toArray();
+export async function getUserReminders(
+	user: DbUser
+): Promise<WithId<Reminder>[]> {
+	const reminders = await container.client.db.reminder
+		.find({ user: user.id })
+		.toArray();
 	return reminders.sort((a, b) => a.expires.valueOf() - b.expires.valueOf());
 }
 
 export async function getGuild(guildId: string): Promise<Guild> {
-	return container.client.guilds.cache.get(guildId) ?? await container.client.guilds.fetch(guildId);
+	return (
+		container.client.guilds.cache.get(guildId)
+		?? await container.client.guilds.fetch(guildId)
+	);
 }
 
-export async function getChannel(channelId: string): Promise<AnyChannel | null> {
-	return container.client.channels.cache.get(channelId) ?? await container.client.channels.fetch(channelId);
+export async function getChannel(
+	channelId: string
+): Promise<AnyChannel | null> {
+	return (
+		container.client.channels.cache.get(channelId)
+		?? await container.client.channels.fetch(channelId)
+	);
 }
 
-export async function getUser(userId:string): Promise<User> {
-	return container.client.users.cache.get(userId) ?? await container.client.users.fetch(userId);
+export async function getUser(userId: string): Promise<User> {
+	return (
+		container.client.users.cache.get(userId)
+		?? await container.client.users.fetch(userId)
+	);
 }

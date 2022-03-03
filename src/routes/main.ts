@@ -12,7 +12,7 @@ export class UserRoute extends Route {
 	public constructor(context: PieceContext, options?: RouteOptions) {
 		super(context, {
 			...options,
-			route: '',
+			route: ''
 		});
 	}
 

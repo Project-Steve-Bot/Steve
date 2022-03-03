@@ -9,6 +9,7 @@ import { getChannel, sendLoadingMessage } from '../../lib/utils';
 	aliases: ['desk']
 })
 export class UserCommand extends SteveCommand {
+
 	public async messageRun(msg: Message) {
 		const response = await sendLoadingMessage(msg);
 
@@ -27,15 +28,15 @@ export class UserCommand extends SteveCommand {
 				}
 			]);
 
-		faxableGuilds.forEach(async (g) => {
-			if (!g.channels?.fax) return;
-			g.channels.fax.forEach(async (c) => {
-				const channel = await getChannel(c);
+		faxableGuilds.forEach(async (guild) => {
+			if (!guild.channels?.fax) return;
+			guild.channels.fax.forEach(async (channelId) => {
+				const channel = await getChannel(channelId);
 				if (!channel?.isText() || channel.type === 'DM' || channel.partial) return;
 
 				dropdown.addOptions({
 					label: `#${channel.name}`,
-					value: c,
+					value: channelId,
 					description: channel.guild.name
 				});
 			});
@@ -43,7 +44,7 @@ export class UserCommand extends SteveCommand {
 
 		const actionRow = new MessageActionRow().addComponents(dropdown);
 
-		await response.edit({ content: 'You can send faxes to all these places!' ,components: [actionRow] });
+		await response.edit({ content: 'You can send faxes to all these places!', components: [actionRow] });
 
 		const collector = response.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 60e3 });
 
@@ -61,7 +62,7 @@ export class UserCommand extends SteveCommand {
 				interaction.editReply("I'll send your faxes to DMs.");
 			} else {
 				await this.updateFaxChannel(msg.author, selected);
-				interaction.editReply(`I\'ll send your faxes to <#${selected}>`);
+				interaction.editReply(`I'll send your faxes to <#${selected}>`);
 			}
 			collector.stop();
 		});
@@ -79,4 +80,5 @@ export class UserCommand extends SteveCommand {
 		this.client.db.users.findOneAndUpdate({ id: user.id }, { $set: { 'fax.channel': channel } }, { upsert: true });
 		return;
 	}
+
 }

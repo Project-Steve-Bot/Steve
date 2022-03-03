@@ -17,33 +17,62 @@ import { SteveCommand } from '../../lib/extensions/SteveCommand';
 	}
 })
 export class UserCommand extends SteveCommand {
-	public async messageRun(msg: Message, args: Args, { prefix }: CommandContext) {
+
+	public async messageRun(
+		msg: Message,
+		args: Args,
+		{ prefix }: CommandContext
+	) {
 		if (!msg.guild) {
 			return send(msg, 'You need to run this command in a server mate.');
 		}
 
 		const channel = await args.pick('guildTextChannel');
 
-		const guildSettings = await this.client.db.guilds.findOne({ id: msg.guild.id });
+		const guildSettings = await this.client.db.guilds.findOne({
+			id: msg.guild.id
+		});
 
-		const added = !guildSettings?.channels?.fax?.includes(channel.id) ?? true;
+		const added
+			= !guildSettings?.channels?.fax?.includes(channel.id) ?? true;
 
 		if (added) {
-			await this.client.db.guilds.updateOne({ id: msg.guild.id }, { $push: { 'channels.fax': channel.id } }, { upsert: true });
+			await this.client.db.guilds.updateOne(
+				{ id: msg.guild.id },
+				{ $push: { 'channels.fax': channel.id } },
+				{ upsert: true }
+			);
 		} else {
-			await this.client.db.guilds.updateOne({ id: msg.guild.id }, { $pull: { 'channels.fax': channel.id } }, { upsert: true });
+			await this.client.db.guilds.updateOne(
+				{ id: msg.guild.id },
+				{ $pull: { 'channels.fax': channel.id } },
+				{ upsert: true }
+			);
 
-			const unfaxedUsers = await this.client.db.users.find({ 'fax.channel': channel.id }).toArray();
+			const unfaxedUsers = await this.client.db.users
+				.find({ 'fax.channel': channel.id })
+				.toArray();
 
-			await this.client.db.users.updateMany({ 'fax.channel': channel.id }, { $set: { 'fax.channel': null } });
+			await this.client.db.users.updateMany(
+				{ 'fax.channel': channel.id },
+				{ $set: { 'fax.channel': null } }
+			);
 
 			channel.send(
 				`<@${unfaxedUsers
 					.map((user) => user.id)
-					.join('>, <@')}>, This channel no longer can receive faxes. Please update your fax channel with \`${prefix}setDesk\`.`
+					.join(
+						'>, <@'
+					)}>, This channel no longer can receive faxes. Please update your fax channel with \`${prefix}setDesk\`.`
 			);
 		}
 
-		return send(msg, `Faxes can ${added ? 'now' : 'no longer'} be sent in <#${channel.id}>.`);
+		return send(
+			msg,
+			`Faxes can ${added ? 'now' : 'no longer'} be sent in <#${
+				channel.id
+			}>.`
+		);
 	}
+
 }

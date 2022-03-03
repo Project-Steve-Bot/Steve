@@ -2,6 +2,7 @@ import { Argument } from '@sapphire/framework';
 import parse from 'parse-duration';
 
 export class DurationArgument extends Argument<number> {
+
 	public run(parameter: string, context: Argument.Context) {
 		const duration = parse(parameter);
 
@@ -16,6 +17,7 @@ export class DurationArgument extends Argument<number> {
 
 		return this.ok(duration);
 	}
+
 }
 
 declare module '@sapphire/framework' {

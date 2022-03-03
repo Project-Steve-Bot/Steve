@@ -10,36 +10,38 @@ const main = async () => {
 	const mongo = new MongoClient(process.env.MONGO_CONNECTION);
 
 	await mongo.connect();
-	const client = new SteveBoi({
-		defaultPrefix: 'd;',
-		regexPrefix: /^dave,( )?/i,
-		fetchPrefix: (msg) => {
-			if (msg.guild) {
-				return ['d;'];
-			}
-			return ['d;', ''];
+	const client = new SteveBoi(
+		{
+			defaultPrefix: 'd;',
+			regexPrefix: /^dave,( )?/i,
+			fetchPrefix: (msg) => {
+				if (msg.guild) {
+					return ['d;'];
+				}
+				return ['d;', ''];
+			},
+			caseInsensitivePrefixes: true,
+			caseInsensitiveCommands: true,
+			logger: {
+				level: LogLevel.Debug
+			},
+			shards: 'auto',
+			intents: [
+				'GUILDS',
+				'GUILD_MEMBERS',
+				'GUILD_BANS',
+				'GUILD_EMOJIS_AND_STICKERS',
+				'GUILD_VOICE_STATES',
+				'GUILD_MESSAGES',
+				'GUILD_MESSAGE_REACTIONS',
+				'DIRECT_MESSAGES',
+				'DIRECT_MESSAGE_REACTIONS'
+			],
+			partials: ['CHANNEL']
 		},
-		caseInsensitivePrefixes: true,
-		caseInsensitiveCommands: true,
-		logger: {
-			level: LogLevel.Debug
-		},
-		shards: 'auto',
-		intents: [
-			'GUILDS',
-			'GUILD_MEMBERS',
-			'GUILD_BANS',
-			'GUILD_EMOJIS_AND_STICKERS',
-			'GUILD_VOICE_STATES',
-			'GUILD_MESSAGES',
-			'GUILD_MESSAGE_REACTIONS',
-			'DIRECT_MESSAGES',
-			'DIRECT_MESSAGE_REACTIONS',
-		],
-		partials: ['CHANNEL']
-	}, mongo);
+		mongo
+	);
 	try {
-
 		client.logger.info('Logging in');
 		await client.login();
 		client.logger.info('logged in');
@@ -53,9 +55,10 @@ const main = async () => {
 		});
 	} catch (error) {
 		client.logger.fatal(error);
-		client.destroy();
+		await client.destroy();
 		process.exit(1);
 	}
 };
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();

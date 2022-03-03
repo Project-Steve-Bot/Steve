@@ -4,21 +4,22 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { EmbedField, Message, MessageEmbed, Util } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	description: `Shows info about ${process.env['BOT_NAME']}'s commands.`,
+	description: `Shows info about ${process.env.BOT_NAME}'s commands.`,
 	detailedDescription: {
 		usage: '(command)',
 		examples: ['', 'remind']
 	}
 })
 export class UserCommand extends Command {
+
 	public async messageRun(msg: Message, args: Args, ctx: Command.RunContext) {
 		const commands = msg.client.stores.get('commands');
-		const prefix = ctx.prefix;
+		const { prefix } = ctx;
 
 		if (args.finished) {
 			let helpStr = `You can do ${prefix}help <command> to get more info about a specific command!\n`;
 
-			const categories = commands.categories;
+			const { categories } = commands;
 
 			await Promise.all(
 				categories.map(async (cat) => {
@@ -119,7 +120,7 @@ export class UserCommand extends Command {
 						name: 'Extra Info',
 						value: details.extendedHelp,
 						inline: false
-					})
+					});
 				}
 			}
 
@@ -130,15 +131,15 @@ export class UserCommand extends Command {
 					name: 'Options',
 					value: `\`--${options.join('`, `--')}\``,
 					inline: true
-				})
+				});
 			}
-			
+
 			if (Array.isArray(flags) && flags.length > 0) {
 				fields.push({
 					name: 'Options',
 					value: `\`--${flags.join('`, `--')}\``,
 					inline: true
-				})
+				});
 			}
 
 			const embed = new MessageEmbed()
@@ -150,4 +151,5 @@ export class UserCommand extends Command {
 			send(msg, { embeds: [embed] });
 		}
 	}
+
 }

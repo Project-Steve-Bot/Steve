@@ -12,7 +12,8 @@ import { SteveCommand } from '../../lib/extensions/SteveCommand';
 	detailedDescription: {
 		usage: '(channel)',
 		examples: ['', '#steves_tree'],
-		extendedHelp: 'Running this command with no arguments allows reminders to be sent in any channel.'
+		extendedHelp:
+			'Running this command with no arguments allows reminders to be sent in any channel.'
 	}
 })
 export class UserCommand extends SteveCommand {
@@ -22,19 +23,23 @@ export class UserCommand extends SteveCommand {
 			return send(msg, 'You need to run this command in a server mate.');
 		}
 
-		const channel = args.finished ? undefined : await args.pick('guildTextChannel');
+		const channel = args.finished
+			? undefined
+			: await args.pick('guildTextChannel');
 
 		await this.client.db.guilds.updateOne(
 			{ id: msg.guild.id },
-			{ $set: { channels: { reminder: channel?.id }}},
+			{ $set: { channels: { reminder: channel?.id } } },
 			{ upsert: true }
 		);
 
 		if (channel) {
-			return send(msg, `Reminders will now always be sent to <#${channel.id}>.`);
+			return send(
+				msg,
+				`Reminders will now always be sent to <#${channel.id}>.`
+			);
 		}
 		return send(msg, 'Reminders can now be sent in any channel.');
-		
 	}
 
 }

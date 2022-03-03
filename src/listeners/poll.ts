@@ -8,6 +8,7 @@ import { dateToTimestamp } from '../lib/utils';
 	event: 'interactionCreate'
 })
 export class UserEvent extends Listener {
+
 	public async run(interaction: Interaction) {
 		if (!interaction.isButton() || !interaction.customId.startsWith('poll')) return;
 		await interaction.deferUpdate();
@@ -44,7 +45,7 @@ export class UserEvent extends Listener {
 		const embed = new MessageEmbed(interaction.message.embeds[0]);
 		embed.setDescription(
 			`${newPoll.choices
-				.map((c) => `${c.text}${c.votes > 0 ? ` - ${c.votes} vote${c.votes === 1 ? '' : 's'}` : ''}`)
+				.map((newChoice) => `${newChoice.text}${newChoice.votes > 0 ? ` - ${newChoice.votes} vote${newChoice.votes === 1 ? '' : 's'}` : ''}`)
 				.join('\n')}\n\nThis poll ends at ${dateToTimestamp(poll.expires, 'f')}`
 		);
 
@@ -64,7 +65,7 @@ export class UserEvent extends Listener {
 
 		// Perhaps the worst way to figure out if this person should still be in the all voters list.
 		const setAllVoters = new Set<string>();
-		poll.choices.forEach((c) => c.voters.forEach((v) => setAllVoters.add(v)));
+		poll.choices.forEach((choice) => choice.voters.forEach((voter) => setAllVoters.add(voter)));
 		poll.allVoters = Array.from(setAllVoters);
 
 		poll.choices[choiceId].votes = poll.choices[choiceId].votes > 0 ? poll.choices[choiceId].votes - 1 : 0;
@@ -73,7 +74,7 @@ export class UserEvent extends Listener {
 	}
 
 	private changeVote(interaction: ButtonInteraction, choiceId: number, poll: Poll): Poll {
-		const oldChoice = poll.choices.find((c) => c.voters.includes(interaction.user.id));
+		const oldChoice = poll.choices.find((choice) => choice.voters.includes(interaction.user.id));
 		if (!oldChoice) {
 			throw new Error('Could not find old choice.');
 		}
@@ -82,4 +83,5 @@ export class UserEvent extends Listener {
 		const newPoll = this.removeVote(interaction, oldChoiceId, poll);
 		return this.addVote(interaction, choiceId, newPoll);
 	}
+
 }

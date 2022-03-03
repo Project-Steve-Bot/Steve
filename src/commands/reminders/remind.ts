@@ -12,13 +12,18 @@ import { dateToTimestamp } from '../../lib/utils';
 	options: ['repeat', 'every'],
 	detailedDescription: {
 		usage: '<duration> <reminder> (--repeat=duration)',
-		examples: [`12h Improve ${process.env['BOT_NAME']}!`, '"1 hour 30 minutes" Call mom --every="7 days"'],
-		extendedHelp: `• The duration of a reminder comes first now and needs to be in quotes if it has spaces.
+		examples: [
+			`12h Improve ${process.env.BOT_NAME}!`,
+			'"1 hour 30 minutes" Call mom --every="7 days"'
+		],
+		extendedHelp:
+			`• The duration of a reminder comes first now and needs to be in quotes if it has spaces.
 			• You can't have a reminder repeat faster than once a minute.
 			• Repeating reminders won't stop until you cancel them`.replace('\t', '')
 	}
 })
 export class UserCommand extends SteveCommand {
+
 	public async messageRun(msg: Message, args: Args) {
 		const duration = await args.pick('duration');
 		const expires = new Date(duration + Date.now());
@@ -36,7 +41,10 @@ export class UserCommand extends SteveCommand {
 			});
 		}
 
-		const channel = msg.guild ? (await this.client.db.guilds.findOne({ id: msg.guild.id }))?.channels?.reminder ?? msg.channelId : msg.channelId;
+		const channel = msg.guild
+			? (await this.client.db.guilds.findOne({ id: msg.guild.id }))
+				?.channels?.reminder ?? msg.channelId
+			: msg.channelId;
 
 		await this.client.db.reminder.insertOne({
 			content,
@@ -47,10 +55,16 @@ export class UserCommand extends SteveCommand {
 			expires
 		});
 
-		return send(msg, `I'll remind you about that at ${dateToTimestamp(expires)}${
-			repeat
-			? `and again every ${prettyMilliseconds(repeat, { verbose: true })}`
-			: ''
-		}.`);
+		return send(
+			msg,
+			`I'll remind you about that at ${dateToTimestamp(expires)}${
+				repeat
+					? `and again every ${prettyMilliseconds(repeat, {
+						verbose: true
+					  })}`
+					: ''
+			}.`
+		);
 	}
+
 }

@@ -1,5 +1,4 @@
-import type { ListenerOptions, PieceContext } from '@sapphire/framework';
-import { Listener, Store } from '@sapphire/framework';
+import { Listener, ListenerOptions, PieceContext, Store } from '@sapphire/framework';
 import {
 	blue,
 	gray,
@@ -59,12 +58,14 @@ ${line03}${
 	private printStoreDebugInformation() {
 		const { client, logger } = this.container;
 		const stores = [...client.stores.values()];
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const last = stores.pop()!;
 
 		for (const store of stores) logger.info(this.styleStore(store, false));
 		logger.info(this.styleStore(last, true));
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private styleStore(store: Store<any>, last: boolean) {
 		return gray(
 			`${last ? '└─' : '├─'} Loaded ${this.style(

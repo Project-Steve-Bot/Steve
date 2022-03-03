@@ -9,5 +9,5 @@ export const RandomLoadingMessage = [
 	'<a:loading:755121200929439745> Eating a eucalyptus leaf',
 	'<a:loading:755121200929439745> Hold on a sec',
 	'<a:loading:755121200929439745> Loading...',
-	'<a:loading:755121200929439745> I\'m working on it'
+	"<a:loading:755121200929439745> I'm working on it"
 ];

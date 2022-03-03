@@ -13,6 +13,7 @@ import { sendLoadingMessage } from '../../lib/utils';
 	}
 })
 export class UserCommand extends SteveCommand {
+
 	public async messageRun(msg: Message, args: Args, ctx: CommandContext) {
 		const number = await args.pick('string');
 		if (!/\d{3}-\d{4}/.test(number)) {
@@ -23,7 +24,7 @@ export class UserCommand extends SteveCommand {
 
 		const faxUsers = await this.client.db.users.find({ 'fax.number': { $ne: null } }).toArray();
 
-		const faxNumbers = faxUsers.map((user) => user.fax?.number).filter((number) => number);
+		const faxNumbers = faxUsers.map((user) => user.fax?.number).filter((hasNum) => hasNum);
 
 		if (faxNumbers.includes(number)) {
 			return response.edit(`${number} is already in use`);
@@ -33,4 +34,5 @@ export class UserCommand extends SteveCommand {
 
 		return response.edit(`Your fax number is now ${number}. Be sure to set where you'll receive faxes with \`${ctx.prefix}setdesk\``);
 	}
+
 }

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 // @ts-nocheck ts(2445)
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
@@ -13,8 +14,10 @@ import { dateToTimestamp } from '../lib/utils';
 export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
-		const embed = new MessageEmbed().setDescription('test').setFooter({ text: dateToTimestamp(new Date())});
-		send(msg, {embeds: [embed]});
+		const embed = new MessageEmbed()
+			.setDescription('test')
+			.setFooter({ text: dateToTimestamp(new Date()) });
+		send(msg, { embeds: [embed] });
 	}
 
 }

@@ -21,7 +21,10 @@ const ZWS = '\u200B';
 	}
 })
 export class UserCommand extends SteveCommand {
-	private SECRETS = process.env.DISCORD_TOKEN ? RegExp(process.env.DISCORD_TOKEN, 'g') : null;
+
+	private SECRETS = process.env.DISCORD_TOKEN
+		? RegExp(process.env.DISCORD_TOKEN, 'g')
+		: null;
 
 	public async messageRun(message: Message, args: Args) {
 		const code = await args.rest('string');
@@ -32,10 +35,14 @@ export class UserCommand extends SteveCommand {
 			showHidden: args.getFlags('hidden', 'showHidden', 'show')
 		});
 		const cleanResult = this.SECRETS
-			? result.replace(this.SECRETS, 'This information has been hidden').replace(/`/g, `\`${ZWS}`)
+			? result
+				.replace(this.SECRETS, 'This information has been hidden')
+				.replace(/`/g, `\`${ZWS}`)
 			: result.replace(/`/g, `\`${ZWS}`);
 
-		const output = success ? codeBlock('js', cleanResult) : `**ERROR**: ${codeBlock('bash', cleanResult)}`;
+		const output = success
+			? codeBlock('js', cleanResult)
+			: `**ERROR**: ${codeBlock('bash', cleanResult)}`;
 		if (args.getFlags('silent', 's')) return null;
 
 		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
@@ -50,7 +57,11 @@ export class UserCommand extends SteveCommand {
 		return send(message, `${output}\n${typeFooter}`);
 	}
 
-	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
+	private async eval(
+		message: Message,
+		code: string,
+		flags: { async: boolean; depth: number; showHidden: boolean }
+	) {
 		if (flags.async) code = `(async () => {\n${code}\n})();`;
 
 		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.
@@ -83,4 +94,5 @@ export class UserCommand extends SteveCommand {
 
 		return { result, success, type };
 	}
+
 }

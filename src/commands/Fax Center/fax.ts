@@ -18,6 +18,7 @@ const FONT_HEIGHT = 35;
 	}
 })
 export class UserCommand extends SteveCommand {
+
 	public async messageRun(msg: Message, args: Args) {
 		const faxNumber = await args.pick('string');
 		const recipient = await this.client.db.users.findOne({ 'fax.number': faxNumber });
@@ -48,14 +49,14 @@ export class UserCommand extends SteveCommand {
 
 		const pfp = await loadImage(msg.author.displayAvatarURL({ format: 'png' }));
 		ctx.save();
-		ctx.translate(HEADER_HEIGHT / 2 - 50, HEADER_HEIGHT / 2 - 50);
+		ctx.translate((HEADER_HEIGHT / 2) - 50, (HEADER_HEIGHT / 2) - 50);
 		ctx.beginPath();
 		ctx.arc(50, 50, 50, 0, Math.PI * 2, true);
 		ctx.clip();
 		ctx.drawImage(pfp, 0, 0, 100, 100);
 		ctx.restore();
 
-		ctx.translate(HEADER_HEIGHT / 2 - 25, HEADER_HEIGHT + 25);
+		ctx.translate((HEADER_HEIGHT / 2) - 25, HEADER_HEIGHT + 25);
 		ctx.textAlign = 'left';
 		ctx.font = `${FONT_HEIGHT - 5}px serif`;
 
@@ -90,8 +91,8 @@ export class UserCommand extends SteveCommand {
 				ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
 				ctx.fillStyle = recipient.fax?.text || '#000000';
-				ctx.translate(HEADER_HEIGHT / 2 - 25, HEADER_HEIGHT / 2 - 25);
-				currentHeight = HEADER_HEIGHT / 2 - 25;
+				ctx.translate((HEADER_HEIGHT / 2) - 25, (HEADER_HEIGHT / 2) - 25);
+				currentHeight = (HEADER_HEIGHT / 2) - 25;
 			}
 		}
 
@@ -108,8 +109,8 @@ export class UserCommand extends SteveCommand {
 				.setColor((recipient.embedColor || 0xadcb27) as ColorResolvable)
 		);
 
-		const faxDest = (this.client.channels.cache.get(recipient.fax.channel) ||
-			(await this.client.channels.fetch(recipient.fax.channel))) as TextChannel;
+		const faxDest = (this.client.channels.cache.get(recipient.fax.channel)
+			|| await this.client.channels.fetch(recipient.fax.channel)) as TextChannel;
 
 		await faxDest.send({
 			content: `<@${recipient.id}>! I got a fax here for ya darlin`,
@@ -119,4 +120,5 @@ export class UserCommand extends SteveCommand {
 
 		return response.edit('The fax confirmation just came through. Your message has been delivered.');
 	}
+
 }

@@ -30,7 +30,7 @@ export interface Poll {
 	messageId: string;
 	channelId: string;
 	multiSelect: boolean;
-	choices:{
+	choices: {
 		votes: number;
 		text: string;
 		voters: string[];

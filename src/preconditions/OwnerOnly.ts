@@ -10,7 +10,7 @@ export class UserPrecondition extends Precondition {
 		return OWNERS.includes(message.author.id)
 			? this.ok()
 			: this.error({
-				message: 'This command can only be used by the owner.',
+				message: 'This command can only be used by the owner.'
 			  });
 	}
 
