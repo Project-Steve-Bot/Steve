@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import { Message, MessageActionRow, MessageSelectMenu, User } from 'discord.js';
 import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { getChannel, sendLoadingMessage } from '../../lib/utils';
+import { getChannel, getGuild, sendLoadingMessage } from '../../lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Set what channel your faxes will go to.',
@@ -28,9 +28,13 @@ export class UserCommand extends SteveCommand {
 				}
 			]);
 
-		faxableGuilds.forEach(async (guild) => {
-			if (!guild.channels?.fax) return;
-			guild.channels.fax.forEach(async (channelId) => {
+		faxableGuilds.forEach(async (dbGuild) => {
+			if (!dbGuild.channels?.fax) return;
+
+			const guild = await getGuild(dbGuild.id);
+			if (!guild.members.cache.has(msg.author.id)) return;
+
+			dbGuild.channels.fax.forEach(async (channelId) => {
 				const channel = await getChannel(channelId);
 				if (!channel?.isText() || channel.type === 'DM' || channel.partial) return;
 
