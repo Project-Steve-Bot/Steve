@@ -10,7 +10,7 @@ export class UserEvent extends Listener<typeof Events.UnknownCommand> {
 	public async run({ message: msg, commandName }: UnknownCommandPayload) {
 		if (!msg.guildId) return;
 
-		const snip = await this.container.client.db.snips.findOne({ guildId: msg.guildId, snipId: commandName });
+		const snip = await this.container.client.db.snips.findOne({ guildId: msg.guildId, snipId: commandName.toLowerCase() });
 
 		if (!snip) return;
 

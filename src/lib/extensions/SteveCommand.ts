@@ -1,8 +1,9 @@
-import { Command, CommandOptions, PieceContext } from '@sapphire/framework';
+import type { CommandOptions, PieceContext } from '@sapphire/framework';
+import { SubCommandPluginCommand } from '@sapphire/plugin-subcommands';
 import { Permissions } from 'discord.js';
 import type { SteveBoi } from './SteveBoi';
 
-export abstract class SteveCommand extends Command {
+export abstract class SteveCommand extends SubCommandPluginCommand {
 
 	public client: SteveBoi;
 
