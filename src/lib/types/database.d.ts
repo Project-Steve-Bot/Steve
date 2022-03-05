@@ -38,3 +38,10 @@ export interface Poll {
 	expires: Date;
 	allVoters: string[];
 }
+
+export interface Snippet {
+	guildId: string;
+	snipId: string;
+	snipName: string;
+	content: string;
+}
