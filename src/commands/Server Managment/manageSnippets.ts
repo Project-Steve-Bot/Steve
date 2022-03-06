@@ -69,7 +69,7 @@ export class UserCommand extends SteveCommand {
 		const snip = await args.pick('snippet');
 		const content = await args.rest('string');
 
-		await this.client.db.snips.findOneAndUpdate(snip, { $set: { content }});
+		await this.client.db.snips.findOneAndUpdate(snip, { $set: { content } });
 
 		return response.edit(`**${snip.snipName}** has been updated.`);
 	}
