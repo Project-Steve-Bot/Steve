@@ -43,7 +43,7 @@ export class UserCommand extends SteveCommand {
 		}
 
 		return response.edit({
-			content: `${target} has been ${added ? 'added' : 'removed'} from the list of assignable roles.`,
+			content: `${target} has been ${added ? 'added to' : 'removed from'} the list of assignable roles.`,
 			allowedMentions: { roles: [] }
 		});
 	}
