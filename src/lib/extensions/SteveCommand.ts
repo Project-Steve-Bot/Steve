@@ -19,4 +19,6 @@ export abstract class SteveCommand extends SubCommandPluginCommand {
 		this.client = this.container.client as SteveBoi;
 	}
 
+	// TODO: Implement dynamic default subcommands
+
 }
