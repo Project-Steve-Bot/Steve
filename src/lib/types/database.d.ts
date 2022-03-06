@@ -13,6 +13,7 @@ export interface DbGuild {
 		reminder?: string;
 		fax?: string[];
 	};
+	assignableRoles?: string[];
 }
 
 export interface DbUser {
