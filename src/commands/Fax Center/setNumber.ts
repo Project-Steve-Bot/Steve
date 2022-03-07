@@ -30,7 +30,7 @@ export class UserCommand extends SteveCommand {
 			return response.edit(`${number} is already in use`);
 		}
 
-		await this.client.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { 'fax.number': number } });
+		await this.client.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { 'fax.number': number } }, { upsert: true });
 
 		return response.edit(`Your fax number is now ${number}. Be sure to set where you'll receive faxes with \`${ctx.prefix}setdesk\``);
 	}
