@@ -11,7 +11,8 @@ import { pickRandom } from '../../lib/utils';
 export class UserCommand extends SteveCommand {
 
 	private MAGIC8BALL_RESPONSES = [
-		'Yes, Ruby should go to bed', 'Read the blog, do the Dew',
+		'Yes, Ruby should go to bed',
+		'Read the blog, do the Dew',
 		'Lincoln Nebraska',
 		'If at first you don\'t succeed, skydiving is not for you',
 		'If you\'re asking a robot, you know its a bad idea',
