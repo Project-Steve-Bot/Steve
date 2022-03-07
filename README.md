@@ -1,30 +1,8 @@
-# TypeScript Sapphire Bot example
+# Steve
+This version of Steve is a bot that I made for me and my friends. He is full of ridiculous, overcomplicated systems mostly originating from in-jokes and general shenanigans. The original version of Steve was not built by me and can be found [right here](https://github.com/stevebot-project/steve). This version is a 100% complete rewrite since the the framework OG Steve relies on ([Klasa](https://klasa.js.org/#/)) was discontinued and didn't receive updates when Discord decommissioned API v6 & v7. This new Steve is built using [Sapphire](https://www.sapphirejs.dev/) and even started from their TS example. 
 
-This is a basic setup of a Discord bot using the [sapphire framework][sapphire] written in TypeScript
+### Shout outs
+Shouts outs go to everyone, the creators of OG Steve, those who used to maintain Klasa, and those who do maintain Sapphire. Without any of those peeps, this Steve wouldn't exist for one reason or another.
 
-## How to use it?
-
-### Prerequisite
-
-```sh
-npm install
-```
-
-### Development
-
-This example can be run with `tsc-watch` to watch the files and automatically restart your bot.
-
-```sh
-npm run watch:start
-```
-
-### Production
-
-You can also run the bot with `npm dev`, this will first build your code and then run `node ./dist/index.js`. But this is not the recommended way to run a bot in production.
-
-## License
-
-Dedicated to the public domain via the [Unlicense], courtesy of the Sapphire Community and its contributors.
-
-[sapphire]: https://github.com/sapphiredev/framework
-[unlicense]: https://github.com/sapphiredev/examples/blob/main/LICENSE.md
+###### And now, a picture of a koala.
+![](https://cdn.discordapp.com/attachments/944669817137418333/950195568074977300/240px-Koala_climbing_tree.png)
