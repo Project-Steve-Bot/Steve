@@ -1,0 +1,36 @@
+{
+	// Place your steve workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"New Steve Command": {
+		"scope": "typescript",
+		"prefix": [
+			"sc",
+			"steve",
+			"command"
+		],
+		"body": [
+			"import { ApplyOptions } from '@sapphire/decorators';",
+			"import type { Args, CommandOptions } from '@sapphire/framework';",
+			"import type { Message } from 'discord.js';",
+			"import { SteveCommand } from '../../lib/extensions/SteveCommand';",
+			"",
+			"@ApplyOptions<CommandOptions>({",
+			"\tdescription: '$1'",
+			"})",
+			"export class UserCommand extends SteveCommand {",
+			"",
+			"\tpublic async messageRun(msg: Message, args: Args) {",
+			"\t\t$2",
+			"\t}",
+			"",
+			"}",
+			""
+		],
+		"description": "Create a new Steve command"
+	}
+}
