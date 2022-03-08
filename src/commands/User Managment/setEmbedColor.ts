@@ -1,8 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, MessageEmbed } from 'discord.js';
+import type { Message } from 'discord.js';
 import { SteveCommand } from '../../lib/extensions/SteveCommand';
+import { makeColorEmbed } from '../../lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Set the color used in some embeds',
@@ -25,13 +26,7 @@ export class UserCommand extends SteveCommand {
 			{ upsert: true }
 		);
 
-		send(msg, {
-			embeds: [
-				new MessageEmbed()
-					.setColor(color)
-					.setDescription('This is your new embed color!')
-			]
-		});
+		send(msg, {	embeds: [makeColorEmbed(color).setDescription('This is your new embed color!')] });
 	}
 
 }

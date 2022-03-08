@@ -1,6 +1,6 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import type { AnyChannel, Guild, Message, User } from 'discord.js';
+import { AnyChannel, ColorResolvable, Guild, Message, MessageEmbed, User } from 'discord.js';
 import type { WithId } from 'mongodb';
 import { RandomLoadingMessage } from './constants';
 import type { Reminder, DbUser } from './types/database';
@@ -50,4 +50,10 @@ export async function getUser(userId: string): Promise<User> {
 		container.client.users.cache.get(userId)
 		?? await container.client.users.fetch(userId)
 	);
+}
+
+export function makeColorEmbed(color: ColorResolvable): MessageEmbed {
+	return new MessageEmbed()
+		.setColor(color)
+		.setThumbnail(`https://singlecolorimage.com/get/${color.toString(16).padStart(6, '0')}/400x400`);
 }
