@@ -22,6 +22,6 @@ export class DurationArgument extends Argument<number> {
 
 declare module '@sapphire/framework' {
 	interface ArgType {
-		duration: string;
+		duration: number;
 	}
 }

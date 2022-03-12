@@ -1,7 +1,7 @@
 import { Argument } from '@sapphire/framework';
 import { ColorResolvable, Util } from 'discord.js';
 
-export class DurationArgument extends Argument<ColorResolvable> {
+export class ColorArgument extends Argument<ColorResolvable> {
 
 	public run(parameter: string, context: Argument.Context) {
 		let color: ColorResolvable;

@@ -2,7 +2,7 @@ import { Argument } from '@sapphire/framework';
 import type { WithId } from 'mongodb';
 import type { Snippet } from '../lib/types/database';
 
-export class DurationArgument extends Argument<WithId<Snippet>> {
+export class SnippetArgument extends Argument<WithId<Snippet>> {
 
 	public async run(parameter: string, context: Argument.Context) {
 		const msg = context.message;
