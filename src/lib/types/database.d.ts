@@ -18,6 +18,7 @@ export interface DbGuild {
 
 export interface DbUser {
 	id: string;
+	timezone?: string;
 	embedColor?: string;
 	fax?: {
 		number?: string;

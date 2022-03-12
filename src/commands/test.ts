@@ -14,10 +14,8 @@ import { dateToTimestamp } from '../lib/utils';
 export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
-		const embed = new MessageEmbed()
-			.setDescription('test')
-			.setFooter({ text: dateToTimestamp(new Date()) });
-		send(msg, { embeds: [embed] });
+		const arg = await args.pick('durationOrTimestamp');
+		send(msg, arg.toLocaleString());
 	}
 
 }

@@ -25,8 +25,18 @@ import { dateToTimestamp } from '../../lib/utils';
 export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
-		const duration = await args.pick('duration');
-		const expires = new Date(duration + Date.now());
+		const durOrTime = await args.pickResult('durationOrTimestamp');
+		if (!durOrTime.success) {
+			return send(msg, 'Please provide a valid duration or timestamp.');
+		}
+
+		const isDur = typeof durOrTime.value === 'number';
+
+		if (!isDur && durOrTime.value.getTime() < Date.now()) {
+			return send(msg, 'Sorry but I can\'t send reminders into the past.');
+		}
+
+		const expires = isDur ? new Date(durOrTime.value + Date.now()) : durOrTime.value;
 
 		const content = await args.rest('string');
 		const mode = msg.guild ? 'public' : 'private';
@@ -57,7 +67,7 @@ export class UserCommand extends SteveCommand {
 
 		return send(
 			msg,
-			`I'll remind you about that at ${dateToTimestamp(expires)}${
+			`I'll remind you about that at ${dateToTimestamp(expires, 'f')}${
 				repeat
 					? `and again every ${prettyMilliseconds(repeat, {
 						verbose: true
