@@ -25,6 +25,17 @@ export class UserEvent extends Listener {
 	public run() {
 		this.printBanner();
 		this.printStoreDebugInformation();
+		this.createCountChannelCache();
+	}
+
+	private async createCountChannelCache() {
+		const countGuilds = await this.container.client.db.guilds.find({ 'channels.count': { $exists: true } }).toArray();
+
+		countGuilds.forEach(dbGuild => {
+			if (dbGuild.channels?.count) {
+				this.container.client.countChannels.set(dbGuild.channels.count, dbGuild);
+			}
+		});
 	}
 
 	private printBanner() {

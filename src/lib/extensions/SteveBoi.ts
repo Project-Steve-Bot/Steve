@@ -20,6 +20,8 @@ export class SteveBoi extends SapphireClient {
 
 	private cronRunner: ScheduledTask;
 
+	public countChannels: Map<string, DbGuild> = new Map();
+
 	public constructor(options: ClientOptions, mongo: MongoClient) {
 		super(options);
 
