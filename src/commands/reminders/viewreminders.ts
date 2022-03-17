@@ -4,21 +4,13 @@ import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
 import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
 import prettyMilliseconds from 'pretty-ms';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import type { Reminder } from '../../lib/types/database';
-import {
-	dateToTimestamp,
-	getUserReminders,
-	sendLoadingMessage
-} from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import type { Reminder } from '@lib/types/database';
+import { dateToTimestamp, getUserReminders, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Show all your pending reminders.',
-	aliases: ['vr', 'showreminders', 'sr'],
-	detailedDescription: {
-		usage: '',
-		examples: ['']
-	}
+	aliases: ['vr', 'showreminders', 'sr']
 })
 export class UserCommand extends SteveCommand {
 

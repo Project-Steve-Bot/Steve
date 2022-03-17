@@ -4,8 +4,8 @@ import { oneLine } from 'common-tags';
 import { AnyChannel, ColorResolvable, Guild, Message, MessageEmbed, User } from 'discord.js';
 import type { WithId } from 'mongodb';
 import prettyMilliseconds from 'pretty-ms';
-import { RandomLoadingMessage } from './constants';
-import type { Reminder, DbUser, CountData } from './types/database';
+import { RandomLoadingMessage } from '@lib/constants';
+import type { Reminder, DbUser, CountData } from '@lib/types/database';
 
 export function pickRandom<T>(array: readonly T[]): T {
 	const { length } = array;

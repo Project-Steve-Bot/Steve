@@ -1,6 +1,6 @@
 import { Argument } from '@sapphire/framework';
-import type { DurationArgument } from './duration';
-import type { TimestampArgument } from './timestamp';
+import type { DurationArgument } from '@root/src/arguments/duration';
+import type { TimestampArgument } from '@root/src/arguments/timestamp';
 
 export class DurationOrTimestampArgument extends Argument<number|Date> {
 

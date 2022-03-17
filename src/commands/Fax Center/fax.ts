@@ -3,7 +3,7 @@ import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ColorResolvable, Message, MessageAttachment, MessageEmbed, TextChannel, Util } from 'discord.js';
 import { createCanvas, loadImage } from 'canvas';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 const WIDTH = 750;
 const HEIGHT = WIDTH;

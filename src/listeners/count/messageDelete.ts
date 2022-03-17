@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { resetCount } from '../../lib/utils';
+import { resetCount } from '@lib/utils';
 
 export class UserEvent extends Listener {
 

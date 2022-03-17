@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
 	description: 'nice'

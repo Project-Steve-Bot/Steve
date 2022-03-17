@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { getUserReminders, sendLoadingMessage } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { getUserReminders, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Cancel a reminder',

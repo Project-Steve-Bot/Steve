@@ -3,8 +3,8 @@ import { Args, CommandContext, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { Message, MessageEmbed } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { sendLoadingMessage } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'View, assign, and unassign self assignable roles.',

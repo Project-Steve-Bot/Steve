@@ -22,11 +22,16 @@
 		"common-tags": "^1.8.2",
 		"discord.js": "^13.6.0",
 		"dotenv-cra": "^3.0.2",
+		"module-alias": "^2.2.2",
 		"mongodb": "^4.4.0",
 		"node-cron": "^3.0.0",
 		"parse-duration": "^1.0.2",
 		"pretty-ms": "^7.0.1",
 		"reflect-metadata": "^0.1.13"
+	},
+	"_moduleAliases": {
+		"@root": "dist",
+		"@lib": "dist/lib"
 	},
 	"devDependencies": {
 		"@sapphire/ts-config": "^3.3.1",

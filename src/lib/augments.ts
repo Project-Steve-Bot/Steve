@@ -1,5 +1,5 @@
-import type { SteveCollections } from './extensions/SteveBoi';
-import type { DbGuild } from './types/database';
+import type { SteveCollections } from '@lib/extensions/SteveBoi';
+import type { DbGuild } from '@lib/types/database';
 declare module '@sapphire/framework' {
 	export interface DetailedDescriptionCommandObject {
 		usage?: string;

@@ -3,7 +3,7 @@ import { Args, CommandOptions } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { oneLine } from 'common-tags';
 import { send } from '@sapphire/plugin-editable-commands';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 type KeepType = 'highest' | 'lowest' | false;
 

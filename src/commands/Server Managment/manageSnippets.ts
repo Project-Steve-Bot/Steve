@@ -3,8 +3,8 @@ import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import type { Message } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { sendLoadingMessage } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Add, remove or edit snips.',

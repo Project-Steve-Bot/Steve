@@ -1,6 +1,7 @@
-import './lib/setup';
+import 'module-alias/register';
+import '@lib/setup';
 import { LogLevel } from '@sapphire/framework';
-import { SteveBoi } from './lib/extensions/SteveBoi';
+import { SteveBoi } from '@lib/extensions/SteveBoi';
 import { MongoClient } from 'mongodb';
 
 const main = async () => {

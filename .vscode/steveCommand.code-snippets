@@ -17,7 +17,7 @@
 			"import { ApplyOptions } from '@sapphire/decorators';",
 			"import type { Args, CommandOptions } from '@sapphire/framework';",
 			"import type { Message } from 'discord.js';",
-			"import { SteveCommand } from '../../lib/extensions/SteveCommand';",
+			"import { SteveCommand } from '@lib/extensions/SteveCommand';",
 			"",
 			"@ApplyOptions<CommandOptions>({",
 			"\tdescription: '$1'",

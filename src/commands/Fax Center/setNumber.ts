@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, CommandContext, CommandOptions, UserError } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { sendLoadingMessage } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Set your fax number!',

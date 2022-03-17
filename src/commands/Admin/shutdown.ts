@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Shuts down the bot',

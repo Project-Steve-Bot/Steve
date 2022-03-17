@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import { Message, MessageActionRow, MessageSelectMenu, User } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { getChannel, getGuild, sendLoadingMessage } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { getChannel, getGuild, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Set what channel your faxes will go to.',

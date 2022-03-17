@@ -2,8 +2,8 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { getChannel } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { getChannel } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Send a suggestion to Ben.',

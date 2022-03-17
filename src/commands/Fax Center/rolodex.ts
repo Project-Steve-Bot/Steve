@@ -1,16 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import {
-	Collection,
-	Message,
-	MessageActionRow,
-	MessageEmbed,
-	MessageSelectMenu,
-	User
-} from 'discord.js';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { getUser, sendLoadingMessage } from '../../lib/utils';
+import { Collection, Message, MessageActionRow, MessageEmbed, MessageSelectMenu, User } from 'discord.js';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { getUser, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Find peoples fax numbers!',

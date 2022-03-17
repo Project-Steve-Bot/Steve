@@ -1,15 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import {
-	Message,
-	MessageActionRow,
-	MessageButton,
-	MessageEmbed
-} from 'discord.js';
+import { Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import parse from 'parse-duration';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { dateToTimestamp, sendLoadingMessage } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Create a poll!',

@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { ButtonInteraction, Interaction, MessageEmbed } from 'discord.js';
-import type { Poll } from '../lib/types/database';
-import { dateToTimestamp } from '../lib/utils';
+import type { Poll } from '@lib/types/database';
+import { dateToTimestamp } from '@lib/utils';
 
 @ApplyOptions<Listener.Options>({
 	event: 'interactionCreate'

@@ -1,6 +1,6 @@
 import { Argument } from '@sapphire/framework';
 import type { WithId } from 'mongodb';
-import type { Snippet } from '../lib/types/database';
+import type { Snippet } from '@lib/types/database';
 
 export class SnippetArgument extends Argument<WithId<Snippet>> {
 

@@ -1,9 +1,9 @@
 import { SapphireClient } from '@sapphire/framework';
 import type { Collection, MongoClient } from 'mongodb';
 import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
-import type { DbGuild, Reminder, DbUser, Poll, Snippet } from '../types/database';
+import type { DbGuild, Reminder, DbUser, Poll, Snippet } from '@lib/types/database';
 import { schedule, ScheduledTask } from 'node-cron';
-import { getChannel } from '../utils';
+import { getChannel } from '@lib/utils';
 
 export interface SteveCollections {
 	reminder: Collection<Reminder>;

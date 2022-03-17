@@ -4,8 +4,8 @@ import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 import parse from 'parse-duration';
 import prettyMilliseconds from 'pretty-ms';
-import { SteveCommand } from '../../lib/extensions/SteveCommand';
-import { dateToTimestamp } from '../../lib/utils';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { dateToTimestamp } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Create a new reminder',
