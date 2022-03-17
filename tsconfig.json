@@ -7,7 +7,8 @@
 		"paths": {
 			"@root/*": ["./*"],
 			"@lib/*": ["./src/lib/*"]
-		}
+		},
+		"skipLibCheck": true
 	},
 	"include": ["src"],
 }
