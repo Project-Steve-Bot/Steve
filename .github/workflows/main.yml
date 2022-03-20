@@ -27,7 +27,7 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: Create env file
-        run: echo ${{ secrets.PROCESS_ENV }} > src/.env.production.local
+        run: echo ${{ secrets.PROCESS_ENV }} >> src/.env.production.local
 
       - name: Docker Build and Push, Kubernetes apply
         run: |
