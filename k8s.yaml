@@ -39,19 +39,3 @@ spec:
       imagePullSecrets:
       - name: regcred
 ---
-# This section will create a service in the Kubernetes cluster
-# so that the deployment can be accessed from the outside
-apiVersion: v1
-kind: Service
-metadata:
-  name: steve-service
-  labels:
-    app: steve-app
-spec:
-  type: LoadBalancer
-  selector:
-    app: steve-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
