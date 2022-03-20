@@ -5,6 +5,7 @@ import { SteveBoi } from '@lib/extensions/SteveBoi';
 import { MongoClient } from 'mongodb';
 
 const main = async () => {
+	console.log('Env', process.env);
 	if (!process.env.MONGO_CONNECTION) {
 		throw new Error('No database connection string provided.');
 	}
