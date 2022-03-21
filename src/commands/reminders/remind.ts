@@ -19,7 +19,7 @@ import { dateToTimestamp } from '@lib/utils';
 		extendedHelp:
 			`• The duration of a reminder comes first now and needs to be in quotes if it has spaces.
 			• You can't have a reminder repeat faster than once a minute.
-			• Repeating reminders won't stop until you cancel them`.replace('\t', '')
+			• Repeating reminders won't stop until you cancel them`
 	}
 })
 export class UserCommand extends SteveCommand {
