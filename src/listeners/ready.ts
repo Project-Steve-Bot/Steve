@@ -17,7 +17,22 @@ export class UserEvent extends Listener {
 	public run() {
 		this.printBanner();
 		this.printStoreDebugInformation();
+		this.logStartupToDiscord();
 		this.createCountChannelCache();
+	}
+
+	private async logStartupToDiscord() {
+		if (!this.container.discordLogs) return;
+
+		const { user } = this.container.client;
+
+		if (!user) return;
+
+		this.container.discordLogs.send({
+			username: user.username,
+			avatarURL: user.displayAvatarURL(),
+			content: `${process.env.BOT_NAME} started. Ready to serve ${this.container.client.guilds.cache.size} guilds.`
+		});
 	}
 
 	private async createCountChannelCache() {
