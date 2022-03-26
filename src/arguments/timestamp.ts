@@ -18,7 +18,7 @@ export class TimestampArgument extends Argument<Date> {
 			parameter = `${new Date().toDateString()} ${match[1]} ${match[2] ?? ''}`;
 		}
 
-		const dbUser = await this.container.client.db.users.findOne({ id: context.message.author.id });
+		const dbUser = await this.container.db.users.findOne({ id: context.message.author.id });
 
 		const timestamp = new Date(`${parameter.replace(this.indicatorRegex, indicator => ` ${indicator}`)}${dbUser?.timezone ? dbUser.timezone : ''}`);
 

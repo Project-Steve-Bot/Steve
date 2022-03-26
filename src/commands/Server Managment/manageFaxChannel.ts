@@ -31,7 +31,7 @@ export class UserCommand extends SteveCommand {
 
 		const channel = await args.pick('guildTextChannel');
 
-		const guildSettings = await this.client.db.guilds.findOne({
+		const guildSettings = await this.container.db.guilds.findOne({
 			id: msg.guild.id
 		});
 
@@ -39,23 +39,23 @@ export class UserCommand extends SteveCommand {
 			= !guildSettings?.channels?.fax?.includes(channel.id) ?? true;
 
 		if (added) {
-			await this.client.db.guilds.updateOne(
+			await this.container.db.guilds.updateOne(
 				{ id: msg.guild.id },
 				{ $push: { 'channels.fax': channel.id } },
 				{ upsert: true }
 			);
 		} else {
-			await this.client.db.guilds.updateOne(
+			await this.container.db.guilds.updateOne(
 				{ id: msg.guild.id },
 				{ $pull: { 'channels.fax': channel.id } },
 				{ upsert: true }
 			);
 
-			const unfaxedUsers = await this.client.db.users
+			const unfaxedUsers = await this.container.db.users
 				.find({ 'fax.channel': channel.id })
 				.toArray();
 
-			await this.client.db.users.updateMany(
+			await this.container.db.users.updateMany(
 				{ 'fax.channel': channel.id },
 				{ $set: { 'fax.channel': null } }
 			);

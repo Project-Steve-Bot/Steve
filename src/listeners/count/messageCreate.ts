@@ -41,7 +41,7 @@ export class UserEvent extends Listener {
 			return resetCount(msg, `Sorry mate but ${newNumber} isn't what comes next.`);
 		}
 
-		const newGuild = (await this.container.client.db.guilds.findOneAndUpdate(
+		const newGuild = (await this.container.db.guilds.findOneAndUpdate(
 			{ id: msg.guildId },
 			{
 				$inc: { 'count.counter': 1 },

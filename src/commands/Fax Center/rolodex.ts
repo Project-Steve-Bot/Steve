@@ -14,7 +14,7 @@ export class UserCommand extends SteveCommand {
 	public async messageRun(msg: Message) {
 		const response = await sendLoadingMessage(msg);
 
-		const faxUsers = await this.client.db.users
+		const faxUsers = await this.container.db.users
 			.find({
 				$and: [
 					{ 'fax.number': { $ne: null } },

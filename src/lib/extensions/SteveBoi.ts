@@ -1,41 +1,40 @@
-import { SapphireClient } from '@sapphire/framework';
-import type { Collection, MongoClient } from 'mongodb';
+import { container, SapphireClient } from '@sapphire/framework';
 import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
-import type { DbGuild, Reminder, DbUser, Poll, Snippet } from '@lib/types/database';
 import { schedule, ScheduledTask } from 'node-cron';
+import type { DbGuild } from '@lib/types/database';
 import { getChannel } from '@lib/utils';
 
-export interface SteveCollections {
-	reminder: Collection<Reminder>;
-	guilds: Collection<DbGuild>;
-	users: Collection<DbUser>;
-	polls: Collection<Poll>;
-	snips: Collection<Snippet>;
-}
+// export interface SteveCollections {
+// 	reminder: Collection<Reminder>;
+// 	guilds: Collection<DbGuild>;
+// 	users: Collection<DbUser>;
+// 	polls: Collection<Poll>;
+// 	snips: Collection<Snippet>;
+// }
 
 export class SteveBoi extends SapphireClient {
 
-	private mongo: MongoClient;
-	public db: SteveCollections;
+	// private mongo: MongoClient;
+	// public db: SteveCollections;
 
 	private cronRunner: ScheduledTask;
 
 	public countChannels: Map<string, DbGuild> = new Map();
 
-	public constructor(options: ClientOptions, mongo: MongoClient) {
+	public constructor(options: ClientOptions) {
 		super(options);
 
-		this.mongo = mongo;
+		// this.mongo = mongo;
 
-		const db = this.mongo.db(process.env.BOT_NAME);
+		// const db = this.mongo.db(process.env.BOT_NAME);
 
-		this.db = {
-			reminder: db.collection<Reminder>('reminders'),
-			guilds: db.collection<DbGuild>('guilds'),
-			users: db.collection<DbUser>('users'),
-			polls: db.collection<Poll>('polls'),
-			snips: db.collection<Snippet>('snippets')
-		};
+		// this.db = {
+		// 	reminder: db.collection<Reminder>('reminders'),
+		// 	guilds: db.collection<DbGuild>('guilds'),
+		// 	users: db.collection<DbUser>('users'),
+		// 	polls: db.collection<Poll>('polls'),
+		// 	snips: db.collection<Snippet>('snippets')
+		// };
 
 		this.logger.info('Connected to Mongo DB');
 
@@ -45,7 +44,7 @@ export class SteveBoi extends SapphireClient {
 	}
 
 	public async destroy() {
-		await this.mongo.close();
+		await container.mongo.close();
 		this.cronRunner.stop();
 		super.destroy();
 	}
@@ -56,7 +55,7 @@ export class SteveBoi extends SapphireClient {
 	}
 
 	private async runReminder(now: Date) {
-		const reminders = await this.db.reminder
+		const reminders = await container.db.reminder
 			.find({
 				expires: { $lte: now }
 			})
@@ -88,7 +87,7 @@ export class SteveBoi extends SapphireClient {
 	}
 
 	private async closePoll(now: Date) {
-		const polls = await this.db.polls
+		const polls = await container.db.polls
 			.find({ expires: { $lte: now } })
 			.toArray();
 

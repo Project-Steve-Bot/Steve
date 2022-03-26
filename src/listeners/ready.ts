@@ -36,7 +36,7 @@ export class UserEvent extends Listener {
 	}
 
 	private async createCountChannelCache() {
-		const countGuilds = await this.container.client.db.guilds.find({ 'channels.count': { $exists: true } }).toArray();
+		const countGuilds = await this.container.db.guilds.find({ 'channels.count': { $exists: true } }).toArray();
 
 		countGuilds.forEach(dbGuild => {
 			if (dbGuild.channels?.count) {

@@ -26,7 +26,7 @@ export class UserCommand extends SteveCommand {
 
 		const targetRole = await args.pick('role');
 
-		const isAssignable = await this.client.db.guilds.countDocuments({ id: msg.guildId, assignableRoles: targetRole.id }) === 1;
+		const isAssignable = await this.container.db.guilds.countDocuments({ id: msg.guildId, assignableRoles: targetRole.id }) === 1;
 
 		if (!isAssignable) {
 			return send(msg, `Sorry but ${targetRole.name} is not self assignable. Use \`${ctx.prefix}assign list\` to see all self assignable roles.`);
@@ -51,7 +51,7 @@ export class UserCommand extends SteveCommand {
 
 		const response = await sendLoadingMessage(msg);
 
-		const dbGuild = await this.client.db.guilds.findOne({ id: msg.guildId });
+		const dbGuild = await this.container.db.guilds.findOne({ id: msg.guildId });
 
 		if (!dbGuild?.assignableRoles || dbGuild.assignableRoles.length === 0) {
 			return response.edit('This server has no assignable roles.');

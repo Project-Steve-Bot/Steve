@@ -13,7 +13,7 @@ export class UserCommand extends SteveCommand {
 	public async messageRun(msg: Message) {
 		const response = await sendLoadingMessage(msg);
 
-		const faxableGuilds = await this.client.db.guilds
+		const faxableGuilds = await this.container.db.guilds
 			.find({ $nor: [{ 'channels.fax': { $exists: false } }, { 'channels.fax': { $size: 0 } }] })
 			.toArray();
 
@@ -81,7 +81,7 @@ export class UserCommand extends SteveCommand {
 	}
 
 	private async updateFaxChannel(user: User, channel: string): Promise<void> {
-		this.client.db.users.findOneAndUpdate({ id: user.id }, { $set: { 'fax.channel': channel } }, { upsert: true });
+		this.container.db.users.findOneAndUpdate({ id: user.id }, { $set: { 'fax.channel': channel } }, { upsert: true });
 		return;
 	}
 

@@ -43,7 +43,7 @@ export class UserCommand extends SteveCommand {
 		const content = await args.rest('string');
 		const snipId = snipName.replace(' ', '-');
 
-		await this.client.db.snips.insertOne({
+		await this.container.db.snips.insertOne({
 			guildId: msg.guildId,
 			snipId,
 			snipName,
@@ -58,7 +58,7 @@ export class UserCommand extends SteveCommand {
 
 		const snip = await args.pick('snippet');
 
-		await this.client.db.snips.findOneAndDelete(snip);
+		await this.container.db.snips.findOneAndDelete(snip);
 
 		return response.edit(`Deleted **${snip.snipName}**.`);
 	}
@@ -69,7 +69,7 @@ export class UserCommand extends SteveCommand {
 		const snip = await args.pick('snippet');
 		const content = await args.rest('string');
 
-		await this.client.db.snips.findOneAndUpdate(snip, { $set: { content } });
+		await this.container.db.snips.findOneAndUpdate(snip, { $set: { content } });
 
 		return response.edit(`**${snip.snipName}** has been updated.`);
 	}

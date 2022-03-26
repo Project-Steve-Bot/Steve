@@ -13,7 +13,7 @@ export class UserEvent extends Listener {
 		if (!interaction.isButton() || !interaction.customId.startsWith('poll')) return;
 		await interaction.deferUpdate();
 
-		const poll = await this.container.client.db.polls.findOne({ messageId: interaction.message.id });
+		const poll = await this.container.db.polls.findOne({ messageId: interaction.message.id });
 
 		if (!poll) {
 			return interaction.followUp({ content: "Something went wrong and I couldn't find this poll :(", ephemeral: true });
@@ -39,7 +39,7 @@ export class UserEvent extends Listener {
 			content = `Your vote has been changed to **${choice.text}**.`;
 		}
 
-		await this.container.client.db.polls.findOneAndReplace({ _id: poll._id }, newPoll);
+		await this.container.db.polls.findOneAndReplace({ _id: poll._id }, newPoll);
 		await interaction.followUp({ content, ephemeral: true });
 
 		const embed = new MessageEmbed(interaction.message.embeds[0]);

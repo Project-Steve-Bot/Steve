@@ -27,7 +27,7 @@ export class UserCommand extends SteveCommand {
 			? undefined
 			: await args.pick('guildTextChannel');
 
-		await this.client.db.guilds.updateOne(
+		await this.container.db.guilds.updateOne(
 			{ id: msg.guild.id },
 			{ $set: { channels: { reminder: channel?.id } } },
 			{ upsert: true }

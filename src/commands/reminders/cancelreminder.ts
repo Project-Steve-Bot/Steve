@@ -35,7 +35,7 @@ export class UserCommand extends SteveCommand {
 			);
 		}
 
-		await this.client.db.reminder.findOneAndDelete({ _id: reminder._id });
+		await this.container.db.reminder.findOneAndDelete({ _id: reminder._id });
 
 		return response.edit(
 			`I have deleted ${

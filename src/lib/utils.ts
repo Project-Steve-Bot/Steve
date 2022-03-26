@@ -25,7 +25,7 @@ export function dateToTimestamp(date: Date, type: TimestampType = 't'): string {
 export async function getUserReminders(
 	user: DbUser
 ): Promise<WithId<Reminder>[]> {
-	const reminders = await container.client.db.reminder
+	const reminders = await container.db.reminder
 		.find({ user: user.id })
 		.toArray();
 	return reminders.sort((a, b) => a.expires.valueOf() - b.expires.valueOf());
@@ -78,7 +78,7 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 		await msg.reply({ content: reason, allowedMentions: { repliedUser: ping } });
 	}
 
-	const dbGuild = await container.client.db.guilds.findOne({ id: msg.guildId });
+	const dbGuild = await container.db.guilds.findOne({ id: msg.guildId });
 
 	if (!dbGuild?.count) {
 		throw new Error('Cannot reset count in a guild with now running count.');
@@ -119,7 +119,7 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 		started: new Date()
 	};
 
-	const newGuild = (await container.client.db.guilds.findOneAndUpdate(
+	const newGuild = (await container.db.guilds.findOneAndUpdate(
 		{ _id: dbGuild._id },
 		{ $set: { count: newCountData } },
 		{ returnDocument: 'after' }

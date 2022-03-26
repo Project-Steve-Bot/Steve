@@ -22,7 +22,7 @@ export class UserCommand extends SteveCommand {
 
 		const response = await sendLoadingMessage(msg);
 
-		const faxUsers = await this.client.db.users.find({ 'fax.number': { $ne: null } }).toArray();
+		const faxUsers = await this.container.db.users.find({ 'fax.number': { $ne: null } }).toArray();
 
 		const faxNumbers = faxUsers.map((user) => user.fax?.number).filter((hasNum) => hasNum);
 
@@ -30,7 +30,7 @@ export class UserCommand extends SteveCommand {
 			return response.edit(`${number} is already in use`);
 		}
 
-		await this.client.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { 'fax.number': number } }, { upsert: true });
+		await this.container.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { 'fax.number': number } }, { upsert: true });
 
 		return response.edit(`Your fax number is now ${number}. Be sure to set where you'll receive faxes with \`${ctx.prefix}setdesk\``);
 	}

@@ -2,24 +2,22 @@ import 'module-alias/register';
 import '@lib/setup';
 import { LogLevel } from '@sapphire/framework';
 import { SteveBoi } from '@lib/extensions/SteveBoi';
-import { MongoClient } from 'mongodb';
+import { startMongo } from '@lib/mongo';
 
 const main = async () => {
-	if (!process.env.MONGO_CONNECTION) {
-		throw new Error('No database connection string provided.');
-	}
-	const mongo = new MongoClient(process.env.MONGO_CONNECTION);
+	startMongo();
 
-	await mongo.connect();
+	const prefix = process.env.PREFIX ?? 's;';
+	const regexPrefix = new RegExp(`^${(process.env.BOT_NAME ?? 'steve').toLowerCase()},( )?`, 'i');
 	const client = new SteveBoi(
 		{
-			defaultPrefix: 'd;',
-			regexPrefix: /^dave,( )?/i,
+			defaultPrefix: prefix,
+			regexPrefix,
 			fetchPrefix: (msg) => {
 				if (msg.guild) {
-					return ['d;'];
+					return [prefix];
 				}
-				return ['d;', ''];
+				return [prefix, ''];
 			},
 			caseInsensitivePrefixes: true,
 			caseInsensitiveCommands: true,
@@ -39,9 +37,8 @@ const main = async () => {
 				'DIRECT_MESSAGE_REACTIONS'
 			],
 			partials: ['CHANNEL']
-		},
-		mongo
-	);
+		});
+
 	try {
 		client.logger.info('Logging in');
 		await client.login();
@@ -50,7 +47,7 @@ const main = async () => {
 			activities: [
 				{
 					type: 'PLAYING',
-					name: 'd;help'
+					name: `${prefix}help`
 				}
 			]
 		});

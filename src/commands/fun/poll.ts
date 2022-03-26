@@ -85,7 +85,7 @@ export class UserCommand extends SteveCommand {
 			components.push(row);
 		});
 
-		await this.client.db.polls.insertOne({
+		await this.container.db.polls.insertOne({
 			messageId: response.id,
 			channelId: response.channel.id,
 			multiSelect: args.getFlags('multiselect', 'ms'),

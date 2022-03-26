@@ -21,7 +21,7 @@ export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
 		const faxNumber = await args.pick('string');
-		const recipient = await this.client.db.users.findOne({ 'fax.number': faxNumber });
+		const recipient = await this.container.db.users.findOne({ 'fax.number': faxNumber });
 
 		if (!recipient || !recipient.fax?.channel) {
 			return send(msg, "Sorry, Lorna doesn't have that number in her rolodex");

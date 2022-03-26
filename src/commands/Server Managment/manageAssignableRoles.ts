@@ -25,17 +25,17 @@ export class UserCommand extends SteveCommand {
 
 		const target = await args.pick('role');
 
-		const dbGuild = await this.client.db.guilds.findOne({ id: msg.guildId });
+		const dbGuild = await this.container.db.guilds.findOne({ id: msg.guildId });
 
 		let added = true;
 		if (dbGuild?.assignableRoles?.includes(target.id)) {
 			added = false;
-			await this.client.db.guilds.findOneAndUpdate(
+			await this.container.db.guilds.findOneAndUpdate(
 				{ id: msg.guildId },
 				{ $pull: { assignableRoles: target.id } },
 				{ upsert: true });
 		} else {
-			await this.client.db.guilds.findOneAndUpdate(
+			await this.container.db.guilds.findOneAndUpdate(
 				{ id: msg.guildId },
 				{ $push: { assignableRoles: target.id } },
 				{ upsert: true }

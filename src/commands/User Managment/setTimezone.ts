@@ -29,7 +29,7 @@ export class UserCommand extends SteveCommand {
 
 		const timezone = input.value.includes(':') ? input.value : `${input.value}:00`;
 
-		await this.client.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { timezone } }, { upsert: true });
+		await this.container.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { timezone } }, { upsert: true });
 
 		return send(msg, `Your timezone has been set to ${timezone}`);
 	}

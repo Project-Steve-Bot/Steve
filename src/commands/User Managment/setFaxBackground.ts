@@ -18,7 +18,7 @@ export class UserCommand extends SteveCommand {
 	public async messageRun(msg: Message, args: Args) {
 		const color = await args.pick('color');
 
-		await this.client.db.users.findOneAndUpdate(
+		await this.container.db.users.findOneAndUpdate(
 			{ id: msg.author.id },
 			{ $set: { 'fax.background': `#${color.toString(16).padStart(6, '0')}` } },
 			{ upsert: true }

@@ -53,11 +53,11 @@ export class UserCommand extends SteveCommand {
 		}
 
 		const channel = msg.guild
-			? (await this.client.db.guilds.findOne({ id: msg.guild.id }))
+			? (await this.container.db.guilds.findOne({ id: msg.guild.id }))
 				?.channels?.reminder ?? msg.channelId
 			: msg.channelId;
 
-		await this.client.db.reminder.insertOne({
+		await this.container.db.reminder.insertOne({
 			content,
 			user,
 			mode,

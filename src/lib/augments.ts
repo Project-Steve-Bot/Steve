@@ -1,6 +1,7 @@
-import type { SteveCollections } from '@lib/extensions/SteveBoi';
+import type { SteveCollections } from '@lib/mongo';
 import type { DbGuild } from '@lib/types/database';
 import type { WebhookClient } from 'discord.js';
+import type { MongoClient } from 'mongodb';
 declare module '@sapphire/framework' {
 	export interface DetailedDescriptionCommandObject {
 		usage?: string;
@@ -14,14 +15,13 @@ declare module '@sapphire/framework' {
 		destroy(): Promise<void>;
 	}
 
-	// export interface Container {
-	// 	logs: WebhookClient;
-	// }
 }
 
 declare module '@sapphire/pieces' {
 	interface Container {
-	  discordLogs?: WebhookClient; // Replace this with the connection type of your database library
+		discordLogs?: WebhookClient;
+		db: SteveCollections;
+		mongo: MongoClient;
 	}
 }
 

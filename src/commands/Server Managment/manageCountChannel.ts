@@ -27,7 +27,7 @@ export class UserCommand extends SteveCommand {
 			? undefined
 			: await args.pick('guildTextChannel');
 
-		const dbGuild = await this.client.db.guilds.findOne({ id: msg.guild.id });
+		const dbGuild = await this.container.db.guilds.findOne({ id: msg.guild.id });
 
 		if (dbGuild?.channels?.count) {
 			this.client.countChannels.delete(dbGuild.channels.count);
@@ -42,7 +42,7 @@ export class UserCommand extends SteveCommand {
 			started: new Date()
 		};
 
-		const newGuild = (await this.client.db.guilds.findOneAndUpdate(
+		const newGuild = (await this.container.db.guilds.findOneAndUpdate(
 			{ id: msg.guild.id },
 			{ $set: {
 				'channels.count': channel?.id,

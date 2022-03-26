@@ -37,7 +37,7 @@ export class UserCommand extends SteveCommand {
 			throw new UserError({ message: 'This command must be run in a server.', identifier: 'NoGuildSnipRun' });
 		}
 
-		const snips = await this.client.db.snips.find({ guildId: msg.guildId }).toArray();
+		const snips = await this.container.db.snips.find({ guildId: msg.guildId }).toArray();
 
 		const embed = new MessageEmbed()
 			.setTitle('Snippets')

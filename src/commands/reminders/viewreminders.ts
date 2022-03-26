@@ -25,7 +25,7 @@ export class UserCommand extends SteveCommand {
 			);
 		}
 
-		const user = await this.client.db.users.findOne({ id: msg.author.id });
+		const user = await this.container.db.users.findOne({ id: msg.author.id });
 
 		const color = user?.embedColor as ColorResolvable ?? '#adcb27';
 
