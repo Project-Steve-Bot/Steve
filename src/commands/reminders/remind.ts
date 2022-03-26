@@ -4,6 +4,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 import parse from 'parse-duration';
 import prettyMilliseconds from 'pretty-ms';
+import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { dateToTimestamp } from '@lib/utils';
 
@@ -16,8 +17,8 @@ import { dateToTimestamp } from '@lib/utils';
 			`12h Improve ${process.env.BOT_NAME}!`,
 			'"1 hour 30 minutes" Call mom --every="7 days"'
 		],
-		extendedHelp:
-			`• The duration of a reminder comes first now and needs to be in quotes if it has spaces.
+		extendedHelp: stripIndent`
+			• The duration of a reminder comes first now and needs to be in quotes if it has spaces.
 			• You can't have a reminder repeat faster than once a minute.
 			• Repeating reminders won't stop until you cancel them`
 	}

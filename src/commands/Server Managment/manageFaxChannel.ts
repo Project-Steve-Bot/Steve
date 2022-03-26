@@ -2,6 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandContext, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
+import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
@@ -11,7 +12,8 @@ import { SteveCommand } from '@lib/extensions/SteveCommand';
 	detailedDescription: {
 		usage: '<channel>',
 		examples: ['#faxes'],
-		extendedHelp: `• You can add multiple fax channels
+		extendedHelp: stripIndent`
+		• You can add multiple fax channels
 		• To remove a channel as a fax channel, run this command again
 		• Removing a channel will send a message in that channel to notify those who used to get their faxes there`
 	}

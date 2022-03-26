@@ -3,6 +3,7 @@ import { Args, CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
 import { Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import parse from 'parse-duration';
+import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 
@@ -17,7 +18,8 @@ import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 			'Is butt legs? | Butt is legs | Butt is butt',
 			'Should I do it? | Do it | Let your dreams be memes --ends:30m'
 		],
-		extendedHelp: `• Polls must have at least two options an no more than 10.
+		extendedHelp: stripIndent`
+		• Polls must have at least two options an no more than 10.
 		• You can allow people to vote for more than one option with the \`--multiselect\` flag.
 		• You can specify when a poll should end with the \`--ends\` option. By default, polls never end.`
 	}
