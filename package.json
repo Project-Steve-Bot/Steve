@@ -4,6 +4,9 @@
 	"main": "dist/index.js",
 	"author": "Ben",
 	"license": "MIT",
+	"engines": {
+		"node": "16.*"
+	},
 	"dependencies": {
 		"@discordjs/collection": "^0.4.0",
 		"@sapphire/decorators": "^4.2.5",
