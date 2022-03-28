@@ -5,7 +5,7 @@
 	"author": "Ben",
 	"license": "MIT",
 	"dependencies": {
-		"@discordjs/collection": "^0.4.0",
+		"@discordjs/collection": "^0.5.0",
 		"@sapphire/decorators": "^4.2.5",
 		"@sapphire/discord-utilities": "^2.8.0",
 		"@sapphire/discord.js-utilities": "^4.8.1",
