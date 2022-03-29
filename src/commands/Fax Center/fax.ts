@@ -109,8 +109,8 @@ export class UserCommand extends SteveCommand {
 				.setColor((recipient.embedColor || 0xadcb27) as ColorResolvable)
 		);
 
-		const faxDest = (this.client.channels.cache.get(recipient.fax.channel)
-			|| await this.client.channels.fetch(recipient.fax.channel)) as TextChannel;
+		const faxDest = (this.container.client.channels.cache.get(recipient.fax.channel)
+			|| await this.container.client.channels.fetch(recipient.fax.channel)) as TextChannel;
 
 		await faxDest.send({
 			content: `<@${recipient.id}>! I got a fax here for ya darlin`,

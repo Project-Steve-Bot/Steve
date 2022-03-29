@@ -1,11 +1,9 @@
 import type { CommandOptions, PieceContext } from '@sapphire/framework';
 import { SubCommandPluginCommand } from '@sapphire/plugin-subcommands';
 import { Permissions } from 'discord.js';
-import type { SteveBoi } from '@lib/extensions/SteveBoi';
 
 export abstract class SteveCommand extends SubCommandPluginCommand {
 
-	public client: SteveBoi;
 
 	public constructor(context: PieceContext, options: CommandOptions) {
 		super(context, {
@@ -16,7 +14,6 @@ export abstract class SteveCommand extends SubCommandPluginCommand {
 				  )
 				: 'EMBED_LINKS'
 		});
-		this.client = this.container.client as SteveBoi;
 	}
 
 	// TODO: Implement dynamic default subcommands

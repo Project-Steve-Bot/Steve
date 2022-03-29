@@ -30,7 +30,7 @@ export class UserCommand extends SteveCommand {
 		const dbGuild = await this.container.db.guilds.findOne({ id: msg.guild.id });
 
 		if (dbGuild?.channels?.count) {
-			this.client.countChannels.delete(dbGuild.channels.count);
+			this.container.client.countChannels.delete(dbGuild.channels.count);
 		}
 
 		const countData: CountData = dbGuild?.count || {
@@ -52,7 +52,7 @@ export class UserCommand extends SteveCommand {
 		)).value;
 
 		if (channel && newGuild) {
-			this.client.countChannels.set(channel.id, newGuild);
+			this.container.client.countChannels.set(channel.id, newGuild);
 			return send(msg, `<#${channel.id}> is now a counting channel.`);
 		}
 

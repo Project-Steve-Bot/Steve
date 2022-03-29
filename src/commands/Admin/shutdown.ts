@@ -12,7 +12,7 @@ export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message) {
 		await send(msg, 'Shutting down...');
-		await this.client.destroy();
+		await this.container.client.destroy();
 		process.exit();
 	}
 
