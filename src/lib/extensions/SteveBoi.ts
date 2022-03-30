@@ -4,18 +4,7 @@ import { schedule, ScheduledTask } from 'node-cron';
 import type { DbGuild } from '@lib/types/database';
 import { getChannel } from '@lib/utils';
 
-// export interface SteveCollections {
-// 	reminder: Collection<Reminder>;
-// 	guilds: Collection<DbGuild>;
-// 	users: Collection<DbUser>;
-// 	polls: Collection<Poll>;
-// 	snips: Collection<Snippet>;
-// }
-
 export class SteveBoi extends SapphireClient {
-
-	// private mongo: MongoClient;
-	// public db: SteveCollections;
 
 	private cronRunner: ScheduledTask;
 
@@ -23,20 +12,6 @@ export class SteveBoi extends SapphireClient {
 
 	public constructor(options: ClientOptions) {
 		super(options);
-
-		// this.mongo = mongo;
-
-		// const db = this.mongo.db(process.env.BOT_NAME);
-
-		// this.db = {
-		// 	reminder: db.collection<Reminder>('reminders'),
-		// 	guilds: db.collection<DbGuild>('guilds'),
-		// 	users: db.collection<DbUser>('users'),
-		// 	polls: db.collection<Poll>('polls'),
-		// 	snips: db.collection<Snippet>('snippets')
-		// };
-
-		this.logger.info('Connected to Mongo DB');
 
 		this.cronRunner = schedule('*/30 * * * * *', (now) =>
 			this.processCron(now)
