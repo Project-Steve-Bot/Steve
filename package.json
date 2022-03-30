@@ -21,6 +21,7 @@
 		"@sapphire/time-utilities": "^1.6.0",
 		"@sapphire/type": "^2.1.2",
 		"@sapphire/utilities": "^3.3.0",
+		"axios": "^0.26.1",
 		"canvas": "^2.9.0",
 		"colorette": "^2.0.16",
 		"common-tags": "^1.8.2",
