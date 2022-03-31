@@ -48,7 +48,7 @@ export class SteveBoi extends SapphireClient {
 			);
 
 			if (reminder.repeat) {
-				this.db.reminder.findOneAndReplace(
+				container.db.reminder.findOneAndReplace(
 					{ _id: reminder._id },
 					{
 						...reminder,
@@ -56,7 +56,7 @@ export class SteveBoi extends SapphireClient {
 					}
 				);
 			} else {
-				this.db.reminder.findOneAndDelete({ _id: reminder._id });
+				container.db.reminder.findOneAndDelete({ _id: reminder._id });
 			}
 		});
 	}
