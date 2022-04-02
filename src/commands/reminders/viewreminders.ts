@@ -44,16 +44,9 @@ export class UserCommand extends SteveCommand {
 
 		pages.forEach((page) => {
 			paginator.addPageEmbed((embed) =>
-				embed.setDescription(
-					page
-						.map(
-							(reminder, i) =>
-								`**${i + 1}:** ${this.getReminderContent(
-									reminder
-								)}`
-						)
-						.join('\n\n')
-				)
+				embed.setDescription(page.map((reminder, i) =>
+					`**${i + 1}:** ${this.getReminderContent(reminder, msg)}`
+				).join('\n\n'))
 			);
 		});
 
@@ -61,9 +54,9 @@ export class UserCommand extends SteveCommand {
 		return response;
 	}
 
-	private getReminderContent(reminder: Reminder): string {
+	private getReminderContent(reminder: Reminder, msg: Message): string {
 		return `${
-			reminder.mode === 'public'
+			reminder.mode === 'public' || msg.channel.type === 'DM'
 				? reminder.content
 				: 'Private reminder, contents hidden.'
 		}\nThis reminder goes off at ${dateToTimestamp(
