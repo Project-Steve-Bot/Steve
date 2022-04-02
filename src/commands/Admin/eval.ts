@@ -22,9 +22,11 @@ const ZWS = '\u200B';
 })
 export class UserCommand extends SteveCommand {
 
-	private SECRETS = process.env.DISCORD_TOKEN
-		? RegExp(process.env.DISCORD_TOKEN, 'g')
-		: null;
+	private SECRETS = [
+		process.env.DISCORD_TOKEN,
+		process.env.MONGO_CONNECTION,
+		process.env.LOG_HOOK
+	];
 
 	public async messageRun(message: Message, args: Args) {
 		const code = await args.rest('string');
@@ -34,23 +36,25 @@ export class UserCommand extends SteveCommand {
 			depth: Number(args.getOption('depth')) ?? 0,
 			showHidden: args.getFlags('hidden', 'showHidden', 'show')
 		});
-		const cleanResult = this.SECRETS
-			? result
-				.replace(this.SECRETS, 'This information has been hidden')
-				.replace(/`/g, `\`${ZWS}`)
-			: result.replace(/`/g, `\`${ZWS}`);
+		let cleanResult = result.replace(/`/g, `\`${ZWS}`);
+
+		this.SECRETS.forEach(secret => {
+			if (secret) {
+				cleanResult = cleanResult.replaceAll(secret, 'This information has been hidden');
+			}
+		});
 
 		const output = success
 			? codeBlock('js', cleanResult)
 			: `**ERROR**: ${codeBlock('bash', cleanResult)}`;
 		if (args.getFlags('silent', 's')) return null;
 
-		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
+		const typeFooter = `**Type**: ${codeBlock('typescript', type || 'unknown')}`;
 
 		if (output.length > 2000) {
 			return send(message, {
 				content: `Output was too long... sent the result as a file.\n\n${typeFooter}`,
-				files: [{ attachment: Buffer.from(output), name: 'output.js' }]
+				files: [{ attachment: Buffer.from(cleanResult), name: `output.${success ? 'js' : 'sh'}` }]
 			});
 		}
 
