@@ -1,5 +1,6 @@
 import { Listener, ListenerOptions, PieceContext, Store } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
+import { Collection } from 'discord.js';
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -19,6 +20,7 @@ export class UserEvent extends Listener {
 		this.printStoreDebugInformation();
 		this.logStartupToDiscord();
 		this.createCountChannelCache();
+		this.createCmdStatsCache();
 	}
 
 	private async logStartupToDiscord() {
@@ -33,6 +35,15 @@ export class UserEvent extends Listener {
 			avatarURL: user.displayAvatarURL(),
 			content: `${process.env.BOT_NAME} started. Ready to serve ${this.container.client.guilds.cache.size} guilds.`
 		});
+	}
+
+	private async createCmdStatsCache() {
+		const cmdStats = await this.container.db.cmdStats.findOne();
+		this.container.cmdStats = new Collection<string, number>();
+
+		cmdStats?.data.forEach(stat => this.container.cmdStats.set(stat.command, stat.uses));
+
+		this.container.statusUpdateFlag = 0;
 	}
 
 	private async createCountChannelCache() {

@@ -1,11 +1,15 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
+import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { createCanvas } from 'canvas';
 import { oneLine } from 'common-tags';
-import { AnyChannel, ColorResolvable, Guild, Message, MessageEmbed, User } from 'discord.js';
+import { AnyChannel, Collection, ColorResolvable, Guild, Message, MessageAttachment, MessageEmbed, User } from 'discord.js';
 import type { WithId } from 'mongodb';
 import prettyMilliseconds from 'pretty-ms';
 import { RandomLoadingMessage } from '@lib/constants';
 import type { Reminder, DbUser, CountData } from '@lib/types/database';
+
 
 export function pickRandom<T>(array: readonly T[]): T {
 	const { length } = array;
@@ -133,4 +137,67 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 	container.client.countChannels.set(msg.channelId, newGuild);
 
 	msg.channel.send('Count restarting...\n0');
+}
+
+export function makeChart(data: Collection<string, number>, { name, title }: { name?: string, title?: string}): MessageAttachment {
+	const canvas = createCanvas(1000, 600);
+	const context = canvas.getContext('2d');
+
+	const displayChart = new Chart(context, {
+		type: 'bar',
+		data: {
+			labels: Array.from(data.keys()),
+			datasets: [{
+				data: Array.from(data.values()),
+				backgroundColor: '#5865F2'
+			}]
+		},
+		options: {
+			layout: {
+				padding: 30
+			},
+			scales: {
+				y: {
+					beginAtZero: true,
+					grid: { display: false }
+				},
+				x: {
+					display: false,
+					grid: { display: false }
+				}
+			},
+			indexAxis: 'y',
+			plugins: {
+				legend: { display: false },
+				title: { text: title ?? '', display: !!title },
+				datalabels: {
+					anchor: 'end',
+					clamp: true,
+					backgroundColor: '#37393f',
+					borderRadius: 10
+				}
+			}
+		},
+		plugins: [
+			ChartDataLabels,
+			{
+				id: 'custom_canvas_background_color',
+				beforeDraw: (chart) => {
+					const ctx = chart.canvas.getContext('2d');
+					if (!ctx) return;
+					ctx.save();
+					ctx.globalCompositeOperation = 'destination-over';
+					ctx.fillStyle = '#37393f';
+					ctx.fillRect(0, 0, chart.width, chart.height);
+					ctx.restore();
+				}
+			}
+		]
+	});
+	displayChart.render();
+
+	return new MessageAttachment(canvas.toBuffer(), `${name ?? 'chart'}.png`)
+		.setDescription(`A bar graph${title ? ` titled ${title}` : ''}. The data on the graph is; ${
+			data.map((value, key) => `${key}: ${value}`).join(', ')
+		}.`);
 }

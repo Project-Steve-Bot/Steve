@@ -1,6 +1,6 @@
 import { Collection, MongoClient } from 'mongodb';
 import { container } from '@sapphire/framework';
-import type { Reminder, DbGuild, DbUser, Poll, Snippet } from '@lib/types/database';
+import type { Reminder, DbGuild, DbUser, Poll, Snippet, CmdStats } from '@lib/types/database';
 
 export interface SteveCollections {
 	reminder: Collection<Reminder>;
@@ -8,6 +8,7 @@ export interface SteveCollections {
 	users: Collection<DbUser>;
 	polls: Collection<Poll>;
 	snips: Collection<Snippet>;
+	cmdStats: Collection<CmdStats>;
 }
 
 export async function startMongo() {
@@ -25,7 +26,8 @@ export async function startMongo() {
 		guilds: database.collection<DbGuild>('guilds'),
 		users: database.collection<DbUser>('users'),
 		polls: database.collection<Poll>('polls'),
-		snips: database.collection<Snippet>('snippets')
+		snips: database.collection<Snippet>('snippets'),
+		cmdStats: database.collection<CmdStats>('commandStats')
 	};
 
 	container.mongo = mongo;

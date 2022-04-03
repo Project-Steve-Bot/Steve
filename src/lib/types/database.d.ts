@@ -58,3 +58,10 @@ export interface Snippet {
 	snipName: string;
 	content: string;
 }
+
+export interface CmdStats {
+	data: {
+		command: string;
+		uses: number;
+	}[];
+}

@@ -1,7 +1,7 @@
 import { container, SapphireClient } from '@sapphire/framework';
 import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
-import type { DbGuild } from '@lib/types/database';
+import type { CmdStats, DbGuild } from '@lib/types/database';
 import { getChannel } from '@lib/utils';
 
 export class SteveBoi extends SapphireClient {
@@ -27,6 +27,21 @@ export class SteveBoi extends SapphireClient {
 	private async processCron(now: Date) {
 		this.runReminder(now);
 		this.closePoll(now);
+		this.updateStats();
+	}
+
+	private async updateStats() {
+		if (container.statusUpdateFlag === 0) {
+			return;
+		}
+
+		const document: CmdStats = { data: [] };
+
+		container.cmdStats.forEach((uses, command) => document.data.push({ command, uses }));
+
+		await container.db.cmdStats.findOneAndReplace({}, document, { upsert: true });
+
+		container.statusUpdateFlag = 0;
 	}
 
 	private async runReminder(now: Date) {

@@ -1,6 +1,6 @@
 import type { SteveCollections } from '@lib/mongo';
 import type { DbGuild } from '@lib/types/database';
-import type { WebhookClient } from 'discord.js';
+import type { Collection, WebhookClient } from 'discord.js';
 import type { MongoClient } from 'mongodb';
 declare module '@sapphire/framework' {
 	export interface DetailedDescriptionCommandObject {
@@ -22,6 +22,8 @@ declare module '@sapphire/pieces' {
 		discordLogs?: WebhookClient;
 		db: SteveCollections;
 		mongo: MongoClient;
+		cmdStats: Collection<string, number>;
+		statusUpdateFlag: number;
 	}
 }
 

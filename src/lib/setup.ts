@@ -11,6 +11,8 @@ import { inspect } from 'util';
 import { WebhookClient } from 'discord.js';
 import { srcDir } from '@lib/constants';
 import { container } from '@sapphire/framework';
+import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 // Read env var
 config({ path: join(srcDir, '.env') });
@@ -24,3 +26,7 @@ createColors({ useColor: true });
 if (process.env.LOG_HOOK) {
 	container.discordLogs = new WebhookClient({ url: process.env.LOG_HOOK });
 }
+
+Chart.defaults.color = 'white';
+Chart.defaults.font.size = 26;
+Chart.register(ChartDataLabels);
