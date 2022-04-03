@@ -1,10 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, UserError } from '@sapphire/framework';
+import { Args, CommandContext, Result, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { Message, MessageEmbed } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { sendLoadingMessage } from '@lib/utils';
+import type { SnippetArgument } from '@root/src/arguments/snippet';
+import type { WithId } from 'mongodb';
+import type { Snippet } from '@lib/types/database';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'View and run snippets.',
@@ -21,16 +24,32 @@ import { sendLoadingMessage } from '@lib/utils';
 })
 export class UserCommand extends SteveCommand {
 
-	public async run(msg: Message, args: Args) {
+	public async run(msg: Message, args: Args, ctx: CommandContext): Promise<Message<boolean>> {
 		if (args.finished) {
 			return this.list(msg);
 		}
-		const { content } = await args.pick('snippet');
 
-		return send(msg, content);
+		const snipArg = this.container.client.stores.get('arguments').get('snippet') as SnippetArgument;
+
+		const snipResult: Result<WithId<Snippet>, UserError> = await snipArg.run(await args.rest('string'), {
+			command: this,
+			commandContext: ctx,
+			args,
+			argument: snipArg,
+			message: msg
+		});
+
+		if (!snipResult.success) {
+			throw new UserError({
+				identifier: 'InvalidSnippet',
+				message: 'Could not find requested snippet.'
+			});
+		}
+
+		return send(msg, snipResult.value.content);
 	}
 
-	public async list(msg: Message) {
+	public async list(msg: Message): Promise<Message<boolean>> {
 		const response = await sendLoadingMessage(msg);
 
 		if (!msg.inGuild()) {

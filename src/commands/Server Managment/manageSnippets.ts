@@ -41,7 +41,7 @@ export class UserCommand extends SteveCommand {
 
 		const snipName = (await args.pick('string')).toLocaleLowerCase();
 		const content = await args.rest('string');
-		const snipId = snipName.replace(' ', '-');
+		const snipId = snipName.replaceAll(' ', '-');
 
 		await this.container.db.snips.insertOne({
 			guildId: msg.guildId,
