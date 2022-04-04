@@ -2,7 +2,7 @@
 A lot has changed. If you want something else to change, use the `suggest` command to let me know.
 ## Commands
 Commands not listed below are not in 3.0.0.
-- `assign`: Identical behavior to previous version.
+- `assign`: Only works on one role at a time. 
 - `setembedcolor`: Allows the user to set their accent color for embeds. Replaces `userconf`.
 - `setfaxtext`: Allows the user to set the text color of faxes they receive. Replaces `userconf`.
 - `settimezone`: Allows the user to set their timezone for use with `remind`. New functionality.
