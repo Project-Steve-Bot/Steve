@@ -19,7 +19,10 @@ declare module '@sapphire/framework' {
 
 declare module '@sapphire/pieces' {
 	interface Container {
-		discordLogs?: WebhookClient;
+		hooks: {
+			discordLogs: WebhookClient | null;
+			suggest: WebhookClient | null;
+		}
 		db: SteveCollections;
 		mongo: MongoClient;
 		cmdStats: Collection<string, number>;

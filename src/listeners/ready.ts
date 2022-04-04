@@ -24,13 +24,13 @@ export class UserEvent extends Listener {
 	}
 
 	private async logStartupToDiscord() {
-		if (!this.container.discordLogs) return;
+		if (!this.container.hooks.discordLogs) return;
 
 		const { user } = this.container.client;
 
 		if (!user) return;
 
-		this.container.discordLogs.send({
+		this.container.hooks.discordLogs.send({
 			username: user.username,
 			avatarURL: user.displayAvatarURL(),
 			content: `${process.env.BOT_NAME} started. Ready to serve ${this.container.client.guilds.cache.size} guilds.`

@@ -1,9 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { getChannel } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Send a suggestion to Ben.',
@@ -11,34 +10,29 @@ import { getChannel } from '@lib/utils';
 })
 export class UserCommand extends SteveCommand {
 
-	private suggestChannel: TextChannel | null = null;
-
 	public async messageRun(msg: Message, args: Args) {
-		if (!process.env.SUGGEST_CHANNEL) return;
-		if (!this.suggestChannel) {
-			this.suggestChannel = await getChannel(process.env.SUGGEST_CHANNEL) as TextChannel;
-		}
+		if (!this.container.hooks.suggest) return;
 
 		const suggestion = await args.rest('string');
 
-		await this.suggestChannel?.send({ embeds: [
-			new MessageEmbed()
-				.setAuthor({ name: msg.author.tag, iconURL: msg.author.displayAvatarURL({ dynamic: true }) })
-				.setTitle('Feedback')
-				.setDescription(suggestion)
-				.setTimestamp()
-		] });
+		await this.container.hooks.suggest.send({ username: this.container.client.user?.username,
+			avatarURL: this.container.client.user?.displayAvatarURL(),
+			embeds: [
+				new MessageEmbed()
+					.setAuthor({ name: msg.author.tag, iconURL: msg.author.displayAvatarURL({ dynamic: true }) })
+					.setTitle('Feedback')
+					.setDescription(suggestion)
+					.setTimestamp()
+			] });
 
 		return send(msg, 'Your feedback has been sent to Ben!');
 	}
 
 	public async onLoad() {
-		if (!process.env.SUGGEST_CHANNEL) {
+		if (!this.container.hooks.suggest) {
 			this.enabled = false;
 			return;
 		}
-
-		this.suggestChannel = await getChannel(process.env.SUGGEST_CHANNEL) as TextChannel;
 	}
 
 }

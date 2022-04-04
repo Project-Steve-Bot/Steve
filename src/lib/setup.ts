@@ -23,9 +23,10 @@ inspect.defaultOptions.depth = 1;
 // Enable colorette
 createColors({ useColor: true });
 
-if (process.env.LOG_HOOK) {
-	container.discordLogs = new WebhookClient({ url: process.env.LOG_HOOK });
-}
+container.hooks = {
+	discordLogs: process.env.LOG_HOOK ? new WebhookClient({ url: process.env.LOG_HOOK }) : null,
+	suggest: process.env.SUGGEST_HOOK ? new WebhookClient({ url: process.env.SUGGEST_HOOK }) : null
+};
 
 Chart.defaults.color = 'white';
 Chart.defaults.font.size = 26;
