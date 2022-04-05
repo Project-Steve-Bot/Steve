@@ -36,8 +36,9 @@ export class UserCommand extends SteveCommand {
 			].includes(action.customId))
 		);
 
-		paginator.addPageEmbed((embed) =>
-			embed.setThumbnail(client.user?.displayAvatarURL() ?? '')
+		paginator.addPage({
+			embeds: [new MessageEmbed()
+				.setThumbnail(client.user?.displayAvatarURL() ?? '')
 				.addFields([
 					{ name: 'Users', value: client.users.cache.size.toString(), inline: true },
 					{ name: 'Channels', value: client.channels.cache.size.toString(), inline: true },
@@ -49,8 +50,9 @@ export class UserCommand extends SteveCommand {
 					{ name: 'Sapphire Version', value: `v${sapphireVersion}`, inline: true },
 					{ name: 'Node.js Version', value: process.version, inline: true }
 
-				])
-		);
+				])],
+			files: []
+		});
 
 		paginator.addPage({
 			files: [makeChart(this.container.cmdStats, { title: 'Command Usage', name: 'cmdUse' })],
