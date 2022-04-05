@@ -201,3 +201,10 @@ export function makeChart(data: Collection<string, number>, { name, title }: { n
 			data.map((value, key) => `${key}: ${value}`).join(', ')
 		}.`);
 }
+
+export function chunkCollection<K, V>(col: Collection<K, V>, size: number): Array<Collection<K, V>> {
+	const chunks: Collection<K, V>[] = [];
+	const colAsArr = Array.from(col.entries());
+	while (colAsArr.length) chunks.push(new Collection(colAsArr.splice(0, size)));
+	return chunks;
+}

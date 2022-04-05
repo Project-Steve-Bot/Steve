@@ -5,7 +5,7 @@ import { Message, MessageEmbed, version as discordVersion } from 'discord.js';
 import { readFileSync } from 'fs';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { makeChart } from '@lib/utils';
+import { chunkCollection, makeChart } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: `Get some stats about ${process.env.BOT_NAME}.`,
@@ -54,10 +54,15 @@ export class UserCommand extends SteveCommand {
 			files: []
 		});
 
-		paginator.addPage({
-			files: [makeChart(this.container.cmdStats, { title: 'Command Usage', name: 'cmdUse' })],
-			embeds: [new MessageEmbed().setImage('attachment://cmdUse.png')]
-		});
+		const statsPages = chunkCollection(this.container.cmdStats, 10);
+
+		statsPages.forEach((statsPage, idx) =>
+			paginator.addPage({
+				files: [makeChart(statsPage, { title: 'Command Usage', name: `cmdUse${idx}` })],
+				embeds: [new MessageEmbed().setImage(`attachment://cmdUse${idx}.png`)]
+			})
+		);
+
 
 		return paginator.run(msg, msg.author);
 	}
