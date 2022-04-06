@@ -16,11 +16,11 @@ export class UserEvent extends Listener {
 			if (lowerContent.includes('thank')) {
 				msg.react('721911747325460501');
 			}
-		}
 
-		if (lowerContent.includes('love you')) {
-			msg.react('739973420841959549');
-			msg.reply({ content: 'I love you too', allowedMentions: { repliedUser: false } });
+			if (lowerContent.includes('love you')) {
+				msg.react('739973420841959549');
+				msg.reply({ content: 'I love you too', allowedMentions: { repliedUser: false } });
+			}
 		}
 	}
 
