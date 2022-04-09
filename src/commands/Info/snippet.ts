@@ -1,13 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, CommandContext, Result, UserError } from '@sapphire/framework';
+import { Args, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { Message, MessageEmbed } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { sendLoadingMessage } from '@lib/utils';
-import type { SnippetArgument } from '@root/src/arguments/snippet';
-import type { WithId } from 'mongodb';
-import type { Snippet } from '@lib/types/database';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'View and run snippets.',
@@ -24,20 +21,12 @@ import type { Snippet } from '@lib/types/database';
 })
 export class UserCommand extends SteveCommand {
 
-	public async run(msg: Message, args: Args, ctx: CommandContext): Promise<Message<boolean>> {
+	public async run(msg: Message, args: Args): Promise<Message<boolean>> {
 		if (args.finished) {
 			return this.list(msg);
 		}
 
-		const snipArg = this.container.client.stores.get('arguments').get('snippet') as SnippetArgument;
-
-		const snipResult: Result<WithId<Snippet>, UserError> = await snipArg.run(await args.rest('string'), {
-			command: this,
-			commandContext: ctx,
-			args,
-			argument: snipArg,
-			message: msg
-		});
+		const snipResult = await args.restResult('snippet');
 
 		if (!snipResult.success) {
 			throw new UserError({
