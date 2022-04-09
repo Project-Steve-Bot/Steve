@@ -31,7 +31,7 @@ export class UserCommand extends SteveCommand {
 		const targetData = await this.container.db.users.findOne({ id: target.id });
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: target.user.discriminator, iconURL: target.displayAvatarURL({ dynamic: true }) })
+			.setAuthor({ name: target.user.tag, iconURL: target.displayAvatarURL({ dynamic: true }) })
 			.setColor((targetData?.embedColor || 'AQUA') as ColorResolvable)
 			.addFields([
 				{ name: 'Display Name', value: target.displayName, inline: true },
