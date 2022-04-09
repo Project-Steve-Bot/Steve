@@ -115,7 +115,7 @@ export class SteveBoi extends SapphireClient {
 
 			await msg.edit({ components, embeds: [embed] });
 
-			this.db.polls.findOneAndDelete({ _id: poll._id });
+			container.db.polls.findOneAndDelete({ _id: poll._id });
 		});
 	}
 

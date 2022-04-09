@@ -10,7 +10,6 @@ declare module '@sapphire/framework' {
 	}
 
 	export interface SapphireClient {
-		db: SteveCollections;
 		countChannels: Map<string, DbGuild>;
 		destroy(): Promise<void>;
 	}

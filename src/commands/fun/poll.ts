@@ -27,7 +27,7 @@ import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
-		let choices = (await args.rest('string')).split('|');
+		let choices = (await args.rest('string')).split('|').map(item => item.trim());
 		const question = choices.shift();
 
 		if (!question || choices.length < 2 || choices.length > 10) {
