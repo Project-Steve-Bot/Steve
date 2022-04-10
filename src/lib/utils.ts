@@ -208,3 +208,7 @@ export function chunkCollection<K, V>(col: Collection<K, V>, size: number): Arra
 	while (colAsArr.length) chunks.push(new Collection(colAsArr.splice(0, size)));
 	return chunks;
 }
+
+export function sendToFile(content: string, { filename, extension = 'txt' }: { filename: string, extension?: string}): MessageAttachment {
+	return new MessageAttachment(Buffer.from(content), `${filename}.${extension}`);
+}
