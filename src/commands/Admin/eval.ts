@@ -6,6 +6,9 @@ import { codeBlock, isThenable } from '@sapphire/utilities';
 import type { Message } from 'discord.js';
 import { inspect } from 'util';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { sendToFile } from '@lib/utils';
+import { Stopwatch } from '@sapphire/stopwatch';
+import { stripIndents } from 'common-tags';
 
 const ZWS = '\u200B';
 @ApplyOptions<CommandOptions>({
@@ -31,11 +34,14 @@ export class UserCommand extends SteveCommand {
 	public async messageRun(message: Message, args: Args) {
 		const code = await args.rest('string');
 
+		const stopwatch = new Stopwatch();
 		const { result, success, type } = await this.eval(message, code, {
 			async: args.getFlags('async'),
 			depth: Number(args.getOption('depth')) ?? 0,
 			showHidden: args.getFlags('hidden', 'showHidden', 'show')
 		});
+		stopwatch.stop();
+
 		let cleanResult = result.replace(/`/g, `\`${ZWS}`);
 
 		this.SECRETS.forEach(secret => {
@@ -49,16 +55,17 @@ export class UserCommand extends SteveCommand {
 			: `**ERROR**: ${codeBlock('bash', cleanResult)}`;
 		if (args.getFlags('silent', 's')) return null;
 
-		const typeFooter = `**Type**: ${codeBlock('typescript', type || 'unknown')}`;
+		const footer = stripIndents`**Type**: ${codeBlock('ts', type || 'unknown')}
+		⏱️ ${stopwatch.toString()}`;
 
 		if (output.length > 2000) {
 			return send(message, {
-				content: `Output was too long... sent the result as a file.\n\n${typeFooter}`,
-				files: [{ attachment: Buffer.from(cleanResult), name: `output.${success ? 'js' : 'sh'}` }]
+				content: `Output was too long... sent the result as a file.\n\n${footer}`,
+				files: [sendToFile(cleanResult, { filename: 'output', extension: success ? 'js' : 'sh' })]
 			});
 		}
 
-		return send(message, `${output}\n${typeFooter}`);
+		return send(message, `${output}\n${footer}`);
 	}
 
 	private async eval(
