@@ -1,7 +1,12 @@
-import { Listener } from '@sapphire/framework';
+import { Events, Listener } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { resetCount } from '@lib/utils';
+import { ApplyOptions } from '@sapphire/decorators';
 
+@ApplyOptions<Listener.Options>({
+	event: Events.MessageCreate,
+	name: 'Count - MessageCreate'
+})
 export class UserEvent extends Listener {
 
 	public async run(msg: Message) {
@@ -57,6 +62,7 @@ export class UserEvent extends Listener {
 		}
 
 		this.container.client.countChannels.set(msg.channelId, newGuild);
+		return;
 	}
 
 }

@@ -14,7 +14,7 @@ export class UserEvent extends Listener<typeof Events.UnknownCommand> {
 
 		if (!snip) return;
 
-		send(msg, snip.content);
+		return send(msg, snip.content);
 	}
 
 }

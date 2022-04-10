@@ -26,6 +26,7 @@ export class UserEvent extends Listener {
 		} else if (this.loveRegex.test(lowerContent)) {
 			msg.react('741082461949132920');
 		}
+		return;
 	}
 
 }

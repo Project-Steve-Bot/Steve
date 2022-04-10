@@ -21,6 +21,7 @@ export class UserEvent extends Listener {
 		this.logStartupToDiscord();
 		this.createCountChannelCache();
 		this.createCmdStatsCache();
+		return;
 	}
 
 	private async logStartupToDiscord() {
