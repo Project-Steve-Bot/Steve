@@ -1,18 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { CommandErrorPayload, Events, Listener } from '@sapphire/framework';
+import { Events, Listener } from '@sapphire/framework';
 import { buildErrorPayload } from '@lib/utils';
 
 @ApplyOptions<Listener.Options>({
-	event: Events.CommandError,
-	name: 'Error log - CommandError'
+	event: Events.Error,
+	name: 'Error log - Error'
 })
 export class UserEvent extends Listener {
 
-	public run(error: Error, { message: msg, command }: CommandErrorPayload) {
-		if (error.name === 'UserError') return;
-
+	public run(error: Error) {
 		const [embed, files] = buildErrorPayload(error);
-		embed.addField(`Command: ${command.name}`, `\`${msg.content}\`\n[Jump to message](${msg.url})`);
 
 		this.container.hooks.discordLogs?.send({
 			avatarURL: this.container.client.user?.displayAvatarURL(),

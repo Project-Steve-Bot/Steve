@@ -1,7 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, CommandOptions, DetailedDescriptionCommand } from '@sapphire/framework';
+import type { Args, Command, CommandOptions, DetailedDescriptionCommand } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { EmbedField, Message, MessageEmbed, Util } from 'discord.js';
+import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
 	description: `Shows info about ${process.env.BOT_NAME}'s commands.`,
@@ -10,7 +11,7 @@ import { EmbedField, Message, MessageEmbed, Util } from 'discord.js';
 		examples: ['', 'remind']
 	}
 })
-export class UserCommand extends Command {
+export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args, ctx: Command.RunContext) {
 		const commands = msg.client.stores.get('commands');

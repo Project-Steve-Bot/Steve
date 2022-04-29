@@ -1,4 +1,4 @@
-import { container, SapphireClient } from '@sapphire/framework';
+import { container, Events, SapphireClient } from '@sapphire/framework';
 import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
@@ -25,9 +25,11 @@ export class SteveBoi extends SapphireClient {
 	}
 
 	private async processCron(now: Date) {
-		this.runReminder(now);
-		this.closePoll(now);
-		this.updateStats();
+		Promise.all([
+			this.runReminder(now),
+			this.closePoll(now),
+			this.updateStats()
+		]).catch(async error => this.emit(Events.Error, error))
 	}
 
 	private async updateStats() {
