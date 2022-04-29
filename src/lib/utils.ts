@@ -212,3 +212,30 @@ export function chunkCollection<K, V>(col: Collection<K, V>, size: number): Arra
 export function sendToFile(content: string, { filename, extension = 'txt' }: { filename: string, extension?: string}): MessageAttachment {
 	return new MessageAttachment(Buffer.from(content), `${filename}.${extension}`);
 }
+
+export function buildErrorPayload(error: Error): [MessageEmbed, MessageAttachment[]] {
+	const embed = new MessageEmbed()
+		.setColor('RED')
+		.setTitle(error.name)
+		.setTimestamp();
+	const files: MessageAttachment[] = [];
+
+	if (error.message) {
+		if (error.message.length < 1000) {
+			embed.setDescription(`\`\`\`\n${error.message}\`\`\``);
+		} else {
+			embed.setDescription(`Full error message too big\n\`\`\`\n${error.message.slice(0, 950)}...\`\`\``);
+			files.push(sendToFile(error.message, { filename: 'ErrorMessage' }));
+		}
+	}
+
+	if (error.stack) {
+		if (error.stack.length < 1000) {
+			embed.addField('Stack Trace', `\`\`\`js\n${error.stack}\`\`\``, false);
+		} else {
+			embed.addField('Stack Trace', 'Full stack too big, sent to file.', false);
+			files.push(sendToFile(error.stack, { filename: 'StackTrace', extension: 'js' }));
+		}
+	}
+	return [embed, files];
+}
