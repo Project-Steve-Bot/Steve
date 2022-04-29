@@ -3,7 +3,7 @@ import type { CommandOptions } from '@sapphire/framework';
 import axios from 'axios';
 import { Message, MessageEmbed } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { sendLoadingMessage } from '@lib/utils';
+import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Find out if Discord is on fire.',
@@ -27,10 +27,15 @@ export class UserCommand extends SteveCommand {
 		const embed = new MessageEmbed()
 			.setColor(isOnFire ? 'RED' : 'BLURPLE')
 			.setTitle(isOnFire ? 'Discord is currently on fire' : currentStatus.status.description)
+			.setURL(currentStatus.page.url)
 			.setThumbnail(isOnFire
 				? 'https://cdn.discordapp.com/attachments/944669817137418333/958870020916650065/unknown.png'
 				: 'https://cdn.discordapp.com/attachments/944669817137418333/958869677499629598/unknown.png')
-			.setDescription(ongoingIncidents ? currentStatus.incidents.map(i => i.name).join('\n') : 'No ongoing incidents.')
+			.setDescription(
+				ongoingIncidents
+					? currentStatus.incidents.map(i => `[${i.name}](${i.shortlink}): started at ${dateToTimestamp(new Date(i.created_at), 'f')}`).join('\n')
+					: `No ongoing incidents.`
+			)
 			.addFields(componentsOperational
 				? [{ name: 'All components operational', value: 'no fires here' }]
 				: currentStatus.components
