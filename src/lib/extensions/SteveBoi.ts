@@ -29,7 +29,7 @@ export class SteveBoi extends SapphireClient {
 			this.runReminder(now),
 			this.closePoll(now),
 			this.updateStats()
-		]).catch(async error => this.emit(Events.Error, error))
+		]).catch(async error => this.emit(Events.Error, error));
 	}
 
 	private async updateStats() {
