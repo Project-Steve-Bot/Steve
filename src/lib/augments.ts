@@ -1,5 +1,6 @@
 import type { SteveCollections } from '@lib/mongo';
 import type { DbGuild } from '@lib/types/database';
+import type { Octokit } from '@octokit/rest';
 import type { Collection, WebhookClient } from 'discord.js';
 import type { MongoClient } from 'mongodb';
 declare module '@sapphire/framework' {
@@ -26,6 +27,7 @@ declare module '@sapphire/pieces' {
 		mongo: MongoClient;
 		cmdStats: Collection<string, number>;
 		statusUpdateFlag: number;
+		gitHub: Octokit | null;
 	}
 }
 

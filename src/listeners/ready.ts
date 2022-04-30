@@ -1,6 +1,8 @@
+import { Octokit } from '@octokit/rest';
 import { Listener, ListenerOptions, PieceContext, Store } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
 import { Collection } from 'discord.js';
+import { readFileSync } from 'fs';
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -21,6 +23,7 @@ export class UserEvent extends Listener {
 		this.logStartupToDiscord();
 		this.createCountChannelCache();
 		this.createCmdStatsCache();
+		this.gitHubLogin();
 		return;
 	}
 
@@ -38,6 +41,14 @@ export class UserEvent extends Listener {
 		});
 	}
 
+	private async gitHubLogin() {
+		if (process.env.GIT_HUB && process.env.REPO_OWNER && process.env.REPO_NAME) {
+			const botVersion = JSON.parse(readFileSync(`${process.cwd()}/package.json`).toString()).version;
+			this.container.gitHub = new Octokit({ auth: process.env.GIT_HUB, userAgent: `$${process.env.BOT_NAME} v${botVersion}` });
+			return;
+		}
+		this.container.gitHub = null;
+	}
 	private async createCmdStatsCache() {
 		const cmdStats = await this.container.db.cmdStats.findOne();
 		this.container.cmdStats = new Collection<string, number>();
