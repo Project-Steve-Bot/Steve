@@ -25,11 +25,7 @@ const ZWS = '\u200B';
 })
 export class UserCommand extends SteveCommand {
 
-	private SECRETS = [
-		process.env.DISCORD_TOKEN,
-		process.env.MONGO_CONNECTION,
-		process.env.LOG_HOOK
-	];
+	private SECRETS = Object.values(process.env);
 
 	public async messageRun(message: Message, args: Args) {
 		const code = await args.rest('string');
