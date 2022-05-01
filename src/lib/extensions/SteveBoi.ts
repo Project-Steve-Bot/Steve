@@ -1,5 +1,5 @@
 import { container, Events, SapphireClient } from '@sapphire/framework';
-import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
+import { ClientOptions, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
 import { getChannel } from '@lib/utils';
@@ -60,9 +60,17 @@ export class SteveBoi extends SapphireClient {
 
 			if (!channel?.isText()) return;
 
-			channel.send(
-				`<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`
-			);
+			channel.send({
+				content: `<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`,
+				components: [
+					new MessageActionRow()
+						.addComponents(new MessageButton()
+							.setEmoji('💤')
+							.setLabel('Snooze')
+							.setStyle('SECONDARY')
+							.setCustomId(`snooze|${reminder.user}`))
+				]
+			});
 
 			if (reminder.repeat) {
 				container.db.reminder.findOneAndReplace(
