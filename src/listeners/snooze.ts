@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
-import { Interaction, MessageActionRow, MessageButton, MessageSelectMenu, TextChannel } from 'discord.js';
+import { Interaction, MessageActionRow, MessageSelectMenu, TextChannel } from 'discord.js';
 import parse from 'parse-duration';
-import { dateToTimestamp } from '@lib/utils';
+import { dateToTimestamp, generateSnoozeButtons } from '@lib/utils';
 
 
 @ApplyOptions<Listener.Options>({
@@ -65,14 +65,10 @@ export class UserEvent extends Listener {
 		});
 
 		collector.on('end', (_, reason) => {
-			const components: MessageActionRow[] = [];
+			let components: MessageActionRow[] = [];
 
 			if (reason !== 'snoozed') {
-				components.push(new MessageActionRow()
-					.addComponents(new MessageButton().setEmoji('💤')
-						.setLabel('Snooze')
-						.setStyle('SECONDARY')
-						.setCustomId(`snooze|${interaction.user.id}`)));
+				components = generateSnoozeButtons(interaction.user.id);
 			}
 
 			interaction.editReply({ components });
