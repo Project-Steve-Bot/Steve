@@ -5,7 +5,7 @@ import { SteveBoi } from '@lib/extensions/SteveBoi';
 import { startMongo } from '@lib/mongo';
 
 const main = async () => {
-	startMongo();
+	await startMongo();
 
 	const prefix = process.env.PREFIX ?? 's;';
 	const regexPrefix = new RegExp(`^${(process.env.BOT_NAME ?? 'steve').toLowerCase()},( )?`, 'i');
