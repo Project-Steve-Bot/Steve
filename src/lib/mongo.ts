@@ -33,5 +33,5 @@ export async function startMongo() {
 	container.mongo = mongo;
 	container.db = db;
 
-	container.logger.info('Connected to MongoDB');
+	console.log('Connected to MongoDB');
 }
