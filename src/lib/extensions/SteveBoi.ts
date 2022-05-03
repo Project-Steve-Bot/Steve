@@ -1,8 +1,8 @@
 import { container, Events, SapphireClient } from '@sapphire/framework';
-import { ClientOptions, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from 'discord.js';
+import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
-import { getChannel } from '@lib/utils';
+import { generateSnoozeButtons, getChannel } from '@lib/utils';
 
 export class SteveBoi extends SapphireClient {
 
@@ -62,14 +62,7 @@ export class SteveBoi extends SapphireClient {
 
 			channel.send({
 				content: `<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`,
-				components: [
-					new MessageActionRow()
-						.addComponents(new MessageButton()
-							.setEmoji('💤')
-							.setLabel('Snooze')
-							.setStyle('SECONDARY')
-							.setCustomId(`snooze|${reminder.user}`))
-				]
+				components: generateSnoozeButtons(reminder.user)
 			});
 
 			if (reminder.repeat) {

@@ -4,7 +4,7 @@ import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { createCanvas } from 'canvas';
 import { oneLine } from 'common-tags';
-import { AnyChannel, Collection, ColorResolvable, Guild, Message, MessageAttachment, MessageEmbed, User } from 'discord.js';
+import { AnyChannel, Collection, ColorResolvable, Guild, Message, MessageActionRow, MessageAttachment, MessageButton, MessageEmbed, User } from 'discord.js';
 import type { WithId } from 'mongodb';
 import prettyMilliseconds from 'pretty-ms';
 import { RandomLoadingMessage } from '@lib/constants';
@@ -238,4 +238,20 @@ export function buildErrorPayload(error: Error): [MessageEmbed, MessageAttachmen
 		}
 	}
 	return [embed, files];
+}
+
+export function generateSnoozeButtons(userId: string): MessageActionRow[] {
+	return [new MessageActionRow()
+		.addComponents([
+			new MessageButton()
+				.setEmoji('💤')
+				.setLabel('Snooze')
+				.setStyle('SECONDARY')
+				.setCustomId(`snooze|${userId}`),
+			new MessageButton()
+				.setEmoji('✅')
+				.setLabel('Done')
+				.setStyle('SUCCESS')
+				.setCustomId('remove all components')
+		])];
 }
