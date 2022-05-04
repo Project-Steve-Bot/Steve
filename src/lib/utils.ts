@@ -252,6 +252,6 @@ export function generateSnoozeButtons(userId: string): MessageActionRow[] {
 				.setEmoji('✅')
 				.setLabel('Done')
 				.setStyle('SUCCESS')
-				.setCustomId('remove all components')
+				.setCustomId(`remove all components|${userId}`)
 		])];
 }

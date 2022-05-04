@@ -9,7 +9,10 @@ import type { Interaction } from 'discord.js';
 export class UserEvent extends Listener {
 
 	public async run(interaction: Interaction) {
-		if (!interaction.isButton() || interaction.customId !== 'remove all components') return;
+		if (!interaction.isButton()) return;
+		if (interaction.customId !== `remove all components|${interaction.user.id}`) {
+			return interaction.reply({ content: 'How do you know if thats done or not mate?', ephemeral: true });
+		}
 
 		interaction.update({ components: [] });
 	}
