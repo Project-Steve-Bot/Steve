@@ -2,7 +2,7 @@ import { container, Events, SapphireClient } from '@sapphire/framework';
 import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
-import { generateSnoozeButtons, getChannel } from '@lib/utils';
+import { generateSnoozeButtons, getChannel, pickRandom } from '@lib/utils';
 
 export class SteveBoi extends SapphireClient {
 
@@ -105,7 +105,7 @@ export class SteveBoi extends SapphireClient {
 					choice.votes >= maxVotes
 						? `**[${choice.text} - ${choice.votes} vote${
 							choice.votes === 1 ? '' : 's'
-						  }](https://tenor.com/view/im-the-best-racer-fox-sports-gif-5943746)**`
+						  }](${pickRandom(this.victoryGIFs)})**`
 						: `${choice.text} - ${choice.votes} vote${
 							choice.votes === 1 ? '' : 's'
 						  }`
@@ -121,5 +121,16 @@ export class SteveBoi extends SapphireClient {
 			container.db.polls.findOneAndDelete({ _id: poll._id });
 		});
 	}
+
+	private victoryGIFs = [
+		'https://c.tenor.com/tQ-WWJwc2BMAAAAC/im-the-best-racer.gif',
+		'https://c.tenor.com/STcTDEpZKZUAAAAM/sweet-victory-spongebob.gif',
+		'https://c.tenor.com/hSRuZwH79-8AAAAM/hotdog-we-have-a-weiner.gif',
+		'https://cdn.discordapp.com/attachments/944669817137418333/972269254399369236/victory_koala.gif',
+		'https://c.tenor.com/Cyr2PR6E3kkAAAAM/sacha-baron.gif',
+		'https://c.tenor.com/qZ3NrYDnD4YAAAAM/congrats-the-office.gif',
+		'https://c.tenor.com/mU6C8c8tmikAAAAM/congratulations.gif',
+		'https://tenor.com/view/baby-yes-yeah-happy-celebrate-gif-16085931'
+	];
 
 }
