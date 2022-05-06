@@ -40,7 +40,7 @@ export class UserEvent extends Listener {
 				return selectInt.reply({ content: 'This selecty boi isn\'t for you!', ephemeral: true });
 			}
 
-			const expires = new Date(msg.createdTimestamp + parseInt(selectInt.values[0]));
+			const expires = new Date(interaction.createdTimestamp + parseInt(selectInt.values[0]));
 
 			if (expires < new Date()) {
 				await selectInt.reply({ content: 'I can\'t snooze reminders into the past!', ephemeral: true });
