@@ -16,7 +16,7 @@ const ZWS = '\u200B';
 	description: 'Evals any JavaScript code',
 	quotes: [],
 	preconditions: ['OwnerOnly'],
-	flags: ['async', 'hidden', 'showHidden', 'show', 'silent', 's'],
+	flags: ['async', 'hidden', 'showHidden', 'show', 'silent', 's', 'unsafe'],
 	options: ['depth'],
 	detailedDescription: {
 		usage: '<code>',
@@ -40,11 +40,13 @@ export class UserCommand extends SteveCommand {
 
 		let cleanResult = result.replace(/`/g, `\`${ZWS}`);
 
-		this.SECRETS.forEach(secret => {
-			if (secret) {
-				cleanResult = cleanResult.replaceAll(secret, 'This information has been hidden');
-			}
-		});
+		if (!args.getFlags('unsafe')) {
+			this.SECRETS.forEach(secret => {
+				if (secret) {
+					cleanResult = cleanResult.replaceAll(secret, 'This information has been hidden');
+				}
+			});
+		}
 
 		const output = success
 			? codeBlock('js', cleanResult)
