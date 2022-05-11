@@ -15,7 +15,8 @@ export interface DbGuild {
 		count?: string;
 	};
 	assignableRoles?: string[];
-	count?: CountData
+	count?: CountData;
+	voteToPin?: number;
 }
 
 export interface CountData {

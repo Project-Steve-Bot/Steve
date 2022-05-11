@@ -36,7 +36,7 @@ const main = async () => {
 				'DIRECT_MESSAGES',
 				'DIRECT_MESSAGE_REACTIONS'
 			],
-			partials: ['CHANNEL']
+			partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 		});
 
 	try {
