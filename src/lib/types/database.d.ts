@@ -44,6 +44,7 @@ export interface Poll {
 	messageId: string;
 	channelId: string;
 	multiSelect: boolean;
+	anonymous: boolean;
 	choices: {
 		votes: number;
 		text: string;
@@ -65,4 +66,13 @@ export interface CmdStats {
 		command: string;
 		uses: number;
 	}[];
+}
+
+export interface ChannelRename {
+	messageId: string;
+	channelId: string;
+	newName: string;
+	requester: string;
+	yesVoters: string[];
+	noVoters: string[];
 }

@@ -10,18 +10,19 @@ import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 @ApplyOptions<CommandOptions>({
 	description: 'Create a poll!',
 	aliases: ['vote'],
-	flags: ['multiselect', 'ms'],
+	flags: ['monoselect', 'ms', 'anonymous', 'anon'],
 	options: ['ends'],
 	detailedDescription: {
-		usage: '<question> | <choices...> (--ends=duration) (--multiselect)',
+		usage: '<question> | <choices...> (--ends=duration) (--monoselect) (--anonymous)',
 		examples: [
 			'Is butt legs? | Butt is legs | Butt is butt',
 			'Should I do it? | Do it | Let your dreams be memes --ends:30m'
 		],
 		extendedHelp: stripIndent`
 		• Polls must have at least two options an no more than 10.
-		• You can allow people to vote for more than one option with the \`--multiselect\` flag.
-		• You can specify when a poll should end with the \`--ends\` option. By default, polls never end.`
+		• You can limit people to only vote for one option with the \`--monoselect\` flag.
+		• You can specify when a poll should end with the \`--ends\` option. By default, polls never end.
+		• By default, you'll see who voted for what when a poll ends. You can turn that off with the \`--anonymous\` flag.`
 	}
 })
 export class UserCommand extends SteveCommand {
@@ -88,7 +89,8 @@ export class UserCommand extends SteveCommand {
 		await this.container.db.polls.insertOne({
 			messageId: response.id,
 			channelId: response.channel.id,
-			multiSelect: args.getFlags('multiselect', 'ms'),
+			multiSelect: !args.getFlags('monoselect', 'ms'),
+			anonymous: args.getFlags('anonymous', 'anon'),
 			expires,
 			allVoters: [],
 			choices: choices.map((choice) => ({

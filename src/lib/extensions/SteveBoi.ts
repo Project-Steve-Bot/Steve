@@ -102,13 +102,16 @@ export class SteveBoi extends SapphireClient {
 
 			const choiceList = poll.choices
 				.map((choice) =>
-					choice.votes >= maxVotes
+					`${choice.votes >= maxVotes
 						? `**[${choice.text} - ${choice.votes} vote${
 							choice.votes === 1 ? '' : 's'
 						  }](${pickRandom(this.victoryGIFs)})**`
 						: `${choice.text} - ${choice.votes} vote${
 							choice.votes === 1 ? '' : 's'
-						  }`
+						  }`}${
+						poll.anonymous
+							? ''
+							: `\nVoters: ${choice.voters.map(voter => `<@${voter}>`).join(', ')}`}`
 				)
 				.join('\n');
 
