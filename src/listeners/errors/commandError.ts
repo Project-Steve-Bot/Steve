@@ -9,7 +9,7 @@ import { buildErrorPayload } from '@lib/utils';
 export class UserEvent extends Listener {
 
 	public run(error: Error, { message: msg, command }: CommandErrorPayload) {
-		if (error.name === 'UserError') return;
+		if (['UserError', 'ArgumentError'].includes(error.name)) return;
 
 		const [embed, files] = buildErrorPayload(error);
 		embed.addField(`Command: ${command.name}`, `\`${msg.content}\`\n[Jump to message](${msg.url})`);
