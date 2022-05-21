@@ -23,7 +23,7 @@ export class UserCommand extends SteveCommand {
 
 		const response = await sendLoadingMessage(msg);
 
-		const target = await args.pick('role');
+		const target = await args.rest('role');
 
 		const dbGuild = await this.container.db.guilds.findOne({ id: msg.guildId });
 

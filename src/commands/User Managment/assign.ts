@@ -24,7 +24,7 @@ export class UserCommand extends SteveCommand {
 			throw new UserError({ message: 'This command must be run in a server.', identifier: 'NoGuildAssign' });
 		}
 
-		const targetRole = await args.pick('role');
+		const targetRole = await args.rest('role');
 
 		const isAssignable = await this.container.db.guilds.countDocuments({ id: msg.guildId, assignableRoles: targetRole.id }) === 1;
 
