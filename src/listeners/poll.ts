@@ -9,7 +9,7 @@ import { dateToTimestamp } from '@lib/utils';
 })
 export class UserEvent extends Listener {
 
-	public async run(interaction: Interaction) {
+	public async run(interaction: Interaction): Promise<unknown> {
 		if (!interaction.isButton() || !interaction.customId.startsWith('poll')) return;
 		await interaction.deferUpdate();
 
