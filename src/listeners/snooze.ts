@@ -132,6 +132,10 @@ export class UserEvent extends Listener {
 					value: `${parse('1d')}`
 				},
 				{
+					label: '3 days',
+					value: `${parse('3d')}`
+				},
+				{
 					label: '1 week',
 					value: `${parse('1w')}`
 				}
