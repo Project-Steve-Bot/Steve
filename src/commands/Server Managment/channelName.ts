@@ -26,8 +26,7 @@ export class UserCommand extends SteveCommand {
 		const needed = 3;
 
 		const embed = new MessageEmbed()
-			.setAuthor({
-				name: `${msg?.member?.displayName ?? msg.author.username} suggested a channel name change!`,
+			.setAuthor({ name: `${msg?.member?.displayName ?? msg.author.username} suggested a channel name change!`,
 				iconURL: msg.author.displayAvatarURL() })
 			.setTitle(`Rename this channel to #${newName}?`)
 			.setColor('RANDOM');

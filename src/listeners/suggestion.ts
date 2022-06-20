@@ -11,7 +11,7 @@ const OWNERS = envParseArray('OWNERS');
 })
 export class UserEvent extends Listener {
 
-	public async run(interaction: Interaction) {
+	public async run(interaction: Interaction): Promise<unknown> {
 		if (!interaction.isButton() || interaction.customId !== 'suggestion') return;
 		await interaction.deferUpdate();
 

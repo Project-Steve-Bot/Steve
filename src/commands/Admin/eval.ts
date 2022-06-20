@@ -16,7 +16,7 @@ const ZWS = '\u200B';
 	description: 'Evals any JavaScript code',
 	quotes: [],
 	preconditions: ['OwnerOnly'],
-	flags: ['async', 'hidden', 'showHidden', 'show', 'silent', 's', 'unsafe'],
+	flags: ['hidden', 'showHidden', 'show', 'silent', 's', 'unsafe'],
 	options: ['depth'],
 	detailedDescription: {
 		usage: '<code>',
@@ -32,7 +32,6 @@ export class UserCommand extends SteveCommand {
 
 		const stopwatch = new Stopwatch();
 		const { result, success, type } = await this.eval(message, code, {
-			async: args.getFlags('async'),
 			depth: Number(args.getOption('depth')) ?? 0,
 			showHidden: args.getFlags('hidden', 'showHidden', 'show')
 		});
@@ -69,9 +68,9 @@ export class UserCommand extends SteveCommand {
 	private async eval(
 		message: Message,
 		code: string,
-		flags: { async: boolean; depth: number; showHidden: boolean }
+		flags: { depth: number; showHidden: boolean }
 	) {
-		if (flags.async) code = `(async () => {\n${code}\n})();`;
+		if (code.includes('await')) code = `(async () => {\n${code}\n})();`;
 
 		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -83,6 +82,7 @@ export class UserCommand extends SteveCommand {
 		try {
 			// eslint-disable-next-line no-eval
 			result = eval(code);
+			if (isThenable(result)) result = await result;
 		} catch (error) {
 			if (error && error instanceof Error && error.stack) {
 				this.container.client.logger.error(error);
@@ -92,7 +92,7 @@ export class UserCommand extends SteveCommand {
 		}
 
 		const type = new Type(result).toString();
-		if (isThenable(result)) result = await result;
+		
 
 		if (typeof result !== 'string') {
 			result = inspect(result, {

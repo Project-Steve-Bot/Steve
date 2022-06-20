@@ -8,7 +8,7 @@ import type { Interaction } from 'discord.js';
 })
 export class UserEvent extends Listener {
 
-	public async run(interaction: Interaction) {
+	public async run(interaction: Interaction): Promise<unknown> {
 		if (!interaction.isButton() || !interaction.customId.startsWith('rename')) return;
 		await interaction.deferUpdate();
 
