@@ -10,7 +10,7 @@ import { dateToTimestamp, getUserReminders, sendLoadingMessage } from '@lib/util
 
 @ApplyOptions<CommandOptions>({
 	description: 'Show all your pending reminders.',
-	aliases: ['vr', 'showreminders', 'sr']
+	aliases: ['vr', 'reminders', 'showreminders', 'sr']
 })
 export class UserCommand extends SteveCommand {
 
