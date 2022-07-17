@@ -8,7 +8,7 @@
 		"node": "16.*"
 	},
 	"dependencies": {
-		"@discordjs/collection": "^0.7.0",
+		"@discordjs/collection": "^0.8.0",
 		"@octokit/rest": "^19.0.0",
 		"@sapphire/decorators": "^4.2.5",
 		"@sapphire/discord-utilities": "^2.8.0",
