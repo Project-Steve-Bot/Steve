@@ -18,7 +18,8 @@ interface RollSpec {
 
 interface DiceResult {
 	spec: RollSpec;
-	rolls: number[];
+	keptRolls: number[];
+	lostRolls: number[];
 }
 
 const DICE_REGEX = /(?<count>\d{1,2})?d(?<sides>\d{1,4})(?<explode>!)?(?<keep>kl?(?<keepCount>\d{1,2}))?/;
@@ -32,7 +33,8 @@ const DICE_REGEX = /(?<count>\d{1,2})?d(?<sides>\d{1,4})(?<explode>!)?(?<keep>kl
 		extendedHelp: oneLine`Use standard dice notation. You can roll up to 10 dice with up to 1,000 sides each.
 		Add a \`!\` at the end of your roll to use exploding dice.
 		To keep the highest n, add \`k<n>\`; to keep the lowest n, add \`kl<n>\` (with n < amount of dice).`
-	}
+	},
+	options: ['repeat', 'r']
 })
 export class UserCommand extends SteveCommand {
 
@@ -75,27 +77,44 @@ export class UserCommand extends SteveCommand {
 		if (!input.success) {
 			return send(msg, input.error.message);
 		}
-
+		
 		const { value: spec } = input;
+		
+		const repeat = parseInt(args.getOption('repeat', 'r') ?? '1') || 1
+		const runs: string[] = []
 
-		let rolls = [];
-		for (let i = 0; i < spec.count; i++) {
-			const roll = this.roll(spec.sides, spec.explodes);
-			rolls.push(roll);
+		for (let i = 0; i < repeat; i++) {
+			let keptRolls: number[] = [];
+			let lostRolls: number[] = [];
+			for (let i = 0; i < spec.count; i++) {
+				const roll = this.roll(spec.sides, spec.explodes);
+				keptRolls.push(roll);
+			}
+	
+			if (spec.keep) {
+				keptRolls.sort();
+				if (spec.keep === 'highest') keptRolls.reverse();
+	
+				for(let i = 0; i < spec.count - (spec.keepCount ?? 0); i++) {
+					lostRolls.push(keptRolls.pop() ?? 0)
+				}
+			}
+	
+			// reorder the dice because I like it better when they are random
+			for (let i = keptRolls.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[keptRolls[i], keptRolls[j]] = [keptRolls[j], keptRolls[i]];
+			}
+	
+			const result: DiceResult = { spec, keptRolls: keptRolls, lostRolls };
+	
+			const emoji = this.getEmoji(result.spec);
+			const total = result.keptRolls.reduce((a, b) => a + b);
+			runs.push(oneLine`${emoji} You rolled: \`${result.keptRolls.join('`, `')}\`
+				${result.lostRolls.length ? `, ~~\`${result.lostRolls.join('`~~, ~~`')}\`~~`: ''}
+				${emoji}${result.keptRolls.length > 1 ? `\nTotal: **${total}**` : ''}`);
 		}
-
-		if (spec.keep) {
-			rolls.sort();
-			if (spec.keep === 'highest') rolls.reverse();
-			rolls = rolls.slice(0, spec.keepCount);
-		}
-
-		const result: DiceResult = { spec, rolls };
-
-		const emoji = this.getEmoji(result.spec);
-		const total = result.rolls.reduce((a, b) => a + b);
-		const message = `${emoji} You rolled: \`${result.rolls.join(', ')}\` ${emoji}${result.rolls.length > 1 ? `\nTotal: ${total}` : ''}`;
-		return send(msg, message);
+		return send(msg, runs.join('\n'));
 	}
 
 	private rollOnce(sides: number): number {
