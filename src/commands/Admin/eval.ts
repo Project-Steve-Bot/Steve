@@ -92,7 +92,7 @@ export class UserCommand extends SteveCommand {
 		}
 
 		const type = new Type(result).toString();
-		
+
 
 		if (typeof result !== 'string') {
 			result = inspect(result, {
