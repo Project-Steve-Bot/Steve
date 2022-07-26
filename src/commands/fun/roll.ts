@@ -77,41 +77,41 @@ export class UserCommand extends SteveCommand {
 		if (!input.success) {
 			return send(msg, input.error.message);
 		}
-		
+
 		const { value: spec } = input;
-		
-		const repeat = parseInt(args.getOption('repeat', 'r') ?? '1') || 1
-		const runs: string[] = []
+
+		const repeat = parseInt(args.getOption('repeat', 'r') ?? '1') || 1;
+		const runs: string[] = [];
 
 		for (let i = 0; i < repeat; i++) {
-			let keptRolls: number[] = [];
-			let lostRolls: number[] = [];
-			for (let i = 0; i < spec.count; i++) {
+			const keptRolls: number[] = [];
+			const lostRolls: number[] = [];
+			for (let j = 0; j < spec.count; j++) {
 				const roll = this.roll(spec.sides, spec.explodes);
 				keptRolls.push(roll);
 			}
-	
+
 			if (spec.keep) {
 				keptRolls.sort();
 				if (spec.keep === 'highest') keptRolls.reverse();
-	
-				for(let i = 0; i < spec.count - (spec.keepCount ?? 0); i++) {
-					lostRolls.push(keptRolls.pop() ?? 0)
+
+				for (let j = 0; j < spec.count - (spec.keepCount ?? 0); j++) {
+					lostRolls.push(keptRolls.pop() ?? 0);
 				}
 			}
-	
+
 			// reorder the dice because I like it better when they are random
-			for (let i = keptRolls.length - 1; i > 0; i--) {
-				const j = Math.floor(Math.random() * (i + 1));
-				[keptRolls[i], keptRolls[j]] = [keptRolls[j], keptRolls[i]];
+			for (let j = keptRolls.length - 1; j > 0; j--) {
+				const rand = Math.floor(Math.random() * (j + 1));
+				[keptRolls[j], keptRolls[rand]] = [keptRolls[rand], keptRolls[j]];
 			}
-	
+
 			const result: DiceResult = { spec, keptRolls: keptRolls, lostRolls };
-	
+
 			const emoji = this.getEmoji(result.spec);
 			const total = result.keptRolls.reduce((a, b) => a + b);
 			runs.push(oneLine`${emoji} You rolled: \`${result.keptRolls.join('`, `')}\`
-				${result.lostRolls.length ? `, ~~\`${result.lostRolls.join('`~~, ~~`')}\`~~`: ''}
+				${result.lostRolls.length ? `, ~~\`${result.lostRolls.join('`~~, ~~`')}\`~~` : ''}
 				${emoji}${result.keptRolls.length > 1 ? `\nTotal: **${total}**` : ''}`);
 		}
 		return send(msg, runs.join('\n'));
