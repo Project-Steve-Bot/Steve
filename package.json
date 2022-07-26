@@ -4,6 +4,7 @@
 	"main": "dist/index.js",
 	"author": "Ben",
 	"license": "MIT",
+	"homepage": "https://github.com/BenSegal855/Steve-V3",
 	"engines": {
 		"node": "16.*"
 	},
