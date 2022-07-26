@@ -62,7 +62,7 @@ export class CommitCommand extends SteveCommand {
 	}
 
 	private getCommits(count = 1, skip = 0): GitInfo {
-		const branch = execSync(`cd ${__dirname} && git branch --show-current`).toString().trim();
+		const branch = execSync(`cd ${__dirname} && git branch`).toString().split('\n')[0].substring(2).trim();
 
 		const commits: Commit[] = [];
 
