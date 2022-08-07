@@ -14,6 +14,8 @@ import { dateToTimestamp, getUserReminders, sendLoadingMessage } from '@lib/util
 })
 export class UserCommand extends SteveCommand {
 
+	private pageLen = 5;
+
 	public async messageRun(msg: Message) {
 		const response = await sendLoadingMessage(msg);
 
@@ -29,7 +31,7 @@ export class UserCommand extends SteveCommand {
 
 		const color = user?.embedColor as ColorResolvable ?? '#adcb27';
 
-		const pages = chunk(reminders, 5);
+		const pages = chunk(reminders, this.pageLen);
 
 		const paginator = new PaginatedMessage({
 			template: {
@@ -42,10 +44,10 @@ export class UserCommand extends SteveCommand {
 			}
 		});
 
-		pages.forEach((page) => {
+		pages.forEach((page, pageNum) => {
 			paginator.addPageEmbed((embed) =>
-				embed.setDescription(page.map((reminder, i) =>
-					`**${i + 1}:** ${this.getReminderContent(reminder, msg)}`
+				embed.setDescription(page.map((reminder, remindNum) =>
+					`**${(pageNum * this.pageLen) + remindNum + 1}:** ${this.getReminderContent(reminder, msg)}`
 				).join('\n\n'))
 			);
 		});
