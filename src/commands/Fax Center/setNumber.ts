@@ -22,7 +22,7 @@ export class UserCommand extends SteveCommand {
 
 		const response = await sendLoadingMessage(msg);
 
-		const faxUsers = await this.container.db.users.find({ 'fax.number': { $ne: null } }).toArray();
+		const faxUsers = await this.container.db.users.find({ 'fax.number': { $ne: undefined } }).toArray();
 
 		const faxNumbers = faxUsers.map((user) => user.fax?.number).filter((hasNum) => hasNum);
 

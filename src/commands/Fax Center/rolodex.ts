@@ -17,8 +17,8 @@ export class UserCommand extends SteveCommand {
 		const faxUsers = await this.container.db.users
 			.find({
 				$and: [
-					{ 'fax.number': { $ne: null } },
-					{ 'fax.channel': { $ne: null } }
+					{ 'fax.number': { $ne: undefined } },
+					{ 'fax.channel': { $ne: undefined } }
 				]
 			})
 			.toArray();

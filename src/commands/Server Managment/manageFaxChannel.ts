@@ -57,7 +57,7 @@ export class UserCommand extends SteveCommand {
 
 			await this.container.db.users.updateMany(
 				{ 'fax.channel': channel.id },
-				{ $set: { 'fax.channel': null } }
+				{ $set: { 'fax.channel': undefined } }
 			);
 
 			channel.send(
