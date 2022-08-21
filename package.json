@@ -66,6 +66,7 @@
 		"lint": "eslint src --ext .ts --fix",
 		"clean": "rm -rf dist",
 		"clear": "run-s clean",
-		"clean:purge": "rm -rf node_modules dist pnpm-lock.yaml package-lock.json"
+		"clean:purge": "rm -rf node_modules dist pnpm-lock.yaml package-lock.json",
+		"updeps": "pnpm clean:purge && pnpm install"
 	}
 }
