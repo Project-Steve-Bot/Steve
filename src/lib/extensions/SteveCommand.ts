@@ -1,20 +1,9 @@
-import type { PieceContext } from '@sapphire/framework';
-import { send } from '@sapphire/plugin-editable-commands';
-import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
-import { Message, Permissions } from 'discord.js';
+import { Command, CommandOptions, PieceContext } from '@sapphire/framework';
+import { Permissions } from 'discord.js';
 
-export abstract class SteveCommand extends SubCommandPluginCommand {
+export abstract class SteveCommand extends Command {
 
-	private cmdNames: string[];
-
-	public constructor(context: PieceContext, options: SubCommandPluginCommandOptions) {
-		const needsDefault = options.subCommands?.every(subcommand => typeof subcommand === 'string' ? true : !subcommand.default) ?? false;
-		const cmdNames = options?.subCommands?.map(subcommand => typeof subcommand === 'string' ? subcommand : subcommand.input.toString()) ?? [];
-
-		if (needsDefault && options.subCommands) {
-			options.subCommands = [{ input: 'showSubcommands', default: true }, ...options.subCommands];
-		}
-
+	public constructor(context: PieceContext, options: CommandOptions) {
 		super(context, {
 			...options,
 			requiredClientPermissions: options.requiredClientPermissions
@@ -23,12 +12,6 @@ export abstract class SteveCommand extends SubCommandPluginCommand {
 				)
 				: 'EMBED_LINKS'
 		});
-
-		this.cmdNames = cmdNames;
-	}
-
-	public showSubcommands(msg: Message) {
-		return send(msg, `You're input is not a valid subcommand. Valid options are \`${this.cmdNames.join('`, `')}\`.`);
 	}
 
 }

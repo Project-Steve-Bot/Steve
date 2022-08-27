@@ -74,13 +74,13 @@ export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
 		const input = await args.pickResult(UserCommand.spec);
-		if (!input.success) {
-			return send(msg, input.error.message);
+		if (input.isErr()) {
+			return send(msg, input.err().unwrap().message);
 		}
 
-		const { value: spec } = input;
+		const spec = input.unwrap();
 
-		const repeat = parseInt(args.getOption('repeat', 'r') ?? '1') || 1;
+		const repeat = parseInt(args.getOption('repeat', 'r').unwrapOr('1')) || 1;
 		const runs: string[] = [];
 
 		for (let i = 0; i < repeat; i++) {

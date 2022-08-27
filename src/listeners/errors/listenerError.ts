@@ -10,7 +10,7 @@ export class UserEvent extends Listener {
 
 	run(error: Error, { piece }: ListenerErrorPayload) {
 		const [embed, files] = buildErrorPayload(error);
-		embed.addField(`Listener: ${piece.name}`, piece.event);
+		embed.addFields([{ name: `Listener: ${piece.name}`, value: piece.event.toString() }]);
 
 		this.container.hooks.discordLogs?.send({
 			avatarURL: this.container.client.user?.displayAvatarURL(),

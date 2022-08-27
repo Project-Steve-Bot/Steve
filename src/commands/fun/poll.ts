@@ -45,7 +45,10 @@ export class UserCommand extends SteveCommand {
 		choices = choices.map(choice => `${emotes.shift()} ${choice}`);
 
 		const rawExpires = args.getOption('ends');
-		const expires = new Date(Date.now() + parse(rawExpires ?? '1d'));
+
+		// rawExpires.
+
+		const expires = new Date(Date.now() + parse(rawExpires.unwrapOr('1d')));
 
 		const embed = new MessageEmbed()
 			.setTitle(question)
