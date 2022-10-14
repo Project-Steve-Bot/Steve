@@ -13,6 +13,7 @@ interface RollSpec {
 	sides: number;
 	explodes: boolean;
 	keep: KeepType;
+	modifier: number
 	keepCount?: number;
 }
 
@@ -22,19 +23,18 @@ interface DiceResult {
 	lostRolls: number[];
 }
 
-const DICE_REGEX = /(?<count>\d{1,2})?d(?<sides>\d{1,4})(?<explode>!)?(?<keep>kl?(?<keepCount>\d{1,2}))?/;
+const DICE_REGEX = /(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<modifier>[+-]\d{1,3})?(?<explode>!)?(?<keep>kl?(?<keepCount>\d{1,3}))?/;
 
 @ApplyOptions<CommandOptions>({
 	description: 'Roll some dice!',
 	aliases: ['dice', 'diceroll'],
 	detailedDescription: {
 		usage: '<spec>',
-		examples: ['1d6', 'd20', '5d10!', '6d12k1', '6d12kl2'],
-		extendedHelp: oneLine`Use standard dice notation. You can roll up to 10 dice with up to 1,000 sides each.
-		Add a \`!\` at the end of your roll to use exploding dice.
+		examples: ['1d6', 'd20', '1d20+3', '5d10!', '6d12k1', '6d12kl2'],
+		extendedHelp: oneLine`Use standard dice notation. You can roll up to 100 dice with up to 1,000 sides each.
+		Modifiers work too!	Add a \`!\` at the end of your roll to use exploding dice.
 		To keep the highest n, add \`k<n>\`; to keep the lowest n, add \`kl<n>\` (with n < amount of dice).`
-	},
-	options: ['repeat', 'r']
+	}
 })
 export class UserCommand extends SteveCommand {
 
@@ -53,10 +53,14 @@ export class UserCommand extends SteveCommand {
 
 		let count = parseInt(match.groups.count, 10) ?? 1;
 		if (isNaN(count)) count = 1;
-		else if (count > 10) count = 10;
+		else if (count > 100) count = 100;
 
 		let sides = parseInt(match.groups.sides, 10);
 		if (sides > 1000) sides = 1000;
+
+		let modifier = parseInt(match.groups.modifier, 10) ?? 0;
+		if (isNaN(modifier)) modifier = 0;
+		else if (modifier > 100) modifier = 100;
 
 		const explodes = match.groups.explode === '!';
 
@@ -69,21 +73,21 @@ export class UserCommand extends SteveCommand {
 
 		const keepCount = parseInt(match.groups.keepCount, 10);
 
-		return Args.ok({ input: match.input, count, sides, explodes, keep, keepCount });
+		return Args.ok({ input: match.input, count, sides, modifier, explodes, keep, keepCount });
 	});
 
 	public async messageRun(msg: Message, args: Args) {
-		const input = await args.pickResult(UserCommand.spec);
-		if (input.isErr()) {
-			return send(msg, input.err().unwrap().message);
-		}
-
-		const spec = input.unwrap();
-
-		const repeat = parseInt(args.getOption('repeat', 'r') ?? '1') || 1;
+		let grandTotal = 0;
 		const runs: string[] = [];
 
-		for (let i = 0; i < repeat; i++) {
+		do {
+			const input = await args.pickResult(UserCommand.spec);
+			if (input.isErr()) {
+				return send(msg, input.err().unwrap().message);
+			}
+
+			const spec = input.unwrap();
+
 			const keptRolls: number[] = [];
 			const lostRolls: number[] = [];
 			for (let j = 0; j < spec.count; j++) {
@@ -106,15 +110,22 @@ export class UserCommand extends SteveCommand {
 				[keptRolls[j], keptRolls[rand]] = [keptRolls[rand], keptRolls[j]];
 			}
 
-			const result: DiceResult = { spec, keptRolls: keptRolls, lostRolls };
+			const result: DiceResult = { spec, keptRolls, lostRolls };
+			const modifierString = spec.modifier === 0
+				? ''
+				: spec.modifier > 0
+					? ` +${spec.modifier}`
+					: ` ${spec.modifier}`;
 
 			const emoji = this.getEmoji(result.spec);
-			const total = result.keptRolls.reduce((a, b) => a + b);
-			runs.push(oneLine`${emoji} You rolled: \`${result.keptRolls.join('`, `')}\`
-				${result.lostRolls.length ? `, ~~\`${result.lostRolls.join('`~~, ~~`')}\`~~` : ''}
-				${emoji}${result.keptRolls.length > 1 ? `\nTotal: **${total}**` : ''}`);
-		}
-		return send(msg, runs.join('\n'));
+			const total = result.keptRolls.reduce((a, b) => a + b) + spec.modifier;
+			runs.push(oneLine`${emoji} You rolled: \`${result.keptRolls.join('`, `')}\`${modifierString}
+					${result.lostRolls.length ? `, ~~\`${result.lostRolls.join('`~~, ~~`')}\`~~` : ''}
+					${emoji}${result.keptRolls.length > 1 || spec.modifier !== 0 ? `\nTotal: **${total}**` : ''}`);
+			grandTotal += total;
+		} while (!args.finished);
+
+		return send(msg, `${runs.join('\n')}\n${runs.length > 1 ? `__**Grand Total: ${grandTotal}**__` : ''}`);
 	}
 
 	private rollOnce(sides: number): number {
