@@ -22,11 +22,11 @@ export class UserCommand extends SteveCommand {
 
 		const setPointResult = await args.pickResult('number');
 
-		if (!setPointResult.success) {
+		if (setPointResult.isErr()) {
 			return send(msg, 'Please specify the number of 📌 reactions needed to pin a message.');
 		}
 
-		const setPoint = setPointResult.value > 0 ? setPointResult.value : 0;
+		const setPoint = setPointResult.unwrap() > 0 ? setPointResult.unwrap() : 0;
 
 		await this.container.db.guilds.updateOne({ id: msg.guildId }, { $set: { voteToPin: setPoint } }, { upsert: true });
 

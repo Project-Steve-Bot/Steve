@@ -1,15 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
+import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
 import type { Message } from 'discord.js';
-import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import { sendLoadingMessage } from '@lib/utils';
 
-@ApplyOptions<SubCommandPluginCommandOptions>({
+@ApplyOptions<SubcommandOptions>({
 	description: 'Add, remove or edit snips.',
 	requiredUserPermissions: 'MANAGE_MESSAGES',
-	aliases: ['mannagesnippet', 'managesnips', 'managesnip'],
+	aliases: ['managesnippet', 'managesnips', 'managesnip'],
 	runIn: 'GUILD_ANY',
 	detailedDescription: {
 		usage: '<add|remove|edit> <snip name> [snip contents]',
@@ -21,18 +21,18 @@ import { sendLoadingMessage } from '@lib/utils';
 		extendedHelp: `If you want the snippet name to be more than one work, put it in quotes.
 		*Note: Doing this will still allow auto snips, users will just need to use a \`-\` in place of any spaces.*`
 	},
-	subCommands: [
-		'add',
-		'remove',
-		'edit',
-		{ input: 'create', output: 'add' },
-		{ input: 'delete', output: 'remove' },
-		{ input: 'update', output: 'edit' }
+	subcommands: [
+		{ name: 'add', messageRun: 'msgAdd' },
+		{ name: 'create', messageRun: 'msgAdd' },
+		{ name: 'remove', messageRun: 'msgRemove' },
+		{ name: 'delete', messageRun: 'msgRemove' },
+		{ name: 'edit', messageRun: 'msgEdit' },
+		{ name: 'update', messageRun: 'msgEdit' }
 	]
 })
-export class UserCommand extends SteveCommand {
+export class UserCommand extends SteveSubcommand {
 
-	public async add(msg: Message, args: Args) {
+	public async msgAdd(msg: Message, args: Args) {
 		if (!msg.guildId) {
 			return send(msg, 'You must be in a server to manage snips!');
 		}
@@ -53,7 +53,7 @@ export class UserCommand extends SteveCommand {
 		return response.edit(`Created new snippet **${snipName}**${snipId === snipName ? '' : ` with snippet id of **${snipId}**`}.`);
 	}
 
-	public async remove(msg: Message, args: Args) {
+	public async msgRemove(msg: Message, args: Args) {
 		const response = await sendLoadingMessage(msg);
 
 		const snip = await args.pick('snippet');
@@ -63,7 +63,7 @@ export class UserCommand extends SteveCommand {
 		return response.edit(`Deleted **${snip.snipName}**.`);
 	}
 
-	public async edit(msg: Message, args: Args) {
+	public async msgEdit(msg: Message, args: Args) {
 		const response = await sendLoadingMessage(msg);
 
 		const snip = await args.pick('snippet');

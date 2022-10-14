@@ -20,9 +20,7 @@ export class UserCommand extends SteveCommand {
 		// const target = args.finished ? msg.member : await (await args.peekResult('member')).success ?
 		const target = args.finished
 			? msg.member
-			: targetResult.success
-				? targetResult.value
-				: null;
+			: targetResult.unwrapOr(null);
 
 		if (!target) {
 			return send(msg, 'Something went wrong and I couldn\'t find that user.');

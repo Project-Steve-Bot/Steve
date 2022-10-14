@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, CommandContext, CommandOptions, UserError } from '@sapphire/framework';
+import { Args, MessageCommandContext, CommandOptions, UserError } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { sendLoadingMessage } from '@lib/utils';
@@ -14,7 +14,7 @@ import { sendLoadingMessage } from '@lib/utils';
 })
 export class UserCommand extends SteveCommand {
 
-	public async messageRun(msg: Message, args: Args, ctx: CommandContext) {
+	public async messageRun(msg: Message, args: Args, ctx: MessageCommandContext) {
 		const number = await args.pick('string');
 		if (!/\d{3}-\d{4}/.test(number)) {
 			throw new UserError({ message: 'A fax number must be in the form of ###-####', identifier: 'InvalidFaxNumber' });
@@ -22,7 +22,7 @@ export class UserCommand extends SteveCommand {
 
 		const response = await sendLoadingMessage(msg);
 
-		const faxUsers = await this.container.db.users.find({ 'fax.number': { $ne: null } }).toArray();
+		const faxUsers = await this.container.db.users.find({ 'fax.number': { $ne: undefined } }).toArray();
 
 		const faxNumbers = faxUsers.map((user) => user.fax?.number).filter((hasNum) => hasNum);
 

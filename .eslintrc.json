@@ -3,7 +3,8 @@
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": 2020,
-		"sourceType": "module"
+		"sourceType": "module",
+		"project": "./tsconfig.json"
 	},
 	"extends": "plugin:@typescript-eslint/recommended",
 	"env": {
@@ -11,6 +12,7 @@
 		"es6": true,
 		"es2020": true
 	},
+	"plugins": ["deprecation"],
 	"rules": {
         "no-extra-parens": ["warn", "all", {
             "nestedBinaryExpressions": false
@@ -42,6 +44,7 @@
                 "error": "Error"
             }
         }],
+		"deprecation/deprecation": "warn",
         "@typescript-eslint/indent": ["error", "tab"],
         "accessor-pairs": "warn",
         "array-callback-return": "error",

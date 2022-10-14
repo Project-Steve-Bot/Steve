@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args, Command, CommandOptions, DetailedDescriptionCommand } from '@sapphire/framework';
+import type { Args, CommandOptions, DetailedDescriptionCommand, MessageCommandContext } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { EmbedField, Message, MessageEmbed, Util } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
@@ -13,7 +13,7 @@ import { SteveCommand } from '@lib/extensions/SteveCommand';
 })
 export class UserCommand extends SteveCommand {
 
-	public async messageRun(msg: Message, args: Args, ctx: Command.RunContext) {
+	public async messageRun(msg: Message, args: Args, ctx: MessageCommandContext) {
 		const commands = msg.client.stores.get('commands');
 		const { prefix } = ctx;
 
@@ -26,11 +26,17 @@ export class UserCommand extends SteveCommand {
 				categories.map(async (cat) => {
 					const commandUsabilityList = await Promise.all(
 						commands.map(async (cmd) => {
-							const result = await cmd.preconditions.run(msg, cmd, { external: true });
-							return {
+							const cmdData: { command: string, useable: boolean } = {
 								command: cmd.name,
-								useable: cmd.category === cat && cmd.enabled && result.success
+								useable: false
 							};
+
+							if (cmd.supportsMessageCommands()) {
+								const result = await cmd.preconditions.messageRun(msg, cmd, { external: true });
+								cmdData.useable = cmd.category === cat && cmd.enabled && result.isOk();
+							}
+
+							return cmdData;
 						})
 					);
 
