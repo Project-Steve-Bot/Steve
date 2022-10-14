@@ -44,7 +44,7 @@ export class UserCommand extends SteveCommand {
 		const mode = msg.guild ? 'public' : 'private';
 		const user = msg.author.id;
 
-		const rawRepeat = args.getOption('repeat', 'every').unwrapOr(null);
+		const rawRepeat = args.getOption('repeat', 'every');
 		const repeat = rawRepeat ? parse(rawRepeat) : null;
 		if (repeat && repeat < 60e3) {
 			throw new UserError({

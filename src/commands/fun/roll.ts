@@ -80,7 +80,7 @@ export class UserCommand extends SteveCommand {
 
 		const spec = input.unwrap();
 
-		const repeat = parseInt(args.getOption('repeat', 'r').unwrapOr('1')) || 1;
+		const repeat = parseInt(args.getOption('repeat', 'r') ?? '1') || 1;
 		const runs: string[] = [];
 
 		for (let i = 0; i < repeat; i++) {

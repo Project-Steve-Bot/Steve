@@ -9,7 +9,7 @@ export abstract class SteveSubcommand extends Subcommand {
 
 	public constructor(context: PieceContext, options: SubcommandOptions) {
 		const needsDefault = options.subcommands?.every(subcommand =>
-			subcommand.type === 'method'
+			subcommand.type === 'method' || subcommand.type === undefined
 				? !subcommand.default
 				: subcommand.type === 'group'
 					? subcommand.entries.every(entry => !entry.default)

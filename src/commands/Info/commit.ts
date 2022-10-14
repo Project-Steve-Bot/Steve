@@ -32,8 +32,8 @@ export class CommitCommand extends SteveCommand {
 	private homePage = JSON.parse(readFileSync(`${process.cwd()}/package.json`).toString()).homepage;
 
 	public async messageRun(msg: Message, args: Args) {
-		const count = parseInt(args.getOption('count', 'c').unwrapOr('10')) || 10;
-		const skip = parseInt(args.getOption('skip', 's').unwrapOr('0')) || 0;
+		const count = parseInt(args.getOption('count', 'c') ?? '10') || 10;
+		const skip = parseInt(args.getOption('skip', 's') ?? '0') || 0;
 
 		const { branch, commits } = this.getCommits(count, skip);
 

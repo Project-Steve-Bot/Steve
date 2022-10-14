@@ -48,7 +48,7 @@ export class UserCommand extends SteveCommand {
 
 		// rawExpires.
 
-		const expires = new Date(Date.now() + parse(rawExpires.unwrapOr('1d')));
+		const expires = new Date(Date.now() + parse(rawExpires ?? '1d'));
 
 		const embed = new MessageEmbed()
 			.setTitle(question)

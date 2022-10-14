@@ -12,7 +12,7 @@ export class UserEvent extends Listener {
 		if (['UserError', 'ArgumentError'].includes(error.name)) return;
 
 		const [embed, files] = buildErrorPayload(error);
-		embed.addField(`Command: ${command.name}`, `\`${msg.content}\`\n[Jump to message](${msg.url})`);
+		embed.addFields([{ name: `Command: ${command.name}`, value: `\`${msg.content}\`\n[Jump to message](${msg.url})` }]);
 
 		this.container.hooks.discordLogs?.send({
 			avatarURL: this.container.client.user?.displayAvatarURL(),

@@ -4,6 +4,7 @@ process.env.NODE_ENV ??= 'development';
 import 'reflect-metadata';
 import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-editable-commands/register';
+import '@sapphire/plugin-subcommands/register';
 import { createColors } from 'colorette';
 import { config } from 'dotenv-cra';
 import { join } from 'path';

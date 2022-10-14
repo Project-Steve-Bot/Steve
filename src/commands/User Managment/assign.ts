@@ -28,10 +28,7 @@ export class UserCommand extends SteveSubcommand {
 			return this.msgList(msg, args, ctx);
 		}
 
-		this.container.logger.debug('getting role');
 		const targetRole = await args.rest('role');
-		this.container.logger.debug('got role');
-		this.container.logger.debug(targetRole);
 
 		const isAssignable = await this.container.db.guilds.countDocuments({ id: msg.guildId, assignableRoles: targetRole.id }) === 1;
 
