@@ -38,5 +38,6 @@
 		"udel",
 		"unfaxed",
 		"viewremind"
-	]
+	],
+	"debug.javascript.unmapMissingSources": true
 }

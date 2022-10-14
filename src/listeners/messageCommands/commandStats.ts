@@ -1,13 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { CommandSuccessPayload, Events, Listener } from '@sapphire/framework';
+import { MessageCommandSuccessPayload, Events, Listener } from '@sapphire/framework';
 
 @ApplyOptions<Listener.Options>({
-	event: Events.CommandSuccess,
-	name: 'Stats - CommandSuccess'
+	event: Events.MessageCommandSuccess,
+	name: 'Stats - MessageCommandSuccess'
 })
 export class UserEvent extends Listener {
 
-	public run({ command }: CommandSuccessPayload) {
+	public run({ command }: MessageCommandSuccessPayload) {
 		if (command.options.preconditions?.includes('OwnerOnly')) {
 			return;
 		}

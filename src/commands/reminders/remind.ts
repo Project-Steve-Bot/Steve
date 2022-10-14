@@ -26,25 +26,26 @@ import { dateToTimestamp } from '@lib/utils';
 export class UserCommand extends SteveCommand {
 
 	public async messageRun(msg: Message, args: Args) {
-		const durOrTime = await args.pickResult('durationOrTimestamp');
-		if (!durOrTime.success) {
+		const durOrTimeResult = await args.pickResult('durationOrTimestamp');
+		if (durOrTimeResult.isErr()) {
 			return send(msg, 'Please provide a valid duration or timestamp.');
 		}
 
-		const isDur = typeof durOrTime.value === 'number';
+		const durOrTime = durOrTimeResult.unwrap();
+		const isDur = typeof durOrTime === 'number';
 
-		if (!isDur && durOrTime.value.getTime() < Date.now()) {
+		if (!isDur && durOrTime.getTime() < Date.now()) {
 			return send(msg, 'Sorry but I can\'t send reminders into the past.');
 		}
 
-		const expires = isDur ? new Date(durOrTime.value + Date.now()) : durOrTime.value;
+		const expires = isDur ? new Date(durOrTime + Date.now()) : durOrTime;
 
 		const content = await args.rest('string');
 		const mode = msg.guild ? 'public' : 'private';
 		const user = msg.author.id;
 
-		const rawRepeat = args.getOptions('repeat', 'every');
-		const repeat = rawRepeat ? parse(rawRepeat[0]) : null;
+		const rawRepeat = args.getOption('repeat', 'every');
+		const repeat = rawRepeat ? parse(rawRepeat) : null;
 		if (repeat && repeat < 60e3) {
 			throw new UserError({
 				identifier: 'RemindRepeatTooShort',

@@ -19,11 +19,11 @@ export class UserCommand extends SteveCommand {
 	public async messageRun(msg: Message, args: Args) {
 		const input = await args.pickResult('string');
 
-		if (!input.success || !this.plays.includes(input.value.toLowerCase())) {
+		if (!input.isOk() || !this.plays.includes(input.unwrap().toLowerCase())) {
 			return send(msg, 'You gotta play rock, paper, or scissors mate.');
 		}
 
-		const playerChoice = input.value.toLowerCase();
+		const playerChoice = input.unwrap().toLowerCase();
 		const botChoice = pickRandom(this.plays);
 
 		const playerNum = this.plays.indexOf(playerChoice);

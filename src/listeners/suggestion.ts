@@ -25,8 +25,6 @@ export class UserEvent extends Listener {
 
 		const embed = new MessageEmbed(interaction.message.embeds[0]);
 		const title = (embed.description?.length ?? 0) > 100 ? `${embed.description?.slice(0, 99)}...` : embed.description ?? '';
-		this.container.logger.debug(title);
-		this.container.logger.debug('Length', (embed.description?.length ?? 0) > 100);
 		const body = stripIndents`${embed.description?.length ?? 0 > 100 ? embed.description : ''}
 		<sub>Requested by ${embed.author?.name}</sub>`;
 

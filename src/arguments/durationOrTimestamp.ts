@@ -19,13 +19,13 @@ export class DurationOrTimestampArgument extends Argument<number|Date> {
 
 		const timestampResult = await timestampArg.run(parameter, context);
 
-		if (timestampResult.success) {
+		if (timestampResult.isOk()) {
 			return timestampResult;
 		}
 
-		const durationResult = await durationArg.run(parameter, context);
+		const durationResult = durationArg.run(parameter, context);
 
-		if (durationResult.success) {
+		if (durationResult.isOk()) {
 			return durationResult;
 		}
 

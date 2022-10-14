@@ -3,7 +3,7 @@ import type { Message } from 'discord.js';
 
 export class UserPrecondition extends Precondition {
 
-	public async run(message: Message) {
+	public async messageRun(message: Message) {
 		return message.guildId === '700378785605877820'
 			? this.ok()
 			: this.error({

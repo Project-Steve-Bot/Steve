@@ -21,6 +21,7 @@ const main = async () => {
 			},
 			caseInsensitivePrefixes: true,
 			caseInsensitiveCommands: true,
+			loadMessageCommandListeners: true,
 			logger: {
 				level: LogLevel.Debug
 			},

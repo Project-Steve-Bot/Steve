@@ -1,13 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Events, Listener, UnknownCommandPayload } from '@sapphire/framework';
+import { Events, Listener, UnknownMessageCommandPayload } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<Listener.Options>({
-	event: Events.UnknownCommand
+	event: Events.UnknownMessageCommand
 })
-export class UserEvent extends Listener<typeof Events.UnknownCommand> {
+export class UserEvent extends Listener<typeof Events.UnknownMessageCommand> {
 
-	public async run({ message: msg, commandName }: UnknownCommandPayload) {
+	public async run({ message: msg, commandName }: UnknownMessageCommandPayload) {
 		if (!msg.guildId) return;
 
 		const snip = await this.container.db.snips.findOne({ guildId: msg.guildId, snipId: commandName.toLowerCase() });

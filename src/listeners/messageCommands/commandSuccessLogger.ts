@@ -1,17 +1,17 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandSuccessPayload, Events, Listener, LogLevel } from '@sapphire/framework';
+import { Command, MessageCommandSuccessPayload, Events, Listener, LogLevel } from '@sapphire/framework';
 // @ts-expect-error ts(6133)
 import type { Logger } from '@sapphire/plugin-logger';
 import { cyan } from 'colorette';
 import type { Guild, User } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({
-	event: Events.CommandSuccess,
-	name: 'Commands - CommandSuccess'
+	event: Events.MessageCommandSuccess,
+	name: 'Message Commands - CommandSuccess'
 })
-export class UserEvent extends Listener<typeof Events.CommandSuccess> {
+export class UserEvent extends Listener<typeof Events.MessageCommandSuccess> {
 
-	public run({ message, command }: CommandSuccessPayload) {
+	public run({ message, command }: MessageCommandSuccessPayload) {
 		const shard = this.shard(message.guild?.shardId ?? 0);
 		const commandName = this.command(command);
 		const author = this.author(message.author);

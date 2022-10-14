@@ -15,7 +15,7 @@ export class SnippetArgument extends Argument<WithId<Snippet>> {
 			});
 		}
 
-		const snip = await this.container.db.snips.findOne({ guildId: msg.guildId, snipId: parameter.replaceAll(' ', '-') });
+		const snip = await this.container.db.snips.findOne({ guildId: msg.guildId, snipId: parameter.trim().replaceAll(' ', '-') });
 
 		if (!snip) {
 			return this.error({
