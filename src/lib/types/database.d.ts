@@ -13,6 +13,7 @@ export interface DbGuild {
 		reminder?: string;
 		fax?: string[];
 		count?: string;
+		rolls?: string;
 	};
 	assignableRoles?: string[];
 	count?: CountData;

@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, CommandOptions } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import { Message, MessageEmbed, TextBasedChannel } from 'discord.js';
 import { oneLine } from 'common-tags';
 import { send } from '@sapphire/plugin-editable-commands';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
@@ -44,7 +44,7 @@ export class UserCommand extends SteveCommand {
 		const rolls: RollSpec[] = [];
 		let match: RegExpExecArray | null;
 		while ((match = DICE_REGEX.exec(parameter)) !== null) {
-			if (!match || !match.groups) {
+			if (!match.groups) {
 				return Args.error({
 					argument,
 					parameter,
@@ -74,6 +74,15 @@ export class UserCommand extends SteveCommand {
 			const keepCount = parseInt(match.groups.keepCount, 10);
 
 			rolls.push({ input: match.input, count, sides, modifier, keep, keepCount });
+		}
+
+		if (rolls.length === 0) {
+			return Args.error({
+				argument,
+				parameter,
+				message: 'Please provide a valid spec.',
+				identifier: 'MissingOrInvalidSpec'
+			});
 		}
 		return Args.ok(rolls);
 	});
@@ -106,8 +115,6 @@ export class UserCommand extends SteveCommand {
 					for (let j = 0; j < spec.count - (spec.keepCount ?? 0); j++) {
 						lostRolls.push(keptRolls.pop() ?? 0);
 					}
-					this.container.logger.debug('Kept:', keptRolls);
-					this.container.logger.debug('Lost:', lostRolls);
 				}
 
 				rollResults.push({ spec, keptRolls, lostRolls });
@@ -116,7 +123,22 @@ export class UserCommand extends SteveCommand {
 			runs.push(this.createResultString(rollResults));
 		} while (!args.finished);
 
-		return send(msg, runs.join('\n'));
+		const out = send(msg, runs.join('\n'));
+
+		if (msg.inGuild()) {
+			const rollLogId = (await this.container.db.guilds.findOne({ id: msg.guildId }))?.channels?.rolls;
+			if (!rollLogId) return out;
+
+			const rollLog = await msg.guild.channels.fetch(rollLogId) as TextBasedChannel;
+			rollLog.send({ embeds: [new MessageEmbed()
+				.setAuthor({ name: `${msg.author.tag} rolled...`, iconURL: msg.author.displayAvatarURL({ dynamic: true }) })
+				.setDescription(runs.join('\n'))
+				.setColor('AQUA')
+				.setTimestamp()
+			] });
+		}
+
+		return out;
 	}
 
 	private roll(sides: number): number {
