@@ -11,7 +11,6 @@ interface RollSpec {
 	input: string;
 	count: number;
 	sides: number;
-	explodes: boolean;
 	keep: KeepType;
 	modifier: number
 	keepCount?: number;
@@ -23,7 +22,7 @@ interface DiceResult {
 	lostRolls: number[];
 }
 
-const DICE_REGEX = /(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<modifier>[+-]\d{1,3})?(?<explode>!)?(?<keep>kl?(?<keepCount>\d{1,3}))?/;
+const DICE_REGEX = /(\/(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<keep>kl?(?<keepCount>\d{1,3}))?(?<modifier>[+-]\d{1,3})?)/g;
 
 @ApplyOptions<CommandOptions>({
 	description: 'Roll some dice!',
@@ -39,45 +38,46 @@ const DICE_REGEX = /(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<modifier>[+-]\d{1,3})
 export class UserCommand extends SteveCommand {
 
 
-	private static spec = Args.make<RollSpec>((parameter, { argument }) => {
-		const match = DICE_REGEX.exec(parameter);
+	private static spec = Args.make<RollSpec[]>((parameter, { argument }) => {
+		parameter = `/${parameter}`;
+		const rolls: RollSpec[] = [];
+		let match: RegExpExecArray | null;
+		while ((match = DICE_REGEX.exec(parameter)) !== null) {
+			if (!match || !match.groups) {
+				return Args.error({
+					argument,
+					parameter,
+					message: 'Please provide a valid spec.',
+					identifier: 'MissingOrInvalidSpec'
+				});
+			}
 
-		if (!match || !match.groups) {
-			return Args.error({
-				argument,
-				parameter,
-				message: 'Please provide a valid spec.',
-				identifier: 'MissingOrInvalidSpec'
-			});
+			let count = parseInt(match.groups.count, 10) ?? 1;
+			if (isNaN(count)) count = 1;
+			else if (count > 100) count = 100;
+
+			let sides = parseInt(match.groups.sides, 10);
+			if (sides > 1000) sides = 1000;
+
+			let modifier = parseInt(match.groups.modifier, 10) ?? 0;
+			if (isNaN(modifier)) modifier = 0;
+			else if (modifier > 100) modifier = 100;
+
+			let keep: KeepType = false;
+			if (match.groups.keep) {
+				const keepLowest = match.groups.keep.includes('l');
+				if (keepLowest) keep = 'lowest';
+				else keep = 'highest';
+			}
+
+			const keepCount = parseInt(match.groups.keepCount, 10);
+
+			rolls.push({ input: match.input, count, sides, modifier, keep, keepCount });
 		}
-
-		let count = parseInt(match.groups.count, 10) ?? 1;
-		if (isNaN(count)) count = 1;
-		else if (count > 100) count = 100;
-
-		let sides = parseInt(match.groups.sides, 10);
-		if (sides > 1000) sides = 1000;
-
-		let modifier = parseInt(match.groups.modifier, 10) ?? 0;
-		if (isNaN(modifier)) modifier = 0;
-		else if (modifier > 100) modifier = 100;
-
-		const explodes = match.groups.explode === '!';
-
-		let keep: KeepType = false;
-		if (match.groups.keep) {
-			const keepLowest = match.groups.keep.includes('l');
-			if (keepLowest) keep = 'lowest';
-			else keep = 'highest';
-		}
-
-		const keepCount = parseInt(match.groups.keepCount, 10);
-
-		return Args.ok({ input: match.input, count, sides, modifier, explodes, keep, keepCount });
+		return Args.ok(rolls);
 	});
 
 	public async messageRun(msg: Message, args: Args) {
-		let grandTotal = 0;
 		const runs: string[] = [];
 
 		do {
@@ -86,76 +86,100 @@ export class UserCommand extends SteveCommand {
 				return send(msg, input.err().unwrap().message);
 			}
 
-			const spec = input.unwrap();
+			const specs = input.unwrap();
+			const rollResults: DiceResult[] = [];
 
-			const keptRolls: number[] = [];
-			const lostRolls: number[] = [];
-			for (let j = 0; j < spec.count; j++) {
-				const roll = this.roll(spec.sides, spec.explodes);
-				keptRolls.push(roll);
-			}
-
-			if (spec.keep) {
-				keptRolls.sort();
-				if (spec.keep === 'highest') keptRolls.reverse();
-
-				for (let j = 0; j < spec.count - (spec.keepCount ?? 0); j++) {
-					lostRolls.push(keptRolls.pop() ?? 0);
+			specs.forEach(spec => {
+				const keptRolls: number[] = [];
+				const lostRolls: number[] = [];
+				for (let j = 0; j < spec.count; j++) {
+					const roll = this.roll(spec.sides);
+					keptRolls.push(roll);
 				}
-			}
 
-			// reorder the dice because I like it better when they are random
-			for (let j = keptRolls.length - 1; j > 0; j--) {
-				const rand = Math.floor(Math.random() * (j + 1));
-				[keptRolls[j], keptRolls[rand]] = [keptRolls[rand], keptRolls[j]];
-			}
+				if (spec.keep) {
+					keptRolls.sort((a, b) => a - b);
 
-			const result: DiceResult = { spec, keptRolls, lostRolls };
-			const modifierString = spec.modifier === 0
-				? ''
-				: spec.modifier > 0
-					? ` +${spec.modifier}`
-					: ` ${spec.modifier}`;
+					if (spec.keep === 'highest') keptRolls.reverse();
 
-			const emoji = this.getEmoji(result.spec);
-			const total = result.keptRolls.reduce((a, b) => a + b) + spec.modifier;
-			runs.push(oneLine`${emoji} You rolled: \`${result.keptRolls.join('`, `')}\`${modifierString}
-					${result.lostRolls.length ? `, ~~\`${result.lostRolls.join('`~~, ~~`')}\`~~` : ''}
-					${emoji}${result.keptRolls.length > 1 || spec.modifier !== 0 ? `\nTotal: **${total}**` : ''}`);
-			grandTotal += total;
+					for (let j = 0; j < spec.count - (spec.keepCount ?? 0); j++) {
+						lostRolls.push(keptRolls.pop() ?? 0);
+					}
+					this.container.logger.debug('Kept:', keptRolls);
+					this.container.logger.debug('Lost:', lostRolls);
+				}
+
+				rollResults.push({ spec, keptRolls, lostRolls });
+			});
+
+			runs.push(this.createResultString(rollResults));
 		} while (!args.finished);
 
-		return send(msg, `${runs.join('\n')}\n${runs.length > 1 ? `__**Grand Total: ${grandTotal}**__` : ''}`);
+		return send(msg, runs.join('\n'));
 	}
 
-	private rollOnce(sides: number): number {
+	private roll(sides: number): number {
 		return Math.floor(Math.random() * sides) + 1;
 	}
 
-	private getEmoji(spec: RollSpec): string {
-		if (spec.keep === 'highest') return '👍';
-		if (spec.keep === 'lowest') return '👎';
-		if (spec.explodes) return '💥';
-		return '🎲';
+	private createResultString(rolls: DiceResult[]): string {
+		const prefix = rolls.length > 1 ? '> ' : '';
+		let output = '';
+		let total = 0;
+
+		rolls.forEach(({ spec, keptRolls, lostRolls }) => {
+			const emoji = this.getEmoji(spec, this.findMax(keptRolls));
+			const modifierString = spec.modifier === 0
+				? ''
+				: spec.modifier > 0
+					? `+${spec.modifier}`
+					: ` ${spec.modifier}`;
+			const extrasString = `${modifierString}${spec.keep
+				? `k${spec.keep === 'lowest' ? 'l' : ''}${spec.keepCount}`
+				: ''}`;
+
+			output += oneLine`${prefix}${emoji} ${spec.count}d${spec.sides}${extrasString}: \`${keptRolls.join('`, `')}\`
+			${lostRolls.length ? `, ~~\`${lostRolls.join('`~~, ~~`')}\`~~` : ''}${modifierString} ${emoji}`;
+
+			if (rolls.length > 1) {
+				output += '\n';
+			}
+
+			total += keptRolls.reduce((a, b) => a + b) + spec.modifier;
+		});
+
+		return `${output}${rolls.length > 1
+			? `> **Total: ${total}**\n`
+			: ''}`;
 	}
 
-	private roll(sides: number, explodes: boolean): number {
-		if (sides <= 1) return 1; // this one is easy
-
-		if (explodes) {
-			let total = 0;
-			let roll = 0;
-			do {
-				roll = this.rollOnce(sides);
-				total += roll;
-			} while (
-				roll === sides
-				&& roll < 1e6 // prevent an infinite loop, just in case
-			);
-			return total;
-		} else {
-			return this.rollOnce(sides);
+	private getEmoji(spec: RollSpec, max: number): string {
+		switch (spec.sides) {
+			case 4:
+				return '<:d4:1031717350526951475>';
+			case 6:
+				return '<:d6:1031717351663599656>';
+			case 8:
+				return '<:d8:1031717352850591774>';
+			case 10:
+				return '<:d10:1031717353404239933>';
+			case 12:
+				return '<:d12:1031717355107143780>';
+			case 20:
+				return max === 20 ? '<a:d20crit:1031724228434731100>' : '<:d20:1031717356008915015>';
+			default:
+				return '<:dice:1032024351060541492>';
 		}
+	}
+
+	private findMax(nums: number[]) {
+		let max = -1;
+
+		nums.forEach(num => {
+			if (num > max) max = num;
+		});
+
+		return max;
 	}
 
 }
