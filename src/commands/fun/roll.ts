@@ -29,10 +29,11 @@ const DICE_REGEX = /(\/(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<keep>kl?(?<keepCou
 	aliases: ['dice', 'diceroll'],
 	detailedDescription: {
 		usage: '<spec>',
-		examples: ['1d6', 'd20', '1d20+3', '5d10!', '6d12k1', '6d12kl2'],
+		examples: ['1d6', 'd20', '1d20+3', '5d10!', '6d12k1', '6d12kl2', '1d20+3 6d4/1d8'],
 		extendedHelp: oneLine`Use standard dice notation. You can roll up to 100 dice with up to 1,000 sides each.
-		Modifiers work too!	Add a \`!\` at the end of your roll to use exploding dice.
-		To keep the highest n, add \`k<n>\`; to keep the lowest n, add \`kl<n>\` (with n < amount of dice).`
+		Modifiers work too!	To keep the highest n, add \`k<n>\`; to keep the lowest n, add \`kl<n>\` (with n < amount of dice).
+		You can also roll multiple dice and even have them added together if you'd like. To add dice together,
+		put a \`/\` between the specs.`
 	}
 })
 export class UserCommand extends SteveCommand {
@@ -123,7 +124,7 @@ export class UserCommand extends SteveCommand {
 	}
 
 	private createResultString(rolls: DiceResult[]): string {
-		const addTotal = rolls.length > 1 || rolls[0].spec.count > 1;
+		const addTotal = rolls.length > 1 || rolls[0].spec.count > 1 || rolls[0].spec.modifier !== 0;
 		const prefix = addTotal ? '> ' : '';
 		let output = '';
 		let total = 0;
