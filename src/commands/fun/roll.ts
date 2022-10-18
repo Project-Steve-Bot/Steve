@@ -123,7 +123,8 @@ export class UserCommand extends SteveCommand {
 	}
 
 	private createResultString(rolls: DiceResult[]): string {
-		const prefix = rolls.length > 1 ? '> ' : '';
+		const addTotal = rolls.length > 1 || rolls[0].spec.count > 1;
+		const prefix = addTotal ? '> ' : '';
 		let output = '';
 		let total = 0;
 
@@ -141,16 +142,14 @@ export class UserCommand extends SteveCommand {
 			output += oneLine`${prefix}${emoji} ${spec.count}d${spec.sides}${extrasString}: \`${keptRolls.join('`, `')}\`
 			${lostRolls.length ? `, ~~\`${lostRolls.join('`~~, ~~`')}\`~~` : ''}${modifierString} ${emoji}`;
 
-			if (rolls.length > 1) {
+			if (addTotal) {
 				output += '\n';
 			}
 
 			total += keptRolls.reduce((a, b) => a + b) + spec.modifier;
 		});
 
-		return `${output}${rolls.length > 1
-			? `> **Total: ${total}**\n`
-			: ''}`;
+		return `${output}${addTotal ? `> **Total: ${total}**\n` : ''}`;
 	}
 
 	private getEmoji(spec: RollSpec, max: number): string {
