@@ -1,3 +1,5 @@
+import type { RollSpec } from './rollSpec';
+
 export interface Reminder {
 	user: string;
 	content: string;
@@ -76,4 +78,10 @@ export interface ChannelRename {
 	requester: string;
 	yesVoters: string[];
 	noVoters: string[];
+}
+
+export interface QuickRoll {
+	user: string;
+	rollName: string;
+	specs: RollSpec[][];
 }
