@@ -74,7 +74,7 @@ export class UserCommand extends SteveCommand {
 
 		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const [msg, client] = [message, this.container.client];
+		const [msg, client, container] = [message, this.container.client, this.container];
 
 		let success = true;
 		let result = null;
