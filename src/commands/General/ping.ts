@@ -10,7 +10,6 @@ import type { Message } from 'discord.js';
 export class UserCommand extends SteveCommand {
 
 	public override registerApplicationCommands(registry: Command.Registry) {
-		this.container.logger.debug(this.container.idHits.get(this.name));
 		registry.registerChatInputCommand(builder => {
 			builder
 				.setName(this.name)

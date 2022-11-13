@@ -1,10 +1,18 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed, TextBasedChannel } from 'discord.js';
+import type { Args, Command, CommandOptions } from '@sapphire/framework';
+import {
+	AutocompleteInteraction,
+	Guild,
+	Message,
+	MessageEmbed,
+	TextBasedChannel,
+	User
+} from 'discord.js';
 import { oneLine } from 'common-tags';
 import { send } from '@sapphire/plugin-editable-commands';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import type { RollSpec } from '@lib/types/rollSpec';
+import { resolveRoll } from '@lib/resolvers';
 
 interface DiceResult {
 	spec: RollSpec;
@@ -24,17 +32,69 @@ interface DiceResult {
 		put a \`/\` between the specs.`
 	}
 })
-export class UserCommand extends SteveCommand {
+export class RollCommand extends SteveCommand {
+
+	private autoCompleteCache: Map<string, { setAt: number, options: string[] }> = new Map();
+
+	public override registerApplicationCommands(registry: Command.Registry) {
+		registry.registerChatInputCommand(builder => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption(option =>
+					option
+						.setName('dice')
+						.setDescription('Use standard dice notation or a quick roll that you setup using the managequickrolls command')
+						.setRequired(true)
+						.setAutocomplete(true)
+				);
+		}, { idHints: this.container.idHits.get(this.name) });
+	}
+
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		const parameter = interaction.options.getString('dice', true);
+		const resolvedRoll = await resolveRoll(parameter, interaction.user);
+
+		if (resolvedRoll.isErr()) {
+			return interaction.reply(`\`${parameter}\` is not a valid quick roll or spec.`);
+		}
+
+		const rollResult = this.preformRolls(resolvedRoll.unwrap());
+		const out = interaction.reply(rollResult);
+
+		if (interaction.inGuild()) {
+			const guild = await this.container.client.guilds.fetch(interaction.guildId);
+			this.logRolls(rollResult, guild, interaction.user);
+		}
+
+		return out;
+	}
+
+	public async autocompleteRun(interaction: AutocompleteInteraction) {
+		const options = await this.fetchAutoCompleteOptions(interaction.user.id);
+		const filtered = options.filter(option => option.startsWith(interaction.options.getFocused()));
+		interaction.respond(filtered.map(option => ({ name: option, value: option })));
+	}
 
 	public async messageRun(msg: Message, args: Args) {
-		const runs: string[] = [];
-
 		const input = await args.restResult('roll');
 		if (input.isErr()) {
 			return send(msg, input.err().unwrap().message);
 		}
 
-		input.unwrap().forEach(specs => {
+		const rollResult = this.preformRolls(input.unwrap());
+		const out = send(msg, rollResult);
+
+		if (msg.inGuild()) {
+			this.logRolls(rollResult, msg.guild, msg.author);
+		}
+
+		return out;
+	}
+
+	private preformRolls(input: RollSpec[][]): string {
+		const runs: string[] = [];
+		input.forEach(specs => {
 			const rollResults: DiceResult[] = [];
 
 			specs.forEach(spec => {
@@ -61,22 +121,20 @@ export class UserCommand extends SteveCommand {
 			runs.push(this.createResultString(rollResults));
 		});
 
-		const out = send(msg, runs.join('\n'));
+		return runs.join('\n');
+	}
 
-		if (msg.inGuild()) {
-			const rollLogId = (await this.container.db.guilds.findOne({ id: msg.guildId }))?.channels?.rolls;
-			if (!rollLogId) return out;
+	private async logRolls(result: string, guild: Guild, author: User) {
+		const rollLogId = (await this.container.db.guilds.findOne({ id: guild.id }))?.channels?.rolls;
+		if (!rollLogId) return;
 
-			const rollLog = await msg.guild.channels.fetch(rollLogId) as TextBasedChannel;
-			rollLog.send({ embeds: [new MessageEmbed()
-				.setAuthor({ name: `${msg.author.tag} rolled...`, iconURL: msg.author.displayAvatarURL({ dynamic: true }) })
-				.setDescription(runs.join('\n'))
-				.setColor('AQUA')
-				.setTimestamp()
-			] });
-		}
-
-		return out;
+		const rollLog = await guild.channels.fetch(rollLogId) as TextBasedChannel;
+		rollLog.send({ embeds: [new MessageEmbed()
+			.setAuthor({ name: `${author.tag} rolled...`, iconURL: author.displayAvatarURL({ dynamic: true }) })
+			.setDescription(result)
+			.setColor('AQUA')
+			.setTimestamp()
+		] });
 	}
 
 	private roll(sides: number): number {
@@ -140,6 +198,19 @@ export class UserCommand extends SteveCommand {
 		});
 
 		return max;
+	}
+
+	private async fetchAutoCompleteOptions(userId: string): Promise<string[]> {
+		const cashedOptions = this.autoCompleteCache.get(userId);
+
+		if (!cashedOptions || Date.now() - cashedOptions.setAt > 60e3) {
+			const quickRolls = await this.container.db.quickRolls.find({ user: userId }).toArray();
+			const options = quickRolls.map(qr => qr.rollName);
+			this.autoCompleteCache.set(userId, { setAt: Date.now(), options });
+			return options;
+		}
+
+		return cashedOptions.options;
 	}
 
 }
