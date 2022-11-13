@@ -1,11 +1,14 @@
 import 'module-alias/register';
 import '@lib/setup';
-import { LogLevel } from '@sapphire/framework';
+import { container, LogLevel } from '@sapphire/framework';
 import { SteveBoi } from '@lib/extensions/SteveBoi';
 import { startMongo } from '@lib/mongo';
 
 const main = async () => {
 	await startMongo();
+
+	const dbHints = await container.db.idHints.find().toArray();
+	const idHints = new Map(dbHints.map(hint => [hint.command, hint.ids]));
 
 	const prefix = process.env.PREFIX ?? 's;';
 	const regexPrefix = new RegExp(`^${(process.env.BOT_NAME ?? 'steve').toLowerCase()},( )?`, 'i');
@@ -52,6 +55,7 @@ const main = async () => {
 				}
 			]
 		});
+		container.idHits = idHints;
 	} catch (error) {
 		client.logger.fatal(error);
 		await client.destroy();

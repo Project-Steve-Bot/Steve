@@ -85,3 +85,8 @@ export interface QuickRoll {
 	rollName: string;
 	specs: RollSpec[][];
 }
+
+export interface IDhint {
+	command: string;
+	ids: string[];
+}

@@ -52,26 +52,33 @@ export class UserCommand extends SteveSubcommand {
 	public async msgRemove(msg: Message, args: Args) {
 		const response = await sendLoadingMessage(msg);
 
-		const quickRoll = await args.pick('quickRoll');
+		const quickRoll = await args.pickResult('quickRoll');
 
-		await this.container.db.quickRolls.findOneAndDelete(quickRoll);
+		if (quickRoll.isErr()) {
+			return response.edit(quickRoll.err().unwrap().message);
+		}
 
-		return response.edit(`Deleted **${quickRoll.rollName}**.`);
+		await this.container.db.quickRolls.findOneAndDelete(quickRoll.unwrap());
+
+		return response.edit(`Deleted **${quickRoll.unwrap().rollName}**.`);
 	}
 
 	public async msgEdit(msg: Message, args: Args) {
 		const response = await sendLoadingMessage(msg);
 
-		const quickRoll = await args.pick('quickRoll');
-		const specs = await args.restResult('rollSpec');
+		const quickRoll = await args.pickResult('quickRoll');
+		if (quickRoll.isErr()) {
+			return response.edit(quickRoll.err().unwrap().message);
+		}
 
+		const specs = await args.restResult('rollSpec');
 		if (specs.isErr()) {
 			return response.edit(specs.err().unwrap().message);
 		}
 
-		await this.container.db.quickRolls.findOneAndUpdate(quickRoll, { $set: { specs: specs.unwrap() } });
+		await this.container.db.quickRolls.findOneAndUpdate(quickRoll.unwrap(), { $set: { specs: specs.unwrap() } });
 
-		return response.edit(`**${quickRoll.rollName}** has been updated.`);
+		return response.edit(`**${quickRoll.unwrap().rollName}** has been updated.`);
 	}
 
 	public async msgShow(msg: Message) {

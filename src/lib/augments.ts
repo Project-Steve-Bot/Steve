@@ -28,6 +28,7 @@ declare module '@sapphire/pieces' {
 		cmdStats: Collection<string, number>;
 		statusUpdateFlag: number;
 		gitHub: Octokit | null;
+		idHits: Map<string, string[]>;
 	}
 }
 
