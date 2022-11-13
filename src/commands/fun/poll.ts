@@ -21,7 +21,7 @@ import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 		extendedHelp: stripIndent`
 		• Polls must have at least two options an no more than 10.
 		• You can limit people to only vote for one option with the \`--monoselect\` flag.
-		• You can specify when a poll should end with the \`--ends\` option. By default, polls never end.
+		• You can specify when a poll should end with the \`--ends\` option. By default, polls end after 24 hours.
 		• By default, you'll see who voted for what when a poll ends. You can turn that off with the \`--anonymous\` flag.`
 	}
 })
@@ -45,8 +45,6 @@ export class UserCommand extends SteveCommand {
 		choices = choices.map(choice => `${emotes.shift()} ${choice}`);
 
 		const rawExpires = args.getOption('ends');
-
-		// rawExpires.
 
 		const expires = new Date(Date.now() + parse(rawExpires ?? '1d'));
 
