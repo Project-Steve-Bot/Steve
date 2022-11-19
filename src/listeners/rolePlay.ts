@@ -16,10 +16,15 @@ export class UserEvent extends Listener {
 
 		if (!character) return;
 
-		hook.send({
+		await hook.send({
 			username: character.name,
-			content: msg.content,
-			avatarURL: character.pfp
+			content: msg.content === '' ? null : msg.content,
+			avatarURL: character.pfp,
+			files: msg.attachments.toJSON(),
+			allowedMentions: {
+				users: msg.mentions.users.map(user => user.id),
+				roles: msg.mentions.roles.map(role => role.id)
+			}
 		});
 		msg.delete();
 	}
