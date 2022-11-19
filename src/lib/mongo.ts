@@ -9,7 +9,8 @@ import type {
 	CmdStats,
 	ChannelRename,
 	QuickRoll,
-	IDhint
+	IDhint,
+	RPCharter
 } from '@lib/types/database';
 
 export interface SteveCollections {
@@ -22,6 +23,7 @@ export interface SteveCollections {
 	channelRename: Collection<ChannelRename>;
 	quickRolls: Collection<QuickRoll>;
 	idHints: Collection<IDhint>;
+	rpCharacters: Collection<RPCharter>;
 }
 
 export async function startMongo() {
@@ -43,7 +45,8 @@ export async function startMongo() {
 		cmdStats: database.collection<CmdStats>('commandStats'),
 		channelRename: database.collection<ChannelRename>('channelRename'),
 		quickRolls: database.collection<QuickRoll>('quickRolls'),
-		idHints: database.collection<IDhint>('idHints')
+		idHints: database.collection<IDhint>('idHints'),
+		rpCharacters: database.collection<RPCharter>('rpCharacters')
 	};
 
 	container.mongo = mongo;
