@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { Listener, ListenerOptions, PieceContext, Store } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
-import { Collection } from 'discord.js';
+import { Collection, WebhookClient } from 'discord.js';
 import { readFileSync } from 'fs';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -22,6 +22,7 @@ export class UserEvent extends Listener {
 		this.printStoreDebugInformation();
 		this.logStartupToDiscord();
 		this.createCountChannelCache();
+		this.createRPchannelCache();
 		this.createCmdStatsCache();
 		this.gitHubLogin();
 		return;
@@ -38,6 +39,18 @@ export class UserEvent extends Listener {
 			username: user.username,
 			avatarURL: user.displayAvatarURL(),
 			content: `${process.env.BOT_NAME} started. Ready to serve ${this.container.client.guilds.cache.size} guilds.`
+		});
+	}
+
+	private async createRPchannelCache() {
+		this.container.rpChannels = new Map();
+		const guilds = await this.container.db.guilds.find().toArray();
+
+		guilds.forEach(guild => {
+			const rpChannel = guild.channels?.rolePlay;
+			if (rpChannel) {
+				this.container.rpChannels.set(rpChannel.channel, new WebhookClient({ url: rpChannel.hook }));
+			}
 		});
 	}
 

@@ -7,6 +7,10 @@ export interface DbGuild {
 		fax?: string[];
 		count?: string;
 		rolls?: string;
+		rolePlay?: {
+			channel: string;
+			hook: string;
+		}
 	};
 	assignableRoles?: string[];
 	count?: CountData;

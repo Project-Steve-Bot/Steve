@@ -8,3 +8,4 @@ export * from './cmdStats';
 export * from './channelRename';
 export * from './quickRoll';
 export * from './idHint';
+export * from './rpCharacter';
