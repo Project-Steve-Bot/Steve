@@ -59,6 +59,10 @@ export class UserCommand extends SteveSubcommand {
 			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
 		}
 
+		if (await this.container.db.rpCharacters.countDocuments({ user: interaction.user.id, guild: interaction.guildId }) > 0) {
+			return interaction.reply({ content: 'You already have a character in this a server.', ephemeral: true });
+		}
+
 		const rpCharacter: RPCharter = {
 			user: interaction.user.id,
 			guild: interaction.guildId,
@@ -122,7 +126,7 @@ export class UserCommand extends SteveSubcommand {
 				break;
 			case 'edit':
 				embed
-					.setDescription(`**${name}** updated`)
+					.setDescription(`Your character is now **${name}**`)
 					.setColor('YELLOW');
 				break;
 			default:
