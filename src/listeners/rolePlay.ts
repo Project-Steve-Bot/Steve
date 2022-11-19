@@ -10,15 +10,26 @@ export class UserEvent extends Listener {
 
 	public async run(msg: Message) {
 		const hook = this.container.rpChannels.get(msg.channelId);
-		if (!hook || !msg.inGuild() || msg.author.bot || msg.type !== 'DEFAULT') return;
+		if (!hook || !msg.inGuild() || msg.author.bot || !['DEFAULT', 'REPLY'].includes(msg.type)) return;
 
 		const character = await this.container.db.rpCharacters.findOne({ user: msg.author.id, guild: msg.guildId });
 
 		if (!character) return;
 
+		let { content } = msg;
+
+		if (msg.reference?.messageId) {
+			const repliedMessage = await msg.channel.messages.fetch(msg.reference.messageId);
+			content = `> [**${repliedMessage.author.username}** ${
+				repliedMessage.content.length > 25
+					? `${repliedMessage.content.substring(0, 25)}...`
+					: repliedMessage.content
+			}](${repliedMessage.url})\n${content}`;
+		}
+
 		await hook.send({
 			username: character.name,
-			content: msg.content === '' ? null : msg.content,
+			content: content === '' ? null : content,
 			avatarURL: character.pfp,
 			files: msg.attachments.toJSON(),
 			allowedMentions: {
