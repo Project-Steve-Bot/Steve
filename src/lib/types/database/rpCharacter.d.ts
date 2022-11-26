@@ -3,4 +3,5 @@ export interface RPCharter {
 	guild: string;
 	name: string;
 	pfp?: string;
+	prefix: string | null;
 }
