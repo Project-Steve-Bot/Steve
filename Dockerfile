@@ -4,12 +4,12 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
 ENV NODE_ENV="production"
 
-RUN npm run build
+RUN yarn build
 
 CMD [ "node", "." ]
