@@ -1,22 +1,29 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Listener } from '@sapphire/framework';
-import { ButtonInteraction, Interaction, MessageEmbed } from 'discord.js';
+import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
+import { ButtonInteraction, MessageEmbed } from 'discord.js';
 import type { Poll } from '@lib/types/database';
 import { dateToTimestamp } from '@lib/utils';
 
-@ApplyOptions<Listener.Options>({
-	event: 'interactionCreate'
+@ApplyOptions<InteractionHandlerOptions>({
+	interactionHandlerType: InteractionHandlerTypes.Button
 })
-export class UserEvent extends Listener {
+export class PollHandler extends InteractionHandler {
 
-	public async run(interaction: Interaction): Promise<unknown> {
-		if (!interaction.isButton() || !interaction.customId.startsWith('poll')) return;
+	public async parse(interaction: ButtonInteraction) {
+		if (interaction.id.startsWith('poll')) {
+			return this.none();
+		}
+
 		await interaction.deferUpdate();
+		return this.some(this.container.db.polls.findOne({ messageId: interaction.message.id }));
+	}
 
-		const poll = await this.container.db.polls.findOne({ messageId: interaction.message.id });
+	public async run(interaction: ButtonInteraction, promisedPoll: InteractionHandler.ParseResult<this>) {
+		const poll = await promisedPoll;
 
 		if (!poll) {
-			return interaction.followUp({ content: "Something went wrong and I couldn't find this poll :(", ephemeral: true });
+			interaction.followUp({ content: 'Something went wrong and I couldn\'t find this poll :(', ephemeral: true });
+			return;
 		}
 
 		const voterId = interaction.user.id;
@@ -49,7 +56,7 @@ export class UserEvent extends Listener {
 				.join('\n')}\n\nThis poll ends at ${dateToTimestamp(poll.expires, 'f')}`
 		);
 
-		return interaction.editReply({ embeds: [embed] });
+		interaction.editReply({ embeds: [embed] });
 	}
 
 	private addVote(interaction: ButtonInteraction, choiceId: number, poll: Poll): Poll {
