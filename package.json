@@ -69,8 +69,8 @@
 		"lint": "eslint src --ext .ts",
 		"clean": "rimraf dist",
 		"clear": "run-s clean",
-		"clean:purge": "rimraf node_modules dist pnpm-lock.yaml package-lock.json",
-		"updeps": "pnpm clean:purge && pnpm install"
+		"clean:purge": "rimraf node_modules dist yarn.lock package-lock.json",
+		"updeps": "yarn clean:purge && yarn install"
 	},
 	"packageManager": "yarn@3.3.0"
 }
