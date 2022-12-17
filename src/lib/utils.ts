@@ -16,8 +16,12 @@ export function pickRandom<T>(array: readonly T[]): T {
 	return array[Math.floor(Math.random() * length)];
 }
 
+export function getLoadingMessage() {
+	return pickRandom(RandomLoadingMessage);
+}
+
 export function sendLoadingMessage(message: Message): Promise<typeof message> {
-	return send(message, pickRandom(RandomLoadingMessage));
+	return send(message, getLoadingMessage());
 }
 
 export type TimestampType = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
