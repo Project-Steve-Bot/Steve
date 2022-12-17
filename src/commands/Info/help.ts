@@ -47,7 +47,11 @@ export class UserCommand extends SteveCommand {
 					if (useableCommands.size > 0) {
 						helpStr += `\n**${cat} Commands**\n`;
 						useableCommands.forEach((cmd) => {
-							helpStr += `\`${prefix}${cmd.name}\` ⇒ ${cmd.description ?? 'No Description provided'}\n`;
+							helpStr += `${
+								cmd.supportsChatInputCommands()
+									? '<:supportsSlashCommands:1053479279343710328>'
+									: ''
+							}\`${prefix}${cmd.name}\` ⇒ ${cmd.description ?? 'No Description provided'}\n`;
 						});
 					}
 				})
@@ -154,6 +158,10 @@ export class UserCommand extends SteveCommand {
 				.setTitle(cmd.description)
 				.addFields(fields)
 				.setColor('RANDOM');
+
+			if (cmd.supportsChatInputCommands()) {
+				embed.setDescription(`<:supportsSlashCommands:1053479279343710328> You can also run ${cmd.name} using slash commands!`);
+			}
 
 			send(msg, { embeds: [embed] });
 		}
