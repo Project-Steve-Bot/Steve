@@ -4,8 +4,6 @@ import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
 import { generateSnoozeButtons, getChannel, pickRandom, pluralize } from '@lib/utils';
 
-const skipCommands = ['snippet', 'managesnippets', 'assign', 'managequickrolls'];
-
 export class SteveBoi extends SapphireClient {
 
 	private cronRunner: ScheduledTask;
@@ -45,9 +43,7 @@ export class SteveBoi extends SapphireClient {
 		const hints = new Map<string, string[]>();
 
 		commands.forEach(command => {
-			if (!skipCommands.includes(command.name)
-					&& (command.supportsChatInputCommands()
-					|| command.supportsContextMenuCommands())) {
+			if (command.supportsChatInputCommands() || command.supportsContextMenuCommands()) {
 				const { chatInputCommands, contextMenuCommands } = command.applicationCommandRegistry;
 				const ids = [...chatInputCommands].concat([...contextMenuCommands]);
 				hints.set(command.name, ids);
