@@ -10,7 +10,7 @@ import { dateToTimestamp } from '@lib/utils';
 export class PollHandler extends InteractionHandler {
 
 	public async parse(interaction: ButtonInteraction) {
-		if (interaction.id.startsWith('poll')) {
+		if (!interaction.id.startsWith('poll')) {
 			return this.none();
 		}
 
