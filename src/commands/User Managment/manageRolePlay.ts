@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import type { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
 import type { Command } from '@sapphire/framework';
-import { AutocompleteInteraction, Collection, MessageEmbed } from 'discord.js';
+import { AutocompleteInteraction, Collection, MessageAttachment, MessageEmbed } from 'discord.js';
 import type { RPCharter } from '@lib/types/database';
 import { Filter, ObjectId, WithId } from 'mongodb';
 
@@ -100,7 +100,7 @@ export class UserCommand extends SteveSubcommand {
 			user: interaction.user.id,
 			guild: interaction.guildId,
 			name: interaction.options.getString('name', true),
-			pfp: interaction.options.getAttachment('pfp')?.url,
+			pfp: await this.getPfpURL(interaction),
 			prefix: interaction.options.getString('prefix') ?? null
 		};
 
@@ -145,7 +145,7 @@ export class UserCommand extends SteveSubcommand {
 			user: interaction.user.id,
 			guild: interaction.guildId,
 			name: interaction.options.getString('name', true),
-			pfp: interaction.options.getAttachment('pfp')?.url,
+			pfp: await this.getPfpURL(interaction),
 			prefix: interaction.options.getString('prefix')
 		};
 
@@ -204,6 +204,7 @@ export class UserCommand extends SteveSubcommand {
 
 		return fetchedCharacters;
 	}
+
 	private buildCharacterEmbed({ name, pfp, prefix }: RPCharter, operation: 'add' | 'edit' | 'delete', oldName?: string): MessageEmbed {
 		const embed = new MessageEmbed();
 
@@ -234,6 +235,22 @@ export class UserCommand extends SteveSubcommand {
 		}
 
 		return embed;
+	}
+
+	private async getPfpURL(interaction: Subcommand.ChatInputInteraction): Promise<string | undefined> {
+		const ephemeralAttachment = interaction.options.getAttachment('pfp');
+		if (!ephemeralAttachment) return undefined;
+
+		const pfpLog = await this.container.client.channels.fetch(process.env.RP_PFP_CHANNEL ?? '');
+
+		if (!pfpLog || !pfpLog.isText()) return undefined;
+
+		const logMsg = await pfpLog.send({ files: [new MessageAttachment(
+			ephemeralAttachment.attachment,
+			ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`
+		)] });
+
+		return logMsg.attachments.first()?.url;
 	}
 
 }
