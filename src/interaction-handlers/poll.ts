@@ -10,10 +10,9 @@ import { dateToTimestamp } from '@lib/utils';
 export class PollHandler extends InteractionHandler {
 
 	public async parse(interaction: ButtonInteraction) {
-		if (!interaction.id.startsWith('poll')) {
+		if (!interaction.customId.startsWith('poll')) {
 			return this.none();
 		}
-
 		await interaction.deferUpdate();
 		return this.some(this.container.db.polls.findOne({ messageId: interaction.message.id }));
 	}
