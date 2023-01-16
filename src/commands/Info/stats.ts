@@ -1,7 +1,7 @@
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { ApplyOptions } from '@sapphire/decorators';
 import { CommandOptions, version as sapphireVersion } from '@sapphire/framework';
-import { Message, MessageEmbed, version as discordVersion } from 'discord.js';
+import { Message, EmbedBuilder, version as discordVersion } from 'discord.js';
 import { readFileSync } from 'fs';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
@@ -21,9 +21,9 @@ export class UserCommand extends SteveCommand {
 		const paginator = new PaginatedMessage({
 			template: {
 				embeds: [
-					new MessageEmbed()
+					new EmbedBuilder()
 						.setTitle('Statistics')
-						.setColor('DARK_GREEN')
+						.setColor('DarkGreen')
 						.setTimestamp()
 				]
 			}
@@ -37,7 +37,7 @@ export class UserCommand extends SteveCommand {
 		);
 
 		paginator.addPage({
-			embeds: [new MessageEmbed()
+			embeds: [new EmbedBuilder()
 				.setThumbnail(client.user?.displayAvatarURL() ?? '')
 				.addFields([
 					{ name: 'Users', value: client.users.cache.size.toString(), inline: true },
@@ -59,7 +59,7 @@ export class UserCommand extends SteveCommand {
 		statsPages.forEach((statsPage, idx) =>
 			paginator.addPage({
 				files: [makeChart(statsPage, { title: 'Command Usage', name: `cmdUse${idx}` })],
-				embeds: [new MessageEmbed().setImage(`attachment://cmdUse${idx}.png`)]
+				embeds: [new EmbedBuilder().setImage(`attachment://cmdUse${idx}.png`)]
 			})
 		);
 

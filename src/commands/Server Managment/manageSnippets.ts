@@ -8,7 +8,7 @@ import { sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<SubcommandOptions>({
 	description: 'Add, remove or edit snips.',
-	requiredUserPermissions: 'MANAGE_MESSAGES',
+	requiredUserPermissions: 'ManageMessages',
 	aliases: ['managesnippet', 'managesnips', 'managesnip'],
 	runIn: 'GUILD_ANY',
 	detailedDescription: {

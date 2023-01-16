@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import type { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
 import type { Command } from '@sapphire/framework';
-import { AutocompleteInteraction, Collection, MessageAttachment, MessageEmbed } from 'discord.js';
+import { AutocompleteInteraction, Collection, AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import type { RPCharter } from '@lib/types/database';
 import { Filter, ObjectId, WithId } from 'mongodb';
 
@@ -85,7 +85,7 @@ export class UserCommand extends SteveSubcommand {
 		}, { idHints: this.container.idHits.get(this.name) });
 	}
 
-	public async chatInputCreate(interaction: Subcommand.ChatInputInteraction) {
+	public async chatInputCreate(interaction: Subcommand.ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
 			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
 		}
@@ -109,7 +109,7 @@ export class UserCommand extends SteveSubcommand {
 		return interaction.reply({ embeds: [this.buildCharacterEmbed(rpCharacter, 'add')], ephemeral: true });
 	}
 
-	public async chatInputEdit(interaction: Subcommand.ChatInputInteraction) {
+	public async chatInputEdit(interaction: Subcommand.ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
 			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
 		}
@@ -157,7 +157,7 @@ export class UserCommand extends SteveSubcommand {
 		return interaction.reply({ embeds: [this.buildCharacterEmbed(rpCharacter, 'edit', preChange.name)], ephemeral: true });
 	}
 
-	public async chatInputRemove(interaction: Subcommand.ChatInputInteraction) {
+	public async chatInputRemove(interaction: Subcommand.ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
 			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
 		}
@@ -205,24 +205,24 @@ export class UserCommand extends SteveSubcommand {
 		return fetchedCharacters;
 	}
 
-	private buildCharacterEmbed({ name, pfp, prefix }: RPCharter, operation: 'add' | 'edit' | 'delete', oldName?: string): MessageEmbed {
-		const embed = new MessageEmbed();
+	private buildCharacterEmbed({ name, pfp, prefix }: RPCharter, operation: 'add' | 'edit' | 'delete', oldName?: string): EmbedBuilder {
+		const embed = new EmbedBuilder();
 
 		switch (operation) {
 			case 'add':
 				embed
 					.setTitle(`**${name}** created`)
-					.setColor('DARK_GREEN');
+					.setColor('DarkRed');
 				break;
 			case 'edit':
 				embed
 					.setTitle(`${oldName || 'Your character'} is now **${name}**`)
-					.setColor('YELLOW');
+					.setColor('Yellow');
 				break;
 			default:
 				embed
 					.setTitle(`**${name}** deleted`)
-					.setColor('DARK_RED');
+					.setColor('DarkRed');
 				break;
 		}
 
@@ -237,17 +237,17 @@ export class UserCommand extends SteveSubcommand {
 		return embed;
 	}
 
-	private async getPfpURL(interaction: Subcommand.ChatInputInteraction): Promise<string | undefined> {
+	private async getPfpURL(interaction: Subcommand.ChatInputCommandInteraction): Promise<string | undefined> {
 		const ephemeralAttachment = interaction.options.getAttachment('pfp');
 		if (!ephemeralAttachment) return undefined;
 
 		const pfpLog = await this.container.client.channels.fetch(process.env.RP_PFP_CHANNEL ?? '');
 
-		if (!pfpLog || !pfpLog.isText()) return undefined;
+		if (!pfpLog || !pfpLog.isTextBased()) return undefined;
 
-		const logMsg = await pfpLog.send({ files: [new MessageAttachment(
+		const logMsg = await pfpLog.send({ files: [new AttachmentBuilder(
 			ephemeralAttachment.attachment,
-			ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`
+			{name: ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`}
 		)] });
 
 		return logMsg.attachments.first()?.url;

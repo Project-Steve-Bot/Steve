@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Args, MessageCommandContext, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import { sendLoadingMessage } from '@lib/utils';
 
@@ -61,9 +61,9 @@ export class UserCommand extends SteveSubcommand {
 			return response.edit('This server has no assignable roles.');
 		}
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle('Assignable roles')
-			.setColor('YELLOW')
+			.setColor('Yellow')
 			.setDescription(`Use \`${ctx.commandPrefix}assign <role>\` to assign or unassign any of these roles
 			<@&${dbGuild.assignableRoles.join('>, <@&')}>`);
 

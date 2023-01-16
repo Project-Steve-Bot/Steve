@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { Collection, Message, MessageActionRow, MessageEmbed, MessageSelectMenu, User } from 'discord.js';
+import { Collection, Message, ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, User, ComponentType } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { getUser, sendLoadingMessage } from '@lib/utils';
 
@@ -31,7 +31,7 @@ export class UserCommand extends SteveCommand {
 			userMap.set(faxUser.fax.number, user);
 		}
 
-		const rows: MessageActionRow[] = [];
+		const rows: ActionRowBuilder<StringSelectMenuBuilder>[] = [];
 
 		const pages = chunk(
 			userMap.map((user, number) => ({ user, number })),
@@ -39,7 +39,7 @@ export class UserCommand extends SteveCommand {
 		);
 
 		pages.forEach((page, idx) => {
-			const dropdown = new MessageSelectMenu()
+			const dropdown = new StringSelectMenuBuilder()
 				.setCustomId(`${msg.author.id}-${msg.id}|${idx}|FaxDeskSelect`)
 				.setPlaceholder('Select a user!');
 			page.forEach(({ user, number }) => {
@@ -50,10 +50,10 @@ export class UserCommand extends SteveCommand {
 					}
 				]);
 			});
-			rows.push(new MessageActionRow().addComponents(dropdown));
+			rows.push(new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(dropdown));
 		});
 
-		const coverEmbed = new MessageEmbed()
+		const coverEmbed = new EmbedBuilder()
 			.setTitle('The Rolodex')
 			.setThumbnail(
 				'https://cdn.discordapp.com/attachments/700378786012594268/733117912310612008/59fcd0a11ac53.png'
@@ -61,7 +61,7 @@ export class UserCommand extends SteveCommand {
 			.setImage(
 				'https://cdn.discordapp.com/attachments/944669817137418333/947584420464955553/PinClipart.com_index-card-clip-art_1718271.png'
 			)
-			.setColor('DARK_AQUA')
+			.setColor('DarkAqua')
 			.setTimestamp();
 
 		await response.edit({
@@ -71,7 +71,7 @@ export class UserCommand extends SteveCommand {
 		});
 
 		const collector = response.createMessageComponentCollector({
-			componentType: 'SELECT_MENU',
+			componentType: ComponentType.StringSelect,
 			time: 60e3
 		});
 
@@ -97,11 +97,11 @@ export class UserCommand extends SteveCommand {
 				return;
 			}
 
-			const userEmbed = new MessageEmbed()
+			const userEmbed = new EmbedBuilder()
 				.setTitle('The Rolodex')
-				.setColor('DARK_AQUA')
-				.addField(user.tag, selected)
-				.setThumbnail(user.displayAvatarURL({ dynamic: true }));
+				.setColor('DarkAqua')
+				.addFields([{ name: user.tag, value: selected}])
+				.setThumbnail(user.displayAvatarURL());
 
 			interaction.update({ embeds: [userEmbed] });
 		});
@@ -109,7 +109,7 @@ export class UserCommand extends SteveCommand {
 		collector.on('end', () => {
 			rows.forEach((row) => {
 				row.setComponents(
-					new MessageSelectMenu()
+					new StringSelectMenuBuilder()
 						.setDisabled(true)
 						.setPlaceholder('This selecty boi is off.')
 						.setCustomId('DISABLED')

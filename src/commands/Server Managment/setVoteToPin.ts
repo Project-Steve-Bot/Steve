@@ -10,7 +10,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 	detailedDescription: {
 		extendedHelp: 'Setting this to `0` disables vote to pin.'
 	},
-	requiredUserPermissions: 'MANAGE_MESSAGES',
+	requiredUserPermissions: 'ManageMessages',
 	runIn: 'GUILD_ANY'
 })
 export class UserCommand extends SteveCommand {

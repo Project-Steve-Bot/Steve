@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
@@ -14,14 +14,14 @@ export class UserCommand extends SteveCommand {
 		if (!this.container.hooks.suggest) return;
 
 		const suggestion = await args.rest('string');
-		const components: MessageActionRow[] = [];
+		const components: ActionRowBuilder<ButtonBuilder>[] = [];
 
 		if (this.container.gitHub) {
-			components.push(new MessageActionRow().addComponents(
-				new MessageButton()
+			components.push(new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder()
 					.setCustomId('suggestion')
 					.setLabel('Create Issue')
-					.setStyle('SECONDARY')
+					.setStyle(ButtonStyle.Secondary)
 					.setEmoji('<:open:949846758509391872>')));
 		}
 
@@ -29,8 +29,8 @@ export class UserCommand extends SteveCommand {
 			username: this.container.client.user?.username,
 			avatarURL: this.container.client.user?.displayAvatarURL(),
 			embeds: [
-				new MessageEmbed()
-					.setAuthor({ name: msg.author.tag, iconURL: msg.author.displayAvatarURL({ dynamic: true }) })
+				new EmbedBuilder()
+					.setAuthor({ name: msg.author.tag, iconURL: msg.author.displayAvatarURL() })
 					.setTitle('Feedback')
 					.setDescription(suggestion)
 					.setTimestamp()

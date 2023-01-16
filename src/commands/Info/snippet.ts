@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Args, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import { sendLoadingMessage } from '@lib/utils';
 
@@ -47,9 +47,9 @@ export class UserCommand extends SteveSubcommand {
 
 		const snips = await this.container.db.snips.find({ guildId: msg.guildId }).toArray();
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle('Snippets')
-			.setColor('DARK_VIVID_PINK')
+			.setColor('DarkVividPink')
 			.setDescription(`\`${snips.map(snip => snip.snipName).join('`, `')}\``);
 
 		return response.edit({ content: ' ', embeds: [embed] });

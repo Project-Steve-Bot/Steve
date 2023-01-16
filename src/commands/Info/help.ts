@@ -1,8 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions, DetailedDescriptionCommand, MessageCommandContext } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { EmbedField, Message, MessageEmbed, Util } from 'discord.js';
+import { EmbedField, Message, EmbedBuilder, ChannelType } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
+import { splitMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: `Shows info about ${process.env.BOT_NAME}'s commands.`,
@@ -57,14 +58,14 @@ export class UserCommand extends SteveCommand {
 				})
 			);
 
-			const splitStr = Util.splitMessage(helpStr, { char: '\n' });
+			const splitStr = splitMessage(helpStr);
 			let notified = false;
 			splitStr.forEach((helpMsg) => {
 				msg.author
 					.send(helpMsg)
 					.then(() => {
 						if (!notified) {
-							if (msg.channel.type !== 'DM') send(msg, '📥 | The list of commands you have access to has been sent to your DMs.');
+							if (msg.channel.type !== ChannelType.DM) send(msg, '📥 | The list of commands you have access to has been sent to your DMs.');
 							notified = true;
 						}
 					})
@@ -153,11 +154,11 @@ export class UserCommand extends SteveCommand {
 				});
 			}
 
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setAuthor({ iconURL: msg.client.user?.avatarURL() ?? undefined, name: cmd.name })
 				.setTitle(cmd.description)
 				.addFields(fields)
-				.setColor('RANDOM');
+				.setColor('Random');
 
 			if (cmd.supportsChatInputCommands()) {
 				embed.setDescription(`<:supportsSlashCommands:1053479279343710328> You can also run ${cmd.name} using slash commands!`);

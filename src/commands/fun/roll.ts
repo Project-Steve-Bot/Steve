@@ -4,7 +4,7 @@ import {
 	AutocompleteInteraction,
 	Guild,
 	Message,
-	MessageEmbed,
+	EmbedBuilder,
 	TextBasedChannel,
 	User
 } from 'discord.js';
@@ -51,7 +51,7 @@ export class RollCommand extends SteveCommand {
 		}, { idHints: this.container.idHits.get(this.name) });
 	}
 
-	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const parameter = interaction.options.getString('dice', true);
 		const resolvedRoll = await resolveRoll(parameter, interaction.user);
 
@@ -129,10 +129,10 @@ export class RollCommand extends SteveCommand {
 		if (!rollLogId) return;
 
 		const rollLog = await guild.channels.fetch(rollLogId) as TextBasedChannel;
-		rollLog.send({ embeds: [new MessageEmbed()
-			.setAuthor({ name: `${author.tag} rolled...`, iconURL: author.displayAvatarURL({ dynamic: true }) })
+		rollLog.send({ embeds: [new EmbedBuilder()
+			.setAuthor({ name: `${author.tag} rolled...`, iconURL: author.displayAvatarURL() })
 			.setDescription(result)
-			.setColor('AQUA')
+			.setColor('Aqua')
 			.setTimestamp()
 		] });
 	}

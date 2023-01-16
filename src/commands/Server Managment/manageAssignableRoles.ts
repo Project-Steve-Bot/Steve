@@ -8,7 +8,7 @@ import { sendLoadingMessage } from '@lib/utils';
 	description: 'Add or remove a role from the list of assignable roles.',
 	aliases: ['mar'],
 	runIn: 'GUILD_ANY',
-	requiredUserPermissions: 'MANAGE_ROLES',
+	requiredUserPermissions: 'ManageRoles',
 	detailedDescription: {
 		usage: '<role>',
 		extendedHelp: 'The role will be added to the list if it isn\'t in it and removed from it if it is.'

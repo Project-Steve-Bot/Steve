@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ColorResolvable, Message, MessageAttachment, MessageEmbed, TextChannel, Util } from 'discord.js';
+import { ColorResolvable, Message, AttachmentBuilder, EmbedBuilder, TextChannel, cleanContent} from 'discord.js';
 import { createCanvas, loadImage } from 'canvas';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 
@@ -29,9 +29,9 @@ export class UserCommand extends SteveCommand {
 
 		const response = await send(msg, `Dialing ${faxNumber}...`);
 
-		let message = Util.cleanContent(await args.rest('string'), msg.channel).replace(/<a?(:[a-zA-Z0-9_-]{2,}:)\d+>/g, '$1');
+		let message = cleanContent(await args.rest('string'), msg.channel).replace(/<a?(:[a-zA-Z0-9_-]{2,}:)\d+>/g, '$1');
 
-		const attachments: Array<MessageAttachment> = [];
+		const attachments: Array<AttachmentBuilder> = [];
 
 		const canvas = createCanvas(WIDTH, HEIGHT);
 		const ctx = canvas.getContext('2d');
@@ -47,7 +47,7 @@ export class UserCommand extends SteveCommand {
 		ctx.font = '45px serif';
 		ctx.fillText(msg.author.username, WIDTH / 2, 100);
 
-		const pfp = await loadImage(msg.author.displayAvatarURL({ format: 'png' }));
+		const pfp = await loadImage(msg.author.displayAvatarURL());
 		ctx.save();
 		ctx.translate((HEADER_HEIGHT / 2) - 50, (HEADER_HEIGHT / 2) - 50);
 		ctx.beginPath();
@@ -83,7 +83,7 @@ export class UserCommand extends SteveCommand {
 			message = message.substring(result.length, message.length);
 
 			if (currentHeight >= HEIGHT - 25) {
-				attachments.push(new MessageAttachment(canvas.toBuffer(), `page${pageIdx++}.png`));
+				attachments.push(new AttachmentBuilder(canvas.toBuffer(), { name: `page${pageIdx++}.png` }));
 
 				ctx.resetTransform();
 
@@ -96,14 +96,14 @@ export class UserCommand extends SteveCommand {
 			}
 		}
 
-		attachments.push(new MessageAttachment(canvas.toBuffer(), `page${pageIdx++}.png`));
+		attachments.push(new AttachmentBuilder(canvas.toBuffer(), { name: `page${pageIdx++}.png` }));
 
 		if (attachments.length > 10) {
 			return response.edit("The fax machine doesn't have enough paper for a fax that long.");
 		}
 
 		const embeds = attachments.map((attachment) =>
-			new MessageEmbed()
+			new EmbedBuilder()
 				.setImage(`attachment://${attachment.name}`)
 				.setTimestamp(msg.createdTimestamp)
 				.setColor((recipient.embedColor || 0xadcb27) as ColorResolvable)

@@ -17,7 +17,7 @@ export class UserCommand extends SteveCommand {
 		}, { idHints: this.container.idHits.get(this.name) });
 	}
 
-	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		await interaction.reply('Ping?');
 		interaction.editReply(`Pong! (Roundtrip took: ${interaction.createdTimestamp - Date.now()
 		}ms. Heartbeat: ${Math.round(this.container.client.ws.ping)}ms.)`);

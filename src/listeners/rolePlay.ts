@@ -1,5 +1,5 @@
 import { Events, Listener } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import { Message, MessageType } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { WithId } from 'mongodb';
 import type { RPCharter } from '../lib/types/database';
@@ -12,7 +12,7 @@ export class UserEvent extends Listener {
 
 	public async run(msg: Message) {
 		const hook = this.container.rpChannels.get(msg.channelId);
-		if (!hook || !msg.inGuild() || msg.author.bot || !['DEFAULT', 'REPLY'].includes(msg.type)) return;
+		if (!hook || !msg.inGuild() || msg.author.bot || ![MessageType.Default, MessageType.Reply].includes(msg.type)) return;
 
 		const characters = await this.container.db.rpCharacters.find({ user: msg.author.id, guild: msg.guildId }).toArray();
 
@@ -56,7 +56,7 @@ export class UserEvent extends Listener {
 
 		await hook.send({
 			username: character.name,
-			content: content === '' ? null : content,
+			content: content === '' ? undefined : content,
 			avatarURL: character.pfp,
 			files: msg.attachments.toJSON(),
 			allowedMentions: {

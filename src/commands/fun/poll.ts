@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { EmbedAuthorData, Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 import parse from 'parse-duration';
 import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
@@ -60,7 +60,7 @@ export class PollCommand extends SteveCommand {
 		}, { idHints: this.container.idHits.get(this.name) });
 	}
 
-	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		interaction.reply(getLoadingMessage());
 
 		const question = interaction.options.getString('question', true);
@@ -76,11 +76,11 @@ export class PollCommand extends SteveCommand {
 		const reply = await interaction.fetchReply();
 
 		let showName = interaction.user.username;
-		let showAvatar = interaction.user.displayAvatarURL({ dynamic: true });
+		let showAvatar = interaction.user.displayAvatarURL();
 
 		if (interaction.member && 'displayName' in interaction.member) {
 			showName = interaction.member.displayName;
-			showAvatar = interaction.member.displayAvatarURL({ dynamic: true });
+			showAvatar = interaction.member.displayAvatarURL();
 		}
 
 		const editReply = await this.generatePoll({
@@ -121,7 +121,7 @@ export class PollCommand extends SteveCommand {
 			channelId: response.channel.id,
 			author: {
 				name: `${msg.member?.displayName ?? msg.author.username} asks...`,
-				iconURL: msg.member?.displayAvatarURL({ dynamic: true }) ?? msg.author.displayAvatarURL({ dynamic: true })
+				iconURL: msg.member?.displayAvatarURL() ?? msg.author.displayAvatarURL()
 			}
 		});
 
@@ -140,7 +140,7 @@ export class PollCommand extends SteveCommand {
 			channelId: string,
 			author: EmbedAuthorData
 		}
-	): Promise<{ content: ' ', embeds: MessageEmbed[], components: MessageActionRow[]}> {
+	): Promise<{ content: ' ', embeds: EmbedBuilder[], components: ActionRowBuilder<ButtonBuilder>[]}> {
 		if (choices.length < 2 || choices.length > 10) {
 			throw new UserError({
 				identifier: 'InvalidChoiceAmount',
@@ -152,23 +152,23 @@ export class PollCommand extends SteveCommand {
 		choices = choices.map((choice, idx) => `${NUMBER_EMOTES[idx]} ${choice}`);
 		const expires = new Date(Date.now() + parse(rawExpires ?? '1d'));
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle(question)
-			.setColor('RANDOM')
+			.setColor('Random')
 			.setAuthor(author)
 			.setDescription(`${choices.join('\n')}\n\nThis poll ends at ${dateToTimestamp(expires, 'f')}`);
 
-		const components: MessageActionRow[] = [];
+		const components: ActionRowBuilder<ButtonBuilder>[] = [];
 
 		chunk(choices, 2).forEach((pair) => {
-			const row = new MessageActionRow();
+			const row = new ActionRowBuilder<ButtonBuilder>();
 			pair.forEach((choice) => {
 				row.addComponents([
-					new MessageButton()
+					new ButtonBuilder()
 						.setCustomId(
 							`poll|${choices.indexOf(choice)}|${messageId}`
 						)
-						.setStyle('PRIMARY')
+						.setStyle(ButtonStyle.Primary)
 						.setLabel(
 							choice.length < 80
 								? choice
