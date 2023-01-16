@@ -7,8 +7,8 @@ import { sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Set the role play channel',
-	requiredUserPermissions: 'MANAGE_CHANNELS',
-	requiredClientPermissions: 'MANAGE_WEBHOOKS',
+	requiredUserPermissions: 'ManageChannels',
+	requiredClientPermissions: 'ManageWebhooks',
 	runIn: ['GUILD_TEXT'],
 	aliases: ['mrpc']
 })
@@ -33,10 +33,10 @@ export class UserCommand extends SteveCommand {
 		}
 
 		const channel = channelResult.unwrap();
-		const { url } = await channel.createWebhook(
-			'rollPlayChannel',
-			{ reason: `Roll play channel set by ${msg.author.tag} (${msg.author.id})` }
-		);
+		const { url } = await channel.createWebhook({
+			name: 'rollPlayChannel',
+			reason: `Roll play channel set by ${msg.author.tag} (${msg.author.id})`
+		});
 
 		this.container.rpChannels.set(channel.id, new WebhookClient({ url }));
 

@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
-import { Message, MessageActionRow, MessageSelectMenu, User } from 'discord.js';
+import { Message, ActionRowBuilder, StringSelectMenuBuilder, User, ChannelType, ComponentType } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { getChannel, getGuild, sendLoadingMessage } from '@lib/utils';
 
@@ -17,7 +17,7 @@ export class UserCommand extends SteveCommand {
 			.find({ $nor: [{ 'channels.fax': { $exists: false } }, { 'channels.fax': { $size: 0 } }] })
 			.toArray();
 
-		const dropdown = new MessageSelectMenu()
+		const dropdown = new StringSelectMenuBuilder()
 			.setCustomId(`${msg.author.id}-${msg.id}|FaxDeskSelect`)
 			.setPlaceholder('Select where you want your faxes to be sent.')
 			.addOptions([
@@ -36,7 +36,7 @@ export class UserCommand extends SteveCommand {
 
 			dbGuild.channels.fax.forEach(async (channelId) => {
 				const channel = await getChannel(channelId);
-				if (!channel?.isText() || channel.type === 'DM' || channel.partial) return;
+				if (!channel?.isTextBased() || channel.type === ChannelType.DM || channel.partial) return;
 
 				dropdown.addOptions({
 					label: `#${channel.name}`,
@@ -46,11 +46,11 @@ export class UserCommand extends SteveCommand {
 			});
 		});
 
-		const actionRow = new MessageActionRow().addComponents(dropdown);
+		const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(dropdown);
 
 		await response.edit({ content: 'You can send faxes to all these places!', components: [actionRow] });
 
-		const collector = response.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 60e3 });
+		const collector = response.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 60e3 });
 
 		collector.on('collect', async (interaction) => {
 			await interaction.deferReply({ ephemeral: true });

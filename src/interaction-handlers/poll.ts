@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
-import { ButtonInteraction, MessageEmbed } from 'discord.js';
+import { ButtonInteraction, EmbedBuilder } from 'discord.js';
 import type { Poll } from '@lib/types/database';
 import { dateToTimestamp } from '@lib/utils';
 
@@ -10,10 +10,9 @@ import { dateToTimestamp } from '@lib/utils';
 export class PollHandler extends InteractionHandler {
 
 	public async parse(interaction: ButtonInteraction) {
-		if (!interaction.id.startsWith('poll')) {
+		if (!interaction.customId.startsWith('poll')) {
 			return this.none();
 		}
-
 		await interaction.deferUpdate();
 		return this.some(this.container.db.polls.findOne({ messageId: interaction.message.id }));
 	}
@@ -49,7 +48,7 @@ export class PollHandler extends InteractionHandler {
 		await this.container.db.polls.findOneAndReplace({ _id: poll._id }, newPoll);
 		await interaction.followUp({ content, ephemeral: true });
 
-		const embed = new MessageEmbed(interaction.message.embeds[0]);
+		const embed = new EmbedBuilder(interaction.message.embeds[0].data);
 		embed.setDescription(
 			`${newPoll.choices
 				.map((newChoice) => `${newChoice.text}${newChoice.votes > 0 ? ` - ${newChoice.votes} vote${newChoice.votes === 1 ? '' : 's'}` : ''}`)

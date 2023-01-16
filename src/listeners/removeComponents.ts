@@ -14,8 +14,9 @@ export class UserEvent extends Listener {
 				return interaction.reply({ content: 'How do you know if thats done or not mate?', ephemeral: true });
 			}
 
-			interaction.update({ components: [] });
+			return interaction.update({ components: [] });
 		}
+		return;
 	}
 
 }

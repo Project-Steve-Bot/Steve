@@ -1,10 +1,21 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Chart } from 'chart.js';
+import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { createCanvas } from 'canvas';
 import { oneLine } from 'common-tags';
-import { AnyChannel, Collection, ColorResolvable, Guild, Message, MessageActionRow, MessageAttachment, MessageButton, MessageEmbed, User } from 'discord.js';
+import {
+	Channel,
+	Collection,
+	ColorResolvable,
+	Guild,
+	Message,
+	ActionRowBuilder,
+	AttachmentBuilder,
+	ButtonBuilder,
+	EmbedBuilder,
+	User,
+	ButtonStyle
+} from 'discord.js';
 import type { WithId } from 'mongodb';
 import prettyMilliseconds from 'pretty-ms';
 import { RandomLoadingMessage } from '@lib/constants';
@@ -48,7 +59,7 @@ export async function getGuild(guildId: string): Promise<Guild> {
 
 export async function getChannel(
 	channelId: string
-): Promise<AnyChannel | null> {
+): Promise<Channel | null> {
 	return (
 		container.client.channels.cache.get(channelId)
 		?? await container.client.channels.fetch(channelId)
@@ -62,8 +73,8 @@ export async function getUser(userId: string): Promise<User> {
 	);
 }
 
-export function makeColorEmbed(color: ColorResolvable): MessageEmbed {
-	return new MessageEmbed()
+export function makeColorEmbed(color: ColorResolvable): EmbedBuilder {
+	return new EmbedBuilder()
 		.setColor(color)
 		.setThumbnail(`https://singlecolorimage.com/get/${color.toString(16).padStart(6, '0')}/400x400`);
 }
@@ -96,7 +107,7 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 	const newMax = counter > max;
 	const timeTaken = Date.now() - started.getTime();
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle(`The count has ended at ${counter}`)
 		.setDescription(
 			counter === 0
@@ -106,7 +117,7 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 				an average of one count ever ${prettyMilliseconds(timeTaken / counter, { verbose: true })}.
 				${newMax ? 'This is the new maximum count!' : ''}`
 		)
-		.setColor('BLURPLE');
+		.setColor('Blurple');
 
 	const resultMsg = await msg.channel.send({ embeds: [embed] });
 
@@ -143,64 +154,61 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 	msg.channel.send('Count restarting...\n0');
 }
 
-export function makeChart(data: Collection<string, number>, { name, title }: { name?: string, title?: string}): MessageAttachment {
-	const canvas = createCanvas(1000, 600);
-	const context = canvas.getContext('2d');
-
-	const displayChart = new Chart(context, {
-		type: 'bar',
-		data: {
-			labels: Array.from(data.keys()),
-			datasets: [{
-				data: Array.from(data.values()),
-				backgroundColor: '#5865F2'
-			}]
-		},
-		options: {
-			layout: {
-				padding: 30
+export function makeChart(data: Collection<string, number>, { name, title }: { name?: string, title?: string}): AttachmentBuilder {
+	const imageBuffer = new ChartJSNodeCanvas({ width: 1000, height: 600 })
+		.renderToBufferSync({
+			type: 'bar',
+			data: {
+				labels: Array.from(data.keys()),
+				datasets: [{
+					data: Array.from(data.values()),
+					backgroundColor: '#5865F2'
+				}]
 			},
-			scales: {
-				y: {
-					beginAtZero: true,
-					grid: { display: false }
+			options: {
+				layout: {
+					padding: 30
 				},
-				x: {
-					display: false,
-					grid: { display: false }
+				scales: {
+					y: {
+						beginAtZero: true,
+						grid: { display: false }
+					},
+					x: {
+						display: false,
+						grid: { display: false }
+					}
+				},
+				indexAxis: 'y',
+				plugins: {
+					legend: { display: false },
+					title: { text: title ?? '', display: !!title },
+					datalabels: {
+						anchor: 'end',
+						clamp: true,
+						backgroundColor: '#37393f',
+						borderRadius: 10
+					}
 				}
 			},
-			indexAxis: 'y',
-			plugins: {
-				legend: { display: false },
-				title: { text: title ?? '', display: !!title },
-				datalabels: {
-					anchor: 'end',
-					clamp: true,
-					backgroundColor: '#37393f',
-					borderRadius: 10
+			plugins: [
+				ChartDataLabels,
+				{
+					id: 'custom_canvas_background_color',
+					beforeDraw: (chart) => {
+						const ctx = chart.canvas.getContext('2d');
+						if (!ctx) return;
+						ctx.save();
+						ctx.globalCompositeOperation = 'destination-over';
+						ctx.fillStyle = '#37393f';
+						ctx.fillRect(0, 0, chart.width, chart.height);
+						ctx.restore();
+					}
 				}
-			}
-		},
-		plugins: [
-			ChartDataLabels,
-			{
-				id: 'custom_canvas_background_color',
-				beforeDraw: (chart) => {
-					const ctx = chart.canvas.getContext('2d');
-					if (!ctx) return;
-					ctx.save();
-					ctx.globalCompositeOperation = 'destination-over';
-					ctx.fillStyle = '#37393f';
-					ctx.fillRect(0, 0, chart.width, chart.height);
-					ctx.restore();
-				}
-			}
-		]
-	});
-	displayChart.render();
+			]
+		});
 
-	return new MessageAttachment(canvas.toBuffer(), `${name ?? 'chart'}.png`)
+	return new AttachmentBuilder(imageBuffer, { name: `${name ?? 'chart'}.png` })
 		.setDescription(`A bar graph${title ? ` titled ${title}` : ''}. The data on the graph is; ${
 			data.map((value, key) => `${key}: ${value}`).join(', ')
 		}.`);
@@ -213,16 +221,16 @@ export function chunkCollection<K, V>(col: Collection<K, V>, size: number): Arra
 	return chunks;
 }
 
-export function sendToFile(content: string, { filename, extension = 'txt' }: { filename: string, extension?: string}): MessageAttachment {
-	return new MessageAttachment(Buffer.from(content), `${filename}.${extension}`);
+export function sendToFile(content: string, { filename, extension = 'txt' }: { filename: string, extension?: string}): AttachmentBuilder {
+	return new AttachmentBuilder(Buffer.from(content), { name: `${filename}.${extension}` });
 }
 
-export function buildErrorPayload(error: Error): [MessageEmbed, MessageAttachment[]] {
-	const embed = new MessageEmbed()
-		.setColor('RED')
+export function buildErrorPayload(error: Error): [EmbedBuilder, AttachmentBuilder[]] {
+	const embed = new EmbedBuilder()
+		.setColor('Red')
 		.setTitle(error.name)
 		.setTimestamp();
-	const files: MessageAttachment[] = [];
+	const files: AttachmentBuilder[] = [];
 
 	if (error.message) {
 		if (error.message.length < 1000) {
@@ -235,27 +243,52 @@ export function buildErrorPayload(error: Error): [MessageEmbed, MessageAttachmen
 
 	if (error.stack) {
 		if (error.stack.length < 1000) {
-			embed.addField('Stack Trace', `\`\`\`js\n${error.stack}\`\`\``, false);
+			embed.addFields([{ name: 'Stack Trace', value: `\`\`\`js\n${error.stack}\`\`\``, inline: false }]);
 		} else {
-			embed.addField('Stack Trace', 'Full stack too big, sent to file.', false);
+			embed.addFields([{ name: 'Stack Trace', value: 'Full stack too big, sent to file.', inline: false }]);
 			files.push(sendToFile(error.stack, { filename: 'StackTrace', extension: 'js' }));
 		}
 	}
 	return [embed, files];
 }
 
-export function generateSnoozeButtons(userId: string): MessageActionRow[] {
-	return [new MessageActionRow()
+export function generateSnoozeButtons(userId: string): ActionRowBuilder<ButtonBuilder>[] {
+	return [new ActionRowBuilder<ButtonBuilder>()
 		.addComponents([
-			new MessageButton()
+			new ButtonBuilder()
 				.setEmoji('💤')
 				.setLabel('Snooze')
-				.setStyle('SECONDARY')
+				.setStyle(ButtonStyle.Secondary)
 				.setCustomId(`snooze|${userId}`),
-			new MessageButton()
+			new ButtonBuilder()
 				.setEmoji('✅')
 				.setLabel('Done')
-				.setStyle('SUCCESS')
+				.setStyle(ButtonStyle.Success)
 				.setCustomId(`remove all components|${userId}`)
 		])];
+}
+
+export function splitMessage(text: string): string[] {
+	if (text.length <= 2000) {
+		return [text];
+	}
+
+	const chunks = text.split('\n');
+	const messages: string[] = [];
+	let current = '';
+
+	chunks.forEach(chunk => {
+		if (chunk.length > 2000) {
+			throw new RangeError('SPLIT_MAX_LEN');
+		}
+
+		if (current.length + chunk.length > 2000) {
+			messages.push(current);
+			current = '';
+		}
+
+		current += `${chunk}\n`;
+	});
+
+	return messages.concat(current);
 }

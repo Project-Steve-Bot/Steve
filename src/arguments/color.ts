@@ -1,5 +1,5 @@
 import { Argument } from '@sapphire/framework';
-import { ColorResolvable, Util } from 'discord.js';
+import { ColorResolvable, resolveColor } from 'discord.js';
 
 export class ColorArgument extends Argument<ColorResolvable> {
 
@@ -7,7 +7,7 @@ export class ColorArgument extends Argument<ColorResolvable> {
 		let color: ColorResolvable;
 
 		try {
-			color = Util.resolveColor(parameter.toUpperCase() as ColorResolvable);
+			color = resolveColor(parameter.toUpperCase() as ColorResolvable);
 		} catch {
 			return this.error({
 				context,

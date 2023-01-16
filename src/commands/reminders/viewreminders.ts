@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
+import { ChannelType, ColorResolvable, Message, EmbedBuilder } from 'discord.js';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import type { Reminder } from '@lib/types/database';
@@ -37,7 +37,7 @@ export class UserCommand extends SteveCommand {
 			template: {
 				content: ' ',
 				embeds: [
-					new MessageEmbed()
+					new EmbedBuilder()
 						.setTitle('Your Pending Reminders')
 						.setColor(color)
 				]
@@ -58,7 +58,7 @@ export class UserCommand extends SteveCommand {
 
 	private getReminderContent(reminder: Reminder, msg: Message): string {
 		return `${
-			reminder.mode === 'public' || msg.channel.type === 'DM'
+			reminder.mode === 'public' || msg.channel.type === ChannelType.DM
 				? reminder.content
 				: 'Private reminder, contents hidden.'
 		}\nThis reminder goes off at ${dateToTimestamp(

@@ -1,5 +1,5 @@
 import { Events, Listener } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import { Message, MessageType } from 'discord.js';
 import { resetCount } from '@lib/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 
@@ -12,7 +12,7 @@ export class UserEvent extends Listener {
 	public async run(msg: Message) {
 		const { count: countData } = this.container.client.countChannels.get(msg.channelId) ?? { count: undefined };
 
-		if (!countData || !msg.inGuild() || msg.author.bot || msg.type !== 'DEFAULT') {
+		if (!countData || !msg.inGuild() || msg.author.bot || msg.type !== MessageType.Default) {
 			return;
 		}
 

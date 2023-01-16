@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, CommandOptions, UserError } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { execSync } from 'child_process';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -51,11 +51,11 @@ export class CommitCommand extends SteveCommand {
 			\`${message}\` by ${author} at ${dateToTimestamp(timestamp, 'f')}`);
 		});
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle(`Showing ${count} ${pluralize('commit', count)} on ${branch}`)
 			.setURL(`${this.homePage}/tree/${branch}`)
 			.setDescription(descriptions.join('\n'))
-			.setColor('AQUA');
+			.setColor('Aqua');
 
 
 		return send(msg, { embeds: [embed] });

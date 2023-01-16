@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
 import axios from 'axios';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { dateToTimestamp, sendLoadingMessage } from '@lib/utils';
 
@@ -24,8 +24,8 @@ export class UserCommand extends SteveCommand {
 		const ongoingIncidents = currentStatus.incidents.length > 0;
 		const isOnFire = !componentsOperational || ongoingIncidents || currentStatus.status.indicator !== 'none';
 
-		const embed = new MessageEmbed()
-			.setColor(isOnFire ? 'RED' : 'BLURPLE')
+		const embed = new EmbedBuilder()
+			.setColor(isOnFire ? 'Red' : 'Blurple')
 			.setTitle(isOnFire ? 'Discord is currently on fire' : currentStatus.status.description)
 			.setURL(currentStatus.page.url)
 			.setThumbnail(isOnFire

@@ -7,7 +7,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 @ApplyOptions<CommandOptions>({
 	description: 'Sets the channel rolls are logged to.',
 	aliases: ['mrl', 'rollchannel'],
-	requiredUserPermissions: ['MANAGE_CHANNELS'],
+	requiredUserPermissions: ['ManageChannels'],
 	runIn: ['GUILD_ANY'],
 	detailedDescription: {
 		examples: ['', '#roll_log'],
