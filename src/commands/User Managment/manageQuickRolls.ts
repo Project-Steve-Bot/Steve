@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import { sendLoadingMessage } from '@lib/utils';
 
@@ -89,8 +89,8 @@ export class UserCommand extends SteveSubcommand {
 			return response.edit('You currently have no quick rolls');
 		}
 
-		const embed = new MessageEmbed()
-			.setColor('RANDOM')
+		const embed = new EmbedBuilder()
+			.setColor('Random')
 			.addFields(quickRolls.map(quickRoll => ({
 				name: quickRoll.rollName,
 				value: quickRoll.specs.map(spec => spec.map(dice => dice.input).join().slice(1)).join(' '),

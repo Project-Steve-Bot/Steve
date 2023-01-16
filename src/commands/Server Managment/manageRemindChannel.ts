@@ -7,7 +7,7 @@ import { SteveCommand } from '@lib/extensions/SteveCommand';
 @ApplyOptions<CommandOptions>({
 	description: 'Sets the channel reminders are to be sent in.',
 	aliases: ['remindChannel'],
-	requiredUserPermissions: ['MANAGE_CHANNELS'],
+	requiredUserPermissions: ['ManageChannels'],
 	runIn: ['GUILD_ANY'],
 	detailedDescription: {
 		usage: '(channel)',

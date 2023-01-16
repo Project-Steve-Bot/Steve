@@ -1,5 +1,5 @@
 import { container, Events, SapphireClient } from '@sapphire/framework';
-import { ClientOptions, MessageEmbed, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ClientOptions, EmbedBuilder, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
 import { generateSnoozeButtons, getChannel, pickRandom, pluralize } from '@lib/utils';
@@ -86,7 +86,7 @@ export class SteveBoi extends SapphireClient {
 				= this.channels.cache.get(reminder.channel)
 				?? await this.channels.fetch(reminder.channel);
 
-			if (!channel?.isText()) return;
+			if (!channel?.isTextBased()) return;
 
 			channel.send({
 				content: `<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`,
@@ -114,15 +114,18 @@ export class SteveBoi extends SapphireClient {
 
 		polls.forEach(async (poll) => {
 			const channel = (await getChannel(poll.channelId)) as TextChannel;
-			const msg = await channel.messages.fetch(poll.messageId, {
-				cache: true
-			});
+			const msg = await channel.messages.fetch({ message: poll.messageId,	cache: true });
 
-			const { components } = msg;
+			const newButtons = new ActionRowBuilder<ButtonBuilder>();
 
-			components.forEach((row) => {
+			msg.components.forEach((row) => {
 				row.components.forEach((button) => {
-					button.setDisabled(true);
+					newButtons.addComponents([
+						new ButtonBuilder({
+							...button.data,
+							disabled: true
+						})
+					]);
 				});
 			});
 
@@ -143,11 +146,11 @@ export class SteveBoi extends SapphireClient {
 				)
 				.join('\n');
 
-			const embed = new MessageEmbed(msg.embeds[0]).setDescription(
+			const embed = new EmbedBuilder(msg.embeds[0].data).setDescription(
 				`${choiceList}\n\nThis poll has ended.`
 			);
 
-			await msg.edit({ components, embeds: [embed] });
+			await msg.edit({ components: [newButtons], embeds: [embed] });
 
 			container.db.polls.findOneAndDelete({ _id: poll._id });
 		});

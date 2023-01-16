@@ -7,7 +7,7 @@ import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Allows a channel to receive faxes.',
-	requiredUserPermissions: ['MANAGE_CHANNELS'],
+	requiredUserPermissions: ['ManageChannels'],
 	runIn: ['GUILD_ANY'],
 	detailedDescription: {
 		usage: '<channel>',

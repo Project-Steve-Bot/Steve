@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Args, CommandOptions } from '@sapphire/framework';
-import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
+import { ColorResolvable, Message, EmbedBuilder } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { dateToTimestamp } from '@lib/utils';
 
@@ -28,8 +28,8 @@ export class UserCommand extends SteveCommand {
 
 		const targetData = await this.container.db.users.findOne({ id: target.id });
 
-		const embed = new MessageEmbed()
-			.setAuthor({ name: target.user.tag, iconURL: target.displayAvatarURL({ dynamic: true }) })
+		const embed = new EmbedBuilder()
+			.setAuthor({ name: target.user.tag, iconURL: target.displayAvatarURL() })
 			.setColor((targetData?.embedColor || 'AQUA') as ColorResolvable)
 			.addFields([
 				{ name: 'Display Name', value: target.displayName, inline: true },

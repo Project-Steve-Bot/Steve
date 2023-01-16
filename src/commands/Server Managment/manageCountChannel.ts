@@ -8,7 +8,7 @@ import type { CountData } from '@lib/types/database';
 @ApplyOptions<CommandOptions>({
 	description: 'Sets the count channel.',
 	aliases: ['countchannel'],
-	requiredUserPermissions: ['MANAGE_CHANNELS'],
+	requiredUserPermissions: ['ManageChannels'],
 	runIn: ['GUILD_ANY'],
 	detailedDescription: {
 		usage: '(channel)',

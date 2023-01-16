@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, CommandOptions, UserError } from '@sapphire/framework';
-import { Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { sendLoadingMessage } from '@lib/utils';
 
@@ -25,23 +25,23 @@ export class UserCommand extends SteveCommand {
 		const newName = (await args.rest('string')).toLowerCase().replaceAll(' ', '_');
 		const needed = 3;
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setAuthor({ name: `${msg?.member?.displayName ?? msg.author.username} suggested a channel name change!`,
 				iconURL: msg.author.displayAvatarURL() })
 			.setTitle(`Rename this channel to #${newName}?`)
-			.setColor('RANDOM');
+			.setColor('Random');
 
-		const buttons = new MessageActionRow()
+		const buttons = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents([
-				new MessageButton()
+				new ButtonBuilder()
 					.setCustomId('rename|yes')
 					.setEmoji('✅')
-					.setStyle('SUCCESS')
+					.setStyle(ButtonStyle.Success)
 					.setLabel(`${needed} votes needed to pass`),
-				new MessageButton()
+				new ButtonBuilder()
 					.setCustomId('rename|no')
 					.setEmoji('❎')
-					.setStyle('DANGER')
+					.setStyle(ButtonStyle.Danger)
 					.setLabel(`${needed} votes needed to decline`)
 			]);
 

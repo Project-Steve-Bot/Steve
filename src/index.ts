@@ -3,6 +3,7 @@ import '@lib/setup';
 import { container, LogLevel } from '@sapphire/framework';
 import { SteveBoi } from '@lib/extensions/SteveBoi';
 import { startMongo } from '@lib/mongo';
+import { ActivityType, Partials } from 'discord.js';
 
 const main = async () => {
 	await startMongo();
@@ -30,17 +31,18 @@ const main = async () => {
 			},
 			shards: 'auto',
 			intents: [
-				'GUILDS',
-				'GUILD_MEMBERS',
-				'GUILD_BANS',
-				'GUILD_EMOJIS_AND_STICKERS',
-				'GUILD_VOICE_STATES',
-				'GUILD_MESSAGES',
-				'GUILD_MESSAGE_REACTIONS',
-				'DIRECT_MESSAGES',
-				'DIRECT_MESSAGE_REACTIONS'
+				'MessageContent',
+				'Guilds',
+				'GuildMembers',
+				'GuildBans',
+				'GuildEmojisAndStickers',
+				'GuildVoiceStates',
+				'GuildMessages',
+				'GuildMessageReactions',
+				'DirectMessages',
+				'DirectMessageReactions'
 			],
-			partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+			partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 		});
 
 	try {
@@ -50,7 +52,7 @@ const main = async () => {
 		client.user?.setPresence({
 			activities: [
 				{
-					type: 'PLAYING',
+					type: ActivityType.Playing,
 					name: `${prefix}help`
 				}
 			]

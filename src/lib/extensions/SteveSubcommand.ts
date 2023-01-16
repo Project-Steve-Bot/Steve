@@ -1,7 +1,7 @@
 import type { PieceContext } from '@sapphire/framework';
 import { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, Permissions } from 'discord.js';
+import { Message, PermissionsBitField } from 'discord.js';
 
 export abstract class SteveSubcommand extends Subcommand {
 
@@ -32,10 +32,10 @@ export abstract class SteveSubcommand extends Subcommand {
 		super(context, {
 			...options,
 			requiredClientPermissions: options.requiredClientPermissions
-				? new Permissions('EMBED_LINKS').add(
+				? new PermissionsBitField('EmbedLinks').add(
 					options.requiredClientPermissions
 				)
-				: 'EMBED_LINKS'
+				: 'EmbedLinks'
 		});
 
 		this.cmdNames = names;
