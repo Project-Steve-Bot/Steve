@@ -5,7 +5,7 @@ import { Message, EmbedBuilder, version as discordVersion } from 'discord.js';
 import { readFileSync } from 'fs';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { chunkCollection, makeChart } from '@lib/utils';
+import { chunkCollection, makeChart, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: `Get some stats about ${process.env.BOT_NAME}.`,
@@ -16,10 +16,12 @@ export class UserCommand extends SteveCommand {
 	private botVersion = JSON.parse(readFileSync(`${process.cwd()}/package.json`).toString()).version;
 
 	public async messageRun(msg: Message) {
+		const loadingMessage = await sendLoadingMessage(msg);
 		const { client } = this.container;
 
 		const paginator = new PaginatedMessage({
 			template: {
+				content: ' ',
 				embeds: [
 					new EmbedBuilder()
 						.setTitle('Statistics')
@@ -64,7 +66,7 @@ export class UserCommand extends SteveCommand {
 		);
 
 
-		return paginator.run(msg, msg.author);
+		return paginator.run(loadingMessage, msg.author);
 	}
 
 }
