@@ -47,7 +47,7 @@ export class UserCommand extends SteveCommand {
 		ctx.font = '45px serif';
 		ctx.fillText(msg.author.username, WIDTH / 2, 100);
 
-		const pfp = await loadImage(msg.author.displayAvatarURL());
+		const pfp = await loadImage(msg.author.displayAvatarURL({ forceStatic: true, extension: 'png' }));
 		ctx.save();
 		ctx.translate((HEADER_HEIGHT / 2) - 50, (HEADER_HEIGHT / 2) - 50);
 		ctx.beginPath();
