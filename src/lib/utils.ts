@@ -1,7 +1,6 @@
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { oneLine } from 'common-tags';
 import {
 	Channel,
@@ -155,7 +154,18 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 }
 
 export function makeChart(data: Collection<string, number>, { name, title }: { name?: string, title?: string}): AttachmentBuilder {
-	const imageBuffer = new ChartJSNodeCanvas({ width: 1000, height: 600 })
+	const imageBuffer = new ChartJSNodeCanvas({
+		width: 1000,
+		height: 600,
+		backgroundColour: '#37393f',
+		plugins: {
+			requireLegacy: ['chartjs-plugin-datalabels']
+		},
+		chartCallback: (ChartJS) => {
+			ChartJS.defaults.color = 'white';
+			ChartJS.defaults.font.size = 26;
+		}
+	})
 		.renderToBufferSync({
 			type: 'bar',
 			data: {
@@ -183,6 +193,8 @@ export function makeChart(data: Collection<string, number>, { name, title }: { n
 				plugins: {
 					legend: { display: false },
 					title: { text: title ?? '', display: !!title },
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore ts(2322)
 					datalabels: {
 						anchor: 'end',
 						clamp: true,
@@ -190,22 +202,7 @@ export function makeChart(data: Collection<string, number>, { name, title }: { n
 						borderRadius: 10
 					}
 				}
-			},
-			plugins: [
-				ChartDataLabels,
-				{
-					id: 'custom_canvas_background_color',
-					beforeDraw: (chart) => {
-						const ctx = chart.canvas.getContext('2d');
-						if (!ctx) return;
-						ctx.save();
-						ctx.globalCompositeOperation = 'destination-over';
-						ctx.fillStyle = '#37393f';
-						ctx.fillRect(0, 0, chart.width, chart.height);
-						ctx.restore();
-					}
-				}
-			]
+			}
 		});
 
 	return new AttachmentBuilder(imageBuffer, { name: `${name ?? 'chart'}.png` })
