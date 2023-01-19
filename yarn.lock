@@ -1961,10 +1961,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chart.js@npm:3.5.1":
-  version: 3.5.1
-  resolution: "chart.js@npm:3.5.1"
-  checksum: aab597abd025354608336111da4e9f7a912a65d4c29f3c7fb41df5cc54bb29d235c41a2cf08d82a79a9a8be928812445f930cbee16aeb8075ebeeb963bfc0da2
+"chart.js@npm:3.9.1":
+  version: 3.9.1
+  resolution: "chart.js@npm:3.9.1"
+  checksum: 9ab0c0ac01215af0b3f020f2e313030fd6e347b48ed17d5484ee9c4e8ead45e78ae71bea16c397621c386b409ce0b14bf17f9f6c2492cd15b56c0f433efdfff6
   languageName: node
   linkType: hard
 
@@ -4500,7 +4500,7 @@ __metadata:
     "@typescript-eslint/parser": 5.48.2
     axios: 1.2.3
     canvas: 2.11.0
-    chart.js: 3.5.1
+    chart.js: 3.9.1
     chartjs-node-canvas: 4.1.6
     chartjs-plugin-datalabels: 2.2.0
     colorette: 2.0.19
