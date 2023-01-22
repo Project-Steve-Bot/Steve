@@ -2,12 +2,11 @@ import { container, Events, SapphireClient } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ClientOptions, EmbedBuilder, TextChannel } from 'discord.js';
 import { schedule, ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
-import { generateSnoozeButtons, getChannel, pickRandom, pluralize } from '@lib/utils';
+import { generateSnoozeButtons, getChannel, pickRandom } from '@lib/utils';
 
 export class SteveBoi extends SapphireClient {
 
 	private cronRunner: ScheduledTask;
-	private cronRuns = 0;
 
 	public countChannels: Map<string, DbGuild> = new Map();
 
@@ -31,33 +30,6 @@ export class SteveBoi extends SapphireClient {
 			this.closePoll(now),
 			this.updateStats()
 		]).catch(async error => this.emit(Events.Error, error));
-
-		if (this.cronRuns === 3) {
-			this.updateIDhints().catch(async error => this.emit(Events.Error, error));
-		}
-		this.cronRuns++;
-	}
-
-	private async updateIDhints() {
-		const commands = container.client.stores.get('commands');
-		const hints = new Map<string, string[]>();
-
-		commands.forEach(command => {
-			if (command.supportsChatInputCommands() || command.supportsContextMenuCommands()) {
-				const { chatInputCommands, contextMenuCommands } = command.applicationCommandRegistry;
-				const ids = [...chatInputCommands].concat([...contextMenuCommands]);
-				hints.set(command.name, ids);
-			}
-		});
-
-		container.logger.info(`Updating ${hints.size} ID ${pluralize('hint', hints.size)}`);
-		hints.forEach((ids, command) => {
-			container.db.idHints.findOneAndUpdate(
-				{ command },
-				{ $set: { ids } },
-				{ upsert: true }
-			);
-		});
 	}
 
 	private async updateStats() {
