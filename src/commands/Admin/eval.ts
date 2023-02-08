@@ -27,11 +27,11 @@ export class UserCommand extends SteveCommand {
 
 	private SECRETS = Object.values(process.env);
 
-	public async messageRun(message: Message, args: Args) {
+	public async messageRun(msg: Message, args: Args) {
 		const code = await args.rest('string');
 
 		const stopwatch = new Stopwatch();
-		const { result, success, type } = await this.eval(message, code, {
+		const { result, success, type } = await this.eval(msg, code, {
 			depth: Number(args.getOption('depth')) ?? 0,
 			showHidden: args.getFlags('hidden', 'showHidden', 'show')
 		});
@@ -39,7 +39,7 @@ export class UserCommand extends SteveCommand {
 
 		let cleanResult = result.replace(/`/g, `\`${ZWS}`);
 
-		if (!args.getFlags('unsafe')) {
+		if (!(args.getFlags('unsafe') || msg.channel.isDMBased())) {
 			this.SECRETS.forEach(secret => {
 				if (secret) {
 					cleanResult = cleanResult.replaceAll(secret, 'This information has been hidden');
@@ -56,13 +56,13 @@ export class UserCommand extends SteveCommand {
 		⏱️ ${stopwatch.toString()}`;
 
 		if (output.length > 2000) {
-			return send(message, {
+			return send(msg, {
 				content: `Output was too long... sent the result as a file.\n\n${footer}`,
 				files: [sendToFile(cleanResult, { filename: 'output', extension: success ? 'js' : 'sh' })]
 			});
 		}
 
-		return send(message, `${output}\n${footer}`);
+		return send(msg, `${output}\n${footer}`);
 	}
 
 	private async eval(
