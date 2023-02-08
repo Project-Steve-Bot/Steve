@@ -28,7 +28,8 @@ export class UserCommand extends SteveCommand {
 				}
 			]);
 
-		faxableGuilds.forEach(async (dbGuild) => {
+		await Promise.all(faxableGuilds.map(async (dbGuild) => {
+			console.log(`Checking guild: ${dbGuild.id}`);
 			if (!dbGuild.channels?.fax) return;
 
 			const guild = await getGuild(dbGuild.id);
@@ -44,7 +45,8 @@ export class UserCommand extends SteveCommand {
 					description: channel.guild.name
 				});
 			});
-		});
+			return;
+		}));
 
 		const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(dropdown);
 
