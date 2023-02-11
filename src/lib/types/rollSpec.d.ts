@@ -7,4 +7,5 @@ export interface RollSpec {
 	keep: KeepType;
 	modifier: number
 	keepCount?: number;
+	minimum?: number;
 }
