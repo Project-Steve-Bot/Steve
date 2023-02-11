@@ -1,7 +1,7 @@
 import type { KeepType, RollSpec } from '@lib/types/rollSpec';
 import { Result } from '@sapphire/framework';
 
-const DICE_REGEX = /(\/(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<keep>kl?(?<keepCount>\d{1,3}))?(?<modifier>[+-]\d{1,3})?)/g;
+const DICE_REGEX = /(\/(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<keep>kl?(?<keepCount>\d{1,3}))?(?<min>r\d{1,2})?(?<modifier>[+-]\d{1,3})?)/g;
 
 export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'MissingOrInvalidSpec'> {
 	const specs = parameter.split(' ');
@@ -27,6 +27,11 @@ export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'Missin
 			if (isNaN(modifier)) modifier = 0;
 			else if (modifier > 100) modifier = 100;
 
+			let minimum = parseInt(match.groups.min.substring(1), 10) ?? 0;
+			if (isNaN(minimum)) minimum = 0;
+			else if (minimum > 20) minimum = 20;
+
+
 			let keep: KeepType = false;
 			if (match.groups.keep) {
 				const keepLowest = match.groups.keep.includes('l');
@@ -36,7 +41,7 @@ export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'Missin
 
 			const keepCount = parseInt(match.groups.keepCount, 10);
 
-			rolls.push({ input: match.input, count, sides, modifier, keep, keepCount });
+			rolls.push({ input: match.input, count, sides, modifier, keep, keepCount, minimum });
 		}
 
 		if (rolls.length === 0) {

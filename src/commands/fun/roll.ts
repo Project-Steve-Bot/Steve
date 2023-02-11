@@ -14,10 +14,15 @@ import { SteveCommand } from '@lib/extensions/SteveCommand';
 import type { RollSpec } from '@lib/types/rollSpec';
 import { resolveRoll } from '@lib/resolvers';
 
+interface RollResult {
+	rolled: number;
+	result: number;
+	modified: boolean
+}
+
 interface DiceResult {
 	spec: RollSpec;
-	keptRolls: number[];
-	lostRolls: number[];
+	rolls: RollResult[];
 }
 
 @ApplyOptions<CommandOptions>({
@@ -95,30 +100,40 @@ export class RollCommand extends SteveCommand {
 	private preformRolls(input: RollSpec[][]): string {
 		const runs: string[] = [];
 		input.forEach(specs => {
-			const rollResults: DiceResult[] = [];
+			const diceResults: DiceResult[] = [];
 
 			specs.forEach(spec => {
-				const keptRolls: number[] = [];
-				const lostRolls: number[] = [];
+				const rolls: RollResult[] = [];
+				const { minimum } = spec;
 				for (let j = 0; j < spec.count; j++) {
-					const roll = this.roll(spec.sides);
-					keptRolls.push(roll);
+					const rolled = this.roll(spec.sides);
+					rolls.push({ rolled, result: rolled, modified: false });
+				}
+
+				if (minimum) {
+					rolls.forEach(roll => {
+						if (roll.result < minimum) {
+							roll.result = minimum;
+							roll.modified = true;
+						}
+					});
 				}
 
 				if (spec.keep) {
-					keptRolls.sort((a, b) => a - b);
+					rolls.sort((a, b) => a.result - b.result);
 
-					if (spec.keep === 'highest') keptRolls.reverse();
+					if (spec.keep === 'lowest') rolls.reverse();
 
 					for (let j = 0; j < spec.count - (spec.keepCount ?? 0); j++) {
-						lostRolls.push(keptRolls.pop() ?? 0);
+						rolls[j].result = 0;
+						rolls[j].modified = true;
 					}
 				}
 
-				rollResults.push({ spec, keptRolls, lostRolls });
+				diceResults.push({ spec, rolls: rolls });
 			});
 
-			runs.push(this.createResultString(rollResults));
+			runs.push(this.createResultString(diceResults));
 		});
 
 		return runs.join('\n');
@@ -141,31 +156,41 @@ export class RollCommand extends SteveCommand {
 		return Math.floor(Math.random() * sides) + 1;
 	}
 
-	private createResultString(rolls: DiceResult[]): string {
-		const addTotal = rolls.length > 1 || rolls[0].spec.count > 1 || rolls[0].spec.modifier !== 0;
+	private createResultString(diceResults: DiceResult[]): string {
+		const addTotal = diceResults.length > 1 || diceResults[0].spec.count > 1 || diceResults[0].spec.modifier !== 0;
 		const prefix = addTotal ? '> ' : '';
 		let output = '';
 		let total = 0;
 
-		rolls.forEach(({ spec, keptRolls, lostRolls }) => {
-			const emoji = this.getEmoji(spec, this.findMax(keptRolls));
+		diceResults.forEach(({ spec, rolls }) => {
+			const emoji = this.getEmoji(spec, this.findMax(rolls));
 			const modifierString = spec.modifier === 0
 				? ''
 				: spec.modifier > 0
 					? `+${spec.modifier}`
 					: ` ${spec.modifier}`;
-			const extrasString = `${modifierString}${spec.keep
+			const extrasString = `${spec.keep
 				? `k${spec.keep === 'lowest' ? 'l' : ''}${spec.keepCount}`
-				: ''}`;
+				: ''}${spec.minimum ? `r${spec.minimum}` : ''}${modifierString}`;
 
-			output += oneLine`${prefix}${emoji} ${spec.count}d${spec.sides}${extrasString}: \`${keptRolls.join('`, `')}\`
-			${lostRolls.length ? `, ~~\`${lostRolls.join('`~~, ~~`')}\`~~` : ''}${modifierString} ${emoji}`;
+			const stringifiedRolls = rolls.map(({ rolled, modified, result }) => oneLine(`
+				${modified ? '~~' : ''}\`${rolled}\`${
+					modified						// eslint-disable-line @typescript-eslint/indent
+						? `~~ ${					// eslint-disable-line @typescript-eslint/indent, template-curly-spacing
+							result !== 0			// eslint-disable-line @typescript-eslint/indent
+								? `< \`${result}\``	// eslint-disable-line @typescript-eslint/indent
+								: ''}`				// eslint-disable-line @typescript-eslint/indent
+						: ''						// eslint-disable-line @typescript-eslint/indent
+				}`));								// eslint-disable-line @typescript-eslint/indent
+
+			output += oneLine`${prefix}${emoji} ${spec.count}d${spec.sides}${extrasString}:
+			${stringifiedRolls.join(', ')}${modifierString} ${emoji}`;
 
 			if (addTotal) {
 				output += '\n';
 			}
 
-			total += keptRolls.reduce((a, b) => a + b) + spec.modifier;
+			total += this.sumRolls(rolls) + spec.modifier;
 		});
 
 		return `${output}${addTotal ? `> **Total: ${total}**\n` : ''}`;
@@ -190,14 +215,20 @@ export class RollCommand extends SteveCommand {
 		}
 	}
 
-	private findMax(nums: number[]) {
+	private findMax(rolls: RollResult[]) {
 		let max = -1;
 
-		nums.forEach(num => {
-			if (num > max) max = num;
+		rolls.forEach(roll => {
+			if (roll.result > max) max = roll.result;
 		});
 
 		return max;
+	}
+
+	private sumRolls(rolls: RollResult[]): number {
+		let total = 0;
+		rolls.forEach(roll => { total += roll.result; });
+		return total;
 	}
 
 	private async fetchAutoCompleteOptions(userId: string): Promise<string[]> {
