@@ -27,7 +27,7 @@ export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'Missin
 			if (isNaN(modifier)) modifier = 0;
 			else if (modifier > 100) modifier = 100;
 
-			let minimum = parseInt(match.groups.min.substring(1), 10) ?? 0;
+			let minimum = parseInt(match.groups.min?.substring(1), 10) ?? 0;
 			if (isNaN(minimum)) minimum = 0;
 			else if (minimum > 20) minimum = 20;
 
