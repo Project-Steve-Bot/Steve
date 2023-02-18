@@ -60,6 +60,9 @@
 		"tslib": "2.5.0",
 		"typescript": "4.9.5"
 	},
+	"resolutions": {
+		"discord-api-types": "0.37.20"
+	},
 	"scripts": {
 		"build": "rimraf dist && tsc",
 		"watch": "tsc -w",
