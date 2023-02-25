@@ -28,8 +28,13 @@ export class SlashSubcommandErrorListener extends Listener<typeof SubcommandPlug
 }
 
 function generateErrorReply(interaction: CommandInteraction, error: Error) {
-	return interaction.reply({
+	const reply = {
 		content: `An error occurred when running that command. More details are below.\n\n**${error.name}**\n${error.message}`,
 		allowedMentions: { repliedUser: false }
-	});
+	};
+
+	if (interaction.deferred) {
+		return interaction.editReply(reply);
+	}
+	return interaction.reply(reply);
 }
