@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
+import { EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, time, TimestampStyles } from 'discord.js';
 import parse from 'parse-duration';
 import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { dateToTimestamp, getLoadingMessage, sendLoadingMessage } from '@lib/utils';
+import { getLoadingMessage, sendLoadingMessage } from '@lib/utils';
 
 const NUMBER_EMOTES = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
 
@@ -156,7 +156,7 @@ export class PollCommand extends SteveCommand {
 			.setTitle(question)
 			.setColor('Random')
 			.setAuthor(author)
-			.setDescription(`${choices.join('\n')}\n\nThis poll ends at ${dateToTimestamp(expires, 'f')}`);
+			.setDescription(`${choices.join('\n')}\n\nThis poll ends at ${time(expires, TimestampStyles.ShortDateTime)}`);
 
 		const components: ActionRowBuilder<ButtonBuilder>[] = [];
 

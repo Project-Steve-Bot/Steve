@@ -1,8 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
-import { ButtonInteraction, EmbedBuilder } from 'discord.js';
+import { ButtonInteraction, EmbedBuilder, time, TimestampStyles } from 'discord.js';
 import type { Poll } from '@lib/types/database';
-import { dateToTimestamp } from '@lib/utils';
 
 @ApplyOptions<InteractionHandlerOptions>({
 	interactionHandlerType: InteractionHandlerTypes.Button
@@ -52,7 +51,7 @@ export class PollHandler extends InteractionHandler {
 		embed.setDescription(
 			`${newPoll.choices
 				.map((newChoice) => `${newChoice.text}${newChoice.votes > 0 ? ` - ${newChoice.votes} vote${newChoice.votes === 1 ? '' : 's'}` : ''}`)
-				.join('\n')}\n\nThis poll ends at ${dateToTimestamp(poll.expires, 'f')}`
+				.join('\n')}\n\nThis poll ends at ${time(poll.expires, TimestampStyles.ShortDateTime)}`
 		);
 
 		interaction.editReply({ embeds: [embed] });

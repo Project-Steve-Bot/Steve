@@ -1,12 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, CommandOptions, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import type { Guild, Message, User } from 'discord.js';
+import { Guild, Message, time, TimestampStyles, User } from 'discord.js';
 import parse from 'parse-duration';
 import prettyMilliseconds from 'pretty-ms';
 import { oneLine, stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { dateToTimestamp } from '@lib/utils';
 import { resolveDurationOrTimestamp } from '@lib/resolvers';
 
 @ApplyOptions<CommandOptions>({
@@ -116,7 +115,7 @@ export class RemindCommand extends SteveCommand {
 			expires
 		});
 
-		return oneLine`I'll remind you about that at ${dateToTimestamp(expires, 'f')}${
+		return oneLine`I'll remind you about that at ${time(expires, TimestampStyles.ShortDateTime)}${
 			repeat
 				? `and again every ${prettyMilliseconds(repeat, { verbose: true })}`
 				: ''
