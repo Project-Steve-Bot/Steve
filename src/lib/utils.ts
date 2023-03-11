@@ -34,12 +34,6 @@ export function sendLoadingMessage(message: Message): Promise<typeof message> {
 	return send(message, getLoadingMessage());
 }
 
-export type TimestampType = 't' | 'T' | 'd' | 'D' | 'f' | 'F' | 'R';
-
-export function dateToTimestamp(date: Date, type: TimestampType = 't'): string {
-	return `<t:${Math.round(date.valueOf() / 1e3)}:${type}>`;
-}
-
 export async function getUserReminders(
 	user: DbUser
 ): Promise<WithId<Reminder>[]> {

@@ -2,11 +2,11 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { ChannelType, ColorResolvable, Message, EmbedBuilder } from 'discord.js';
+import { ChannelType, ColorResolvable, Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import type { Reminder } from '@lib/types/database';
-import { dateToTimestamp, getUserReminders, sendLoadingMessage } from '@lib/utils';
+import { getUserReminders, sendLoadingMessage } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Show all your pending reminders.',
@@ -61,9 +61,9 @@ export class UserCommand extends SteveCommand {
 			reminder.mode === 'public' || msg.channel.type === ChannelType.DM
 				? reminder.content
 				: 'Private reminder, contents hidden.'
-		}\nThis reminder goes off at ${dateToTimestamp(
-			reminder.expires
-		)}, thats ${dateToTimestamp(reminder.expires, 'R')}${
+		}\nThis reminder goes off at ${time(
+			reminder.expires, TimestampStyles.ShortDateTime
+		)}, thats ${time(reminder.expires, TimestampStyles.RelativeTime)}${
 			reminder.repeat
 				? ` and again every ${prettyMilliseconds(reminder.repeat, {
 					verbose: true

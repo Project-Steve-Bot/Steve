@@ -1,9 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Args, CommandOptions } from '@sapphire/framework';
-import { ColorResolvable, Message, EmbedBuilder } from 'discord.js';
+import { ColorResolvable, Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { dateToTimestamp } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Get information about a user or about yourself!',
@@ -35,11 +34,11 @@ export class UserCommand extends SteveCommand {
 				{ name: 'Display Name', value: target.displayName, inline: true },
 				{
 					name: 'Account Created',
-					value: `${dateToTimestamp(target.user.createdAt, 'F')} (${dateToTimestamp(target.user.createdAt, 'R')})`,
+					value: `${time(target.user.createdAt, TimestampStyles.LongDateTime)} (${time(target.user.createdAt, TimestampStyles.RelativeTime)})`,
 					inline: true
 				}, {
 					name: 'Joined Server',
-					value: target.joinedAt ? `${dateToTimestamp(target.joinedAt, 'F')} (${dateToTimestamp(target.joinedAt, 'R')})` : 'Unknown',
+					value: target.joinedAt ? `${time(target.joinedAt, TimestampStyles.LongDateTime)} (${time(target.joinedAt, TimestampStyles.RelativeTime)})` : 'Unknown',
 					inline: true
 				}, {
 					name: 'Roles',

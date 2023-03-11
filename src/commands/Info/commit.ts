@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, CommandOptions, UserError } from '@sapphire/framework';
-import { Message, EmbedBuilder } from 'discord.js';
+import { Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { execSync } from 'child_process';
 import { send } from '@sapphire/plugin-editable-commands';
 import { readFileSync } from 'fs';
-import { dateToTimestamp, pluralize } from '@lib/utils';
+import { pluralize } from '@lib/utils';
 import { oneLine } from 'common-tags';
 
 interface Commit {
@@ -48,7 +48,7 @@ export class CommitCommand extends SteveCommand {
 
 		commits.forEach(({ hash, author, message, timestamp }) => {
 			descriptions.push(oneLine`[${hash.substring(0, 8)}](${this.homePage}/commit/${hash}):
-			\`${message}\` by ${author} at ${dateToTimestamp(timestamp, 'f')}`);
+			\`${message}\` by ${author} at ${time(timestamp, TimestampStyles.ShortDateTime)}`);
 		});
 
 		const embed = new EmbedBuilder()

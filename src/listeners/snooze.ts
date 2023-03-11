@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
-import { Interaction, ActionRowBuilder, StringSelectMenuBuilder, ComponentType, ButtonBuilder } from 'discord.js';
+import { Interaction, ActionRowBuilder, StringSelectMenuBuilder, ComponentType, ButtonBuilder, time, TimestampStyles } from 'discord.js';
 import parse from 'parse-duration';
-import { dateToTimestamp, generateSnoozeButtons } from '@lib/utils';
+import { generateSnoozeButtons } from '@lib/utils';
 
 
 @ApplyOptions<Listener.Options>({
@@ -54,7 +54,7 @@ export class UserEvent extends Listener {
 				repeat: null
 			});
 
-			await selectInt.update(`${msg.content}\nI've snoozed this reminder and will remind you again at ${dateToTimestamp(expires)}.`);
+			await selectInt.update(`${msg.content}\nI've snoozed this reminder and will remind you again at ${time(expires, TimestampStyles.ShortDateTime)}.`);
 			return collector.stop(`snoozed`);
 		});
 
