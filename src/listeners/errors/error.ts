@@ -9,6 +9,7 @@ import { buildErrorPayload } from '@lib/utils';
 export class UserEvent extends Listener {
 
 	public run(error: Error) {
+		this.container.logger.error('Error Listener received error\n', error);
 		const [embed, files] = buildErrorPayload(error);
 
 		this.container.hooks.discordLogs?.send({

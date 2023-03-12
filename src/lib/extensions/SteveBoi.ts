@@ -53,16 +53,18 @@ export class SteveBoi extends SapphireClient {
 			})
 			.toArray();
 
-		reminders.forEach(async (reminder) => {
+		return Promise.all(reminders.map(async (reminder) => {
 			const channel
 				= this.channels.cache.get(reminder.channel)
 				?? await this.channels.fetch(reminder.channel);
 
 			if (!channel?.isTextBased()) return;
 
-			channel.send({
+			await channel.send({
 				content: `<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`,
 				components: generateSnoozeButtons(reminder.user)
+			}).catch(() => {
+				container.logger.warn(`Could not send reminder to ${reminder.channel}`);
 			});
 
 			if (reminder.repeat) {
@@ -76,7 +78,8 @@ export class SteveBoi extends SapphireClient {
 			} else {
 				container.db.reminder.findOneAndDelete({ _id: reminder._id });
 			}
-		});
+			return;
+		}));
 	}
 
 	private async closePoll(now: Date) {
@@ -84,9 +87,15 @@ export class SteveBoi extends SapphireClient {
 			.find({ expires: { $lte: now } })
 			.toArray();
 
-		polls.forEach(async (poll) => {
+		return Promise.all(polls.map(async (poll) => {
+			await container.db.polls.findOneAndDelete({ _id: poll._id });
 			const channel = (await getChannel(poll.channelId)) as TextChannel;
-			const msg = await channel.messages.fetch({ message: poll.messageId,	cache: true });
+			const msg = await channel.messages.fetch({ message: poll.messageId,	cache: true }).catch(() => undefined);
+
+			if (!msg) {
+				container.logger.warn(`Could not find poll message\n\tchannelId: ${poll.channelId}\n\tmessageId: ${poll.messageId}`);
+				return;
+			}
 
 			const newButtons = new ActionRowBuilder<ButtonBuilder>();
 
@@ -123,9 +132,8 @@ export class SteveBoi extends SapphireClient {
 			);
 
 			await msg.edit({ components: [newButtons], embeds: [embed] });
-
-			container.db.polls.findOneAndDelete({ _id: poll._id });
-		});
+			return;
+		}));
 	}
 
 	private victoryGIFs = [
