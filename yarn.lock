@@ -875,20 +875,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/builders@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@discordjs/builders@npm:1.4.0"
-  dependencies:
-    "@discordjs/util": ^0.1.0
-    "@sapphire/shapeshift": ^3.7.1
-    discord-api-types: ^0.37.20
-    fast-deep-equal: ^3.1.3
-    ts-mixer: ^6.0.2
-    tslib: ^2.4.1
-  checksum: 3089ea5dc58e62c0314fd5fd995281d183d1a938d14a71b89c47b71b6cdf4cdf9f8c2ee1d04ca59e6bdde583b8bb785f3b53d917fb155cade8d27ac0dedbc942
-  languageName: node
-  linkType: hard
-
 "@discordjs/builders@npm:^1.5.0":
   version: 1.5.0
   resolution: "@discordjs/builders@npm:1.5.0"
@@ -959,13 +945,6 @@ __metadata:
     tslib: ^2.5.0
     undici: ^5.20.0
   checksum: 4370919696401b052602b34bc0a421811efb1360eed7f904206e20216cba052a63bf08e0307222523f8c5d8066b08264ae95a8037b2e86969cffba68e18aaefe
-  languageName: node
-  linkType: hard
-
-"@discordjs/util@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "@discordjs/util@npm:0.1.0"
-  checksum: 880e15cd761437a21cf17b8a9dab50e7e5418fcc77dc34037c31a52b871fab1b958218ab6218aafd20af8b7a4e658a705d3f257268324773a285d9a06368c1b9
   languageName: node
   linkType: hard
 
@@ -1330,20 +1309,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/framework@npm:4.2.1":
-  version: 4.2.1
-  resolution: "@sapphire/framework@npm:4.2.1"
+"@sapphire/framework@npm:4.2.2":
+  version: 4.2.2
+  resolution: "@sapphire/framework@npm:4.2.2"
   dependencies:
-    "@discordjs/builders": ^1.4.0
-    "@sapphire/discord-utilities": ^3.0.0
-    "@sapphire/discord.js-utilities": 6.0.3
+    "@discordjs/builders": ^1.5.0
+    "@sapphire/discord-utilities": ^3.0.1
+    "@sapphire/discord.js-utilities": 6.0.4
     "@sapphire/lexure": ^1.1.2
     "@sapphire/pieces": ^3.6.0
-    "@sapphire/ratelimits": ^2.4.5
+    "@sapphire/ratelimits": ^2.4.6
     "@sapphire/result": ^2.6.0
     "@sapphire/stopwatch": ^1.5.0
     "@sapphire/utilities": ^3.11.0
-  checksum: d4c51ac8d795db185167909f21831327d45085c9cf5a710a42470baf7c6d0aa6c2177e8cc58717f0d5d4fab93f3634efea1a6df959ad0807dcaee156437e4b0d
+  checksum: d155d839da609c4de6f53b55641e9bf9fdd68f12c3595e99cf1e51b881d42bdf5b65fd6a88113237ac156a2703c6dbe5a8267c67f9ea4fc15cb667ca72831349
   languageName: node
   linkType: hard
 
@@ -1398,7 +1377,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/ratelimits@npm:^2.4.5":
+"@sapphire/ratelimits@npm:^2.4.6":
   version: 2.4.6
   resolution: "@sapphire/ratelimits@npm:2.4.6"
   checksum: cbec157ea8dc660a8dd045f2d57100289c5eb1ecd9e9bac786b9703cbd9dcea1d39b7d1ea1ca03dac9e266285ddf1767f50195dc7bf88a7cbd5bf25fcca3174f
@@ -1412,7 +1391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/shapeshift@npm:^3.7.1, @sapphire/shapeshift@npm:^3.8.1":
+"@sapphire/shapeshift@npm:^3.8.1":
   version: 3.8.1
   resolution: "@sapphire/shapeshift@npm:3.8.1"
   dependencies:
@@ -4641,7 +4620,7 @@ __metadata:
     "@sapphire/discord-utilities": 3.0.1
     "@sapphire/discord.js-utilities": 6.0.4
     "@sapphire/fetch": 2.4.1
-    "@sapphire/framework": 4.2.1
+    "@sapphire/framework": 4.2.2
     "@sapphire/pieces": 3.6.0
     "@sapphire/plugin-editable-commands": 3.0.0
     "@sapphire/plugin-logger": 3.0.1
@@ -4886,7 +4865,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-mixer@npm:^6.0.2, ts-mixer@npm:^6.0.3":
+"ts-mixer@npm:^6.0.3":
   version: 6.0.3
   resolution: "ts-mixer@npm:6.0.3"
   checksum: 7fbaba0a413bf817835a6a23d46bccf4192dd4d7345b6bae9d594c88acffac35bf4995ef3cce753090c8abcdf2afd16dba8899365584a1f960ccc2a15bf2e2d6
