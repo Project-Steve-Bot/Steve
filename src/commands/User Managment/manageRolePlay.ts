@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import type { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
 import type { Command } from '@sapphire/framework';
-import { AutocompleteInteraction, Collection, AttachmentBuilder, EmbedBuilder } from 'discord.js';
+import { AutocompleteInteraction, Collection, EmbedBuilder } from 'discord.js';
 import type { RPCharter } from '@lib/types/database';
 import { Filter, ObjectId, WithId } from 'mongodb';
 
@@ -212,7 +212,7 @@ export class UserCommand extends SteveSubcommand {
 			case 'add':
 				embed
 					.setTitle(`**${name}** created`)
-					.setColor('DarkRed');
+					.setColor('DarkGreen');
 				break;
 			case 'edit':
 				embed
@@ -245,10 +245,9 @@ export class UserCommand extends SteveSubcommand {
 
 		if (!pfpLog || !pfpLog.isTextBased()) return undefined;
 
-		const logMsg = await pfpLog.send({ files: [new AttachmentBuilder(
-			ephemeralAttachment.attachment,
-			{name: ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`}
-		)] });
+		ephemeralAttachment.name = ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`;
+
+		const logMsg = await pfpLog.send({ files: [ephemeralAttachment] });
 
 		return logMsg.attachments.first()?.url;
 	}
