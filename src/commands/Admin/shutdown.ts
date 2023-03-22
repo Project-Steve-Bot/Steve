@@ -6,7 +6,8 @@ import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Shuts down the bot',
-	preconditions: ['OwnerOnly']
+	preconditions: ['OwnerOnly'],
+	aliases: ['reboot']
 })
 export class UserCommand extends SteveCommand {
 
