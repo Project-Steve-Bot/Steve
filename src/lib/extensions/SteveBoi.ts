@@ -97,17 +97,14 @@ export class SteveBoi extends SapphireClient {
 				return;
 			}
 
-			const newButtons = new ActionRowBuilder<ButtonBuilder>();
-
+			const newButtons: ActionRowBuilder<ButtonBuilder>[] = [];
 			msg.components.forEach((row) => {
-				row.components.forEach((button) => {
-					newButtons.addComponents([
-						new ButtonBuilder({
-							...button.data,
-							disabled: true
-						})
-					]);
-				});
+				newButtons.push(
+					new ActionRowBuilder<ButtonBuilder>()
+						.addComponents(row.components.map(button =>
+							new ButtonBuilder({ ...button.data, disabled: true })
+						))
+				);
 			});
 
 			const maxVotes = Math.max(...poll.choices.map((choice) => choice.votes));
@@ -131,7 +128,7 @@ export class SteveBoi extends SapphireClient {
 				`${choiceList}\n\nThis poll has ended.`
 			);
 
-			await msg.edit({ components: [newButtons], embeds: [embed] });
+			await msg.edit({ components: newButtons, embeds: [embed] });
 			return;
 		}));
 	}
