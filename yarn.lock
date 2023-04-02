@@ -891,7 +891,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/collection@npm:1.4.0, @discordjs/collection@npm:^1.4.0":
+"@discordjs/collection@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@discordjs/collection@npm:1.5.0"
+  checksum: 072043743c5e5ef99033f1c227fd92f437a0665b8f0a5bfa26bacc6610963d03b54c45da0e0116ce30e4612efc52b2db0a0827f79091a135409237722db5400a
+  languageName: node
+  linkType: hard
+
+"@discordjs/collection@npm:^1.4.0":
   version: 1.4.0
   resolution: "@discordjs/collection@npm:1.4.0"
   checksum: fb6da43b3df8eeade104490a024918cb58690db58ef8bdc2e2812ffee7e166c9baae0c244306a8187179ffa17cab679dcd50ea7fde9bf137c76275a608acd6b3
@@ -4524,7 +4531,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "steve@workspace:."
   dependencies:
-    "@discordjs/collection": 1.4.0
+    "@discordjs/collection": 1.5.0
     "@octokit/rest": 19.0.7
     "@sapphire/decorators": 6.0.0
     "@sapphire/discord-utilities": 3.0.1
