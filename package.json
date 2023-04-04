@@ -34,7 +34,7 @@
 		"discord.js": "14.9.0",
 		"dotenv-cra": "3.0.3",
 		"module-alias": "2.2.2",
-		"mongodb": "4.14.0",
+		"mongodb": "4.15.0",
 		"node-cron": "3.0.2",
 		"parse-duration": "1.0.3",
 		"pretty-ms": "7.0.1",
