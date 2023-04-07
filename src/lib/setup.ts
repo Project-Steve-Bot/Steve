@@ -26,4 +26,3 @@ container.hooks = {
 	discordLogs: process.env.LOG_HOOK ? new WebhookClient({ url: process.env.LOG_HOOK }) : null,
 	suggest: process.env.SUGGEST_HOOK ? new WebhookClient({ url: process.env.SUGGEST_HOOK }) : null
 };
-

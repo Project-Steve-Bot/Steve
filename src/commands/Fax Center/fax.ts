@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ColorResolvable, Message, AttachmentBuilder, EmbedBuilder, TextChannel, cleanContent} from 'discord.js';
-import { createCanvas, loadImage } from 'canvas';
+import { ColorResolvable, Message, AttachmentBuilder, EmbedBuilder, TextChannel, cleanContent } from 'discord.js';
+import { createCanvas, loadImage, Image } from 'canvas';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 const WIDTH = 750;
@@ -29,7 +29,16 @@ export class UserCommand extends SteveCommand {
 
 		const response = await send(msg, `Dialing ${faxNumber}...`);
 
-		let message = cleanContent(await args.rest('string'), msg.channel).replace(/<a?(:[a-zA-Z0-9_-]{2,}:)\d+>/g, '$1');
+		const emojiPromises: Promise<Image>[] = [];
+
+		const cleanMessage = cleanContent(await args.rest('string'), msg.channel).replace(/<a?:[a-zA-Z0-9_-]{2,}:(\d+)>/gm, (_, id) => {
+			emojiPromises.push(loadImage(`https://cdn.discordapp.com/emojis/${id}.png?size=32`));
+			return '\u0000';
+		});
+
+		const messageParts = cleanMessage.split('\u0000');
+
+		const emotes = await Promise.all(emojiPromises);
 
 		const attachments: Array<AttachmentBuilder> = [];
 
@@ -62,39 +71,60 @@ export class UserCommand extends SteveCommand {
 
 		let i = 0,
 			j = 0,
+			spaceLeft = 75,
 			currentHeight = HEADER_HEIGHT + 25,
 			pageIdx = 1;
 
-		while (message.length) {
-			for (i = message.length; ctx.measureText(message.substring(0, i)).width > WIDTH - 75; i--);
 
-			let result = message.substring(0, i);
+		messageParts.forEach((message, emoteIdx) => {
+			while (message.length) {
+				for (i = message.length; ctx.measureText(message.substring(0, i)).width > WIDTH - spaceLeft; i--);
 
-			if (result.indexOf('\n') !== -1) {
-				result = result.substring(0, result.indexOf('\n') + 1);
-			} else if (i !== message.length) {
-				for (j = 0; result.indexOf(' ', j) !== -1; j = result.indexOf(' ', j) + 1);
-				result = result.substring(0, j || result.length);
+				let result = message.substring(0, i);
+
+				let addNewLine = false;
+				if (result.indexOf('\n') !== -1) {
+					result = result.substring(0, result.indexOf('\n') + 1);
+					addNewLine = true;
+				} else if (i !== message.length) {
+					for (j = 0; result.indexOf(' ', j) !== -1; j = result.indexOf(' ', j) + 1);
+					result = result.substring(0, j || result.length);
+					addNewLine = true;
+				}
+				ctx.fillText(result, 0, 0);
+
+				if (addNewLine) {
+					currentHeight += FONT_HEIGHT;
+					ctx.resetTransform();
+					ctx.translate((HEADER_HEIGHT / 2) - 25, currentHeight);
+					spaceLeft = 75;
+				} else {
+					const lineWidth = ctx.measureText(result).width;
+					ctx.translate(lineWidth, 0);
+					spaceLeft -= lineWidth;
+				}
+
+				message = message.substring(result.length, message.length);
+
+				if (currentHeight >= HEIGHT - 25) {
+					attachments.push(new AttachmentBuilder(canvas.toBuffer(), { name: `page${pageIdx++}.png` }));
+
+					ctx.resetTransform();
+
+					ctx.fillStyle = recipient.fax?.background || '#ffffff';
+					ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+					ctx.fillStyle = recipient.fax?.text || '#000000';
+					ctx.translate((HEADER_HEIGHT / 2) - 25, (HEADER_HEIGHT / 2) - 25);
+					currentHeight = (HEADER_HEIGHT / 2) - 25;
+				}
 			}
-
-			ctx.fillText(result, 0, 0);
-			ctx.translate(0, FONT_HEIGHT);
-			currentHeight += FONT_HEIGHT;
-			message = message.substring(result.length, message.length);
-
-			if (currentHeight >= HEIGHT - 25) {
-				attachments.push(new AttachmentBuilder(canvas.toBuffer(), { name: `page${pageIdx++}.png` }));
-
-				ctx.resetTransform();
-
-				ctx.fillStyle = recipient.fax?.background || '#ffffff';
-				ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-				ctx.fillStyle = recipient.fax?.text || '#000000';
-				ctx.translate((HEADER_HEIGHT / 2) - 25, (HEADER_HEIGHT / 2) - 25);
-				currentHeight = (HEADER_HEIGHT / 2) - 25;
+			if (emotes[emoteIdx]) {
+				ctx.drawImage(emotes[emoteIdx], 0, -32);
+				ctx.translate(32, 0);
+				spaceLeft -= 32;
 			}
-		}
+		});
 
 		attachments.push(new AttachmentBuilder(canvas.toBuffer(), { name: `page${pageIdx++}.png` }));
 
