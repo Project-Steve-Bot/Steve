@@ -100,7 +100,7 @@ export class UserCommand extends SteveCommand {
 			const userEmbed = new EmbedBuilder()
 				.setTitle('The Rolodex')
 				.setColor('DarkAqua')
-				.addFields([{ name: user.tag, value: selected}])
+				.addFields([{ name: user.tag, value: selected }])
 				.setThumbnail(user.displayAvatarURL());
 
 			interaction.update({ embeds: [userEmbed] });
