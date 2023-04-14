@@ -1,6 +1,6 @@
 {
 	"name": "steve",
-	"version": "3.3.1",
+	"version": "3.4.0",
 	"main": "dist/index.js",
 	"author": "Ben",
 	"license": "MIT",
@@ -37,6 +37,7 @@
 		"mongodb": "4.15.0",
 		"node-cron": "3.0.2",
 		"parse-duration": "1.0.3",
+		"pdf2json": "^3.0.3",
 		"pretty-ms": "7.0.1",
 		"reflect-metadata": "0.1.13"
 	},
