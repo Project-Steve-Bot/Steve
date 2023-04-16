@@ -10,7 +10,6 @@ import type { WithId } from 'mongodb';
 import type { QuickRoll } from '@lib/types/database';
 import type { ResolverError } from '@lib/types/resolverError';
 import axios from 'axios';
-import { parsePDF } from '@lib/pdfParser';
 
 type WrapResult<T> = Result<T, UserError | ArgumentError | ResolverError>;
 
@@ -284,8 +283,8 @@ export class UserCommand extends SteveSubcommand {
 	}
 
 	private async importRolls(_user: User, url: string) {
-		const pdf = await axios.get<Buffer>(url, { responseType: 'arraybuffer' });
-		console.log(parsePDF(pdf.data));
+		const pdf = await axios.get(url);
+		console.log(pdf.data);
 	}
 
 	public async chatInputImportNew(interaction: ChatInputCommandInteraction) {
