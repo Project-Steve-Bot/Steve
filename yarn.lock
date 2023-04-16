@@ -1646,6 +1646,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@xmldom/xmldom@npm:^0.8.6":
+  version: 0.8.7
+  resolution: "@xmldom/xmldom@npm:0.8.7"
+  checksum: 593d4429c2281ee7799adcb6ff8604b68cf30ce0721537e3e380287b423e67c7ac197d90987f932b4fd3febc409ded8435706e7f90fbba6e22e08740477341d1
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:1, abbrev@npm:^1.0.0":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -4045,6 +4052,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pdf2json@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "pdf2json@npm:3.0.3"
+  dependencies:
+    "@xmldom/xmldom": ^0.8.6
+  bin:
+    pdf2json: bin/pdf2json
+  checksum: 52b39f9b03cc503d05cde78af373fd88e289e1709c324dcbf67045cf0b4c13a097dd405f8c9861f7fb3f5c16d6d5af733207dab973131680f4403ea52e7e0944
+  languageName: node
+  linkType: hard
+
 "peek-readable@npm:^5.0.0":
   version: 5.0.0
   resolution: "peek-readable@npm:5.0.0"
@@ -4550,6 +4568,7 @@ __metadata:
     node-cron: 3.0.2
     npm-run-all: 4.1.5
     parse-duration: 1.0.3
+    pdf2json: ^3.0.3
     pretty-ms: 7.0.1
     reflect-metadata: 0.1.13
     rimraf: 4.4.1

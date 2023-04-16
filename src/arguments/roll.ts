@@ -6,10 +6,9 @@ export class RollArgument extends Argument<RollSpec[][]> {
 
 	public async run(parameter: string, context: Argument.Context) {
 		const resolved = await resolveRoll(parameter, context.message.author);
-		return resolved.mapErrInto(identifier => this.error({
+		return resolved.mapErrInto(error => this.error({
+			...error,
 			parameter,
-			identifier,
-			message: `\`${parameter}\` is not a valid quick roll or spec.`,
 			context
 		}));
 	}

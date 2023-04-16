@@ -1,9 +1,10 @@
 import type { KeepType, RollSpec } from '@lib/types/rollSpec';
 import { Result } from '@sapphire/framework';
+import type { ResolverError } from '../types/resolverError';
 
 const DICE_REGEX = /(\/(?<count>\d{1,3})?d(?<sides>\d{1,4})(?<keep>kl?(?<keepCount>\d{1,3}))?(?<min>r\d{1,2})?(?<modifier>[+-]\d{1,3})?)/g;
 
-export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'MissingOrInvalidSpec'> {
+export function resolveRollSpec(parameter: string): Result<RollSpec[][], ResolverError> {
 	const specs = parameter.split(' ');
 	const out: RollSpec[][] = [];
 
@@ -13,7 +14,10 @@ export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'Missin
 		let match: RegExpExecArray | null;
 		while ((match = DICE_REGEX.exec(spec)) !== null) {
 			if (!match.groups) {
-				return Result.err('MissingOrInvalidSpec');
+				return Result.err({
+					identifier: 'InvalidSpec',
+					message: `\`${parameter}\` is not a valid roll spec`
+				});
 			}
 
 			let count = parseInt(match.groups.count, 10) ?? 1;
@@ -45,7 +49,10 @@ export function resolveRollSpec(parameter: string): Result<RollSpec[][], 'Missin
 		}
 
 		if (rolls.length === 0) {
-			return Result.err('MissingOrInvalidSpec');
+			return Result.err({
+				identifier: 'MissingSpec',
+				message: `\`${parameter}\` does not contain a roll spec`
+			});
 		}
 		out.push(rolls);
 	}

@@ -13,7 +13,8 @@ import {
 	ButtonBuilder,
 	EmbedBuilder,
 	User,
-	ButtonStyle
+	ButtonStyle,
+	AutocompleteInteraction
 } from 'discord.js';
 import type { WithId } from 'mongodb';
 import prettyMilliseconds from 'pretty-ms';
@@ -282,4 +283,27 @@ export function splitMessage(text: string): string[] {
 	});
 
 	return messages.concat(current);
+}
+
+export function getLongCommandName(interaction: AutocompleteInteraction): string {
+	let longName = interaction.commandName;
+	let groupName: string | null = null;
+	try {
+		groupName = interaction.options.getSubcommandGroup();
+	} catch {}
+
+	let subcommandName: string | null = null;
+	try {
+		subcommandName = interaction.options.getSubcommand();
+	} catch {}
+
+	if (groupName) {
+		longName += ` ${groupName}`;
+	}
+
+	if (subcommandName) {
+		longName += ` ${subcommandName}`;
+	}
+
+	return `${longName} ${interaction.options.getFocused(true).name}`;
 }
