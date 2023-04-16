@@ -290,7 +290,7 @@ export class UserCommand extends SteveSubcommand {
 
 	public async chatInputImportNew(interaction: ChatInputCommandInteraction) {
 		await interaction.deferReply();
-		await this.importRolls(interaction.user, interaction.options.getString('url', true));
+		await this.importRolls(interaction.user, 'http://localhost:8080/rolls?characterId=segalb855_97199668');
 		return interaction.editReply('Logged');
 	}
 

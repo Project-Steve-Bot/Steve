@@ -36,6 +36,11 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
+      - name: beyond-api
+        image: DOCKERHUB_USERNAME/dnd-beyond-pdf-parser:1.0.0
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
       imagePullSecrets:
       - name: regcred
 ---
