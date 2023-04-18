@@ -1286,9 +1286,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/framework@npm:4.4.0":
-  version: 4.4.0
-  resolution: "@sapphire/framework@npm:4.4.0"
+"@sapphire/framework@npm:4.4.1":
+  version: 4.4.1
+  resolution: "@sapphire/framework@npm:4.4.1"
   dependencies:
     "@discordjs/builders": ^1.6.1
     "@sapphire/discord-utilities": ^3.0.2
@@ -1299,7 +1299,7 @@ __metadata:
     "@sapphire/result": ^2.6.1
     "@sapphire/stopwatch": ^1.5.0
     "@sapphire/utilities": ^3.11.1
-  checksum: 9a1e31582f9be638121a6b94deaab9c22fce0c9b4bf9a777b769cb01285bebcbac169450911bf95c4354eab8ec7031e2764cb52c2694f757fde6fa33aaf43bac
+  checksum: e7a92461b97f03d55ffc5330430f22803f33616d4b923d36658e2115c13afa3afc226842d549b8625397adb9f06af81943250bff27b68d398a43ced3ef67ba57
   languageName: node
   linkType: hard
 
@@ -4618,7 +4618,7 @@ __metadata:
     "@sapphire/discord-utilities": 3.0.2
     "@sapphire/discord.js-utilities": 6.0.6
     "@sapphire/fetch": 2.4.1
-    "@sapphire/framework": 4.4.0
+    "@sapphire/framework": 4.4.1
     "@sapphire/pieces": 3.6.2
     "@sapphire/plugin-editable-commands": 3.0.2
     "@sapphire/plugin-logger": 3.0.3
