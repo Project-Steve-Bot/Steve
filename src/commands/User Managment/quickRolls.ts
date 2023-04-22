@@ -1,17 +1,21 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args, ArgumentError, Command, Result, UserError } from '@sapphire/framework';
+import { Args, ArgumentError, Command, Result, UserError } from '@sapphire/framework';
 import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
-import { Message, EmbedBuilder, User, ChatInputCommandInteraction } from 'discord.js';
+import { Message, EmbedBuilder, User, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import { sendLoadingMessage } from '@lib/utils';
 import type { RollSpec } from '@lib/types/rollSpec';
-import { resolveQuickRoll, resolveRollSpec } from '@lib/resolvers';
-import type { WithId } from 'mongodb';
-import type { QuickRoll } from '@lib/types/database';
+import { resolveQuickRoll, resolveRollImportCharacter, resolveRollSpec } from '@lib/resolvers';
+import type { ObjectId, WithId } from 'mongodb';
+import type { QuickRoll, RollImportCharacter, RollType } from '@lib/types/database';
 import type { ResolverError } from '@lib/types/resolverError';
 import axios from 'axios';
+import type { AttackRoll, Roll, RollImport } from '@lib/types/rollImport';
+import { PaginatedMessage } from '@sapphire/discord.js-utilities';
+import { chunk } from '@sapphire/utilities';
 
 type WrapResult<T> = Result<T, UserError | ArgumentError | ResolverError>;
+type MessageParts = {embeds: [EmbedBuilder], components: [ActionRowBuilder<ButtonBuilder>]};
 
 @ApplyOptions<SubcommandOptions>({
 	description: 'Add, remove or edit quick rolls.',
@@ -134,9 +138,10 @@ export class UserCommand extends SteveSubcommand {
 								.setDescription('Delete a character sheet\'s quick rolls.')
 								.addStringOption(option =>
 									option
-										.setName('url')
-										.setDescription('The D&D Beyond PDF url of your character sheet.')
+										.setName('character')
+										.setDescription('The character sheet to delete.')
 										.setRequired(true)
+										.setAutocomplete(true)
 								)
 						)
 				);
@@ -251,46 +256,221 @@ export class UserCommand extends SteveSubcommand {
 		return interaction.editReply(out);
 	}
 
-	private async view(user: User): Promise<EmbedBuilder> {
-		const quickRolls = await this.container.db.quickRolls.find({ user: user.id }).toArray();
-		const embed = new EmbedBuilder().setColor('Random');
+	private async view(user: User): Promise<PaginatedMessage> {
+		const quickRolls = await this.container.db.quickRolls.find({ user: user.id, active: true }).toArray();
+
+		const paginator = new PaginatedMessage({
+			template: {
+				content: ' ',
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('Your Quick Rolls')
+						.setColor('Random')
+				]
+			}
+		});
+
 		if (quickRolls.length === 0) {
-			return embed.setDescription('You currently have no quick rolls');
+			return paginator.addPageEmbed(embed =>
+				embed.setDescription('You currently have no quick rolls')
+			);
 		}
 
-		return embed
-			.addFields(quickRolls.map(quickRoll => ({
-				name: quickRoll.rollName,
-				value: quickRoll.specs.map(spec => spec.map(dice => dice.input).join().slice(1)).join(' '),
-				inline: true
-			})));
+		paginator.setActions(PaginatedMessage.defaultActions.filter(action => 'customId' in action
+			&& [
+				'@sapphire/paginated-messages.previousPage',
+				'@sapphire/paginated-messages.nextPage',
+				'@sapphire/paginated-messages.stop'
+			].includes(action.customId))
+		);
+
+		const pages = chunk(quickRolls, 25);
+
+		pages.forEach(page => {
+			paginator.addPageEmbed(embed =>
+				embed
+					.addFields(page.map(roll => ({
+						name: roll.rollName,
+						value: roll.specs.map(spec => spec.map(dice => dice.input).join().slice(1)).join(' '),
+						inline: true
+					})))
+			);
+		});
+
+		return paginator;
 	}
 
 	public async msgView(msg: Message) {
 		const response = await sendLoadingMessage(msg);
-		const out = await this.view(msg.author);
-		return response.edit({ embeds: [out], content: null });
+		const paginator = await this.view(msg.author);
+		return paginator.run(response, msg.author);
 	}
 
 	public async chatInputView(interaction: ChatInputCommandInteraction) {
 		await interaction.deferReply();
-		const out = await this.view(interaction.user);
-		return interaction.editReply({ embeds: [out] });
+		const paginator = await this.view(interaction.user);
+		return paginator.run(interaction, interaction.user);
 	}
 
 	private formatErrorMessage(identifier: string, message: string): string {
 		return `**${identifier}**\n${message}`;
 	}
 
-	private async importRolls(_user: User, url: string) {
-		const pdf = await axios.get(url);
-		console.log(pdf.data);
+	private async importRolls(user: User, url: string): Promise<MessageParts> {
+		const characterId = url.split('/').pop()?.split('.')[0];
+		if (!characterId) {
+			throw new UserError({
+				identifier: 'InvalidURL',
+				message: 'Invalid URL provided.'
+			});
+		}
+
+		if (await this.container.db.rollImportCharacters.countDocuments({ url }) > 0) {
+			throw new UserError({
+				identifier: 'DuplicateBeyondCharacter',
+				message: 'You cannot import rolls for the same character multiple times. Update the rolls instead.'
+			});
+		}
+
+		const { data: ddbData } = await axios.get<RollImport>(`http://localhost:8080/rolls?characterId=${characterId}`);
+		const embed = new EmbedBuilder().setTitle(`Found rolls for ${ddbData.characterName}`);
+
+		const { insertedId } = await this.container.db.rollImportCharacters.insertOne({
+			url,
+			user: user.id,
+			name: ddbData.characterName
+		});
+
+		const { display: attackDisplay, quickRolls: attackRolls } = this.parseRolls(user, ddbData.attacks, 'attack', insertedId, ddbData.characterName);
+		embed.addFields([
+			{ name: 'Attack Rolls', value: attackDisplay, inline: true }
+		]);
+
+		const { display: attributeDisplay, quickRolls: attributeRolls } = this.parseRolls(user, ddbData.attributes, 'attribute', insertedId, ddbData.characterName);
+		embed.addFields([
+			{ name: 'Attribute Rolls', value: attributeDisplay, inline: true }
+		]);
+
+		const { display: saveDisplay, quickRolls: saveRolls } = this.parseRolls(user, ddbData.saves, 'save', insertedId, ddbData.characterName);
+		embed.addFields([
+			{ name: 'Saving throws', value: saveDisplay, inline: true }
+		]);
+
+		const { display: abilityDisplay, quickRolls: abilityRolls } = this.parseRolls(user, ddbData.abilityChecks, 'ability', insertedId, ddbData.characterName);
+		embed.addFields([
+			{ name: 'Ability Check Rolls', value: abilityDisplay, inline: true }
+		]);
+
+		await this.container.db.quickRolls.insertMany([
+			...attackRolls,
+			...abilityRolls,
+			...attributeRolls,
+			...saveRolls
+		]);
+
+		return { embeds: [embed], components: [this.makeImportButtons(user, insertedId)] };
+	}
+
+	private parseRolls(user: User, rawRolls: AttackRoll[] | Roll[], type: RollType, characterId: ObjectId, characterName: string): { display: string, quickRolls: QuickRoll[] } {
+		const quickRolls: QuickRoll[] = [];
+		let display = '';
+
+		rawRolls.forEach(rawRoll => {
+			const rollString = `1d20${rawRoll.roll > 0 ? '+' : ''}${rawRoll.roll === 0 ? '' : rawRoll.roll} ${'damage' in rawRoll ? rawRoll.damage : ''}`.trim();
+
+			const specs = resolveRollSpec(rollString);
+
+			display += `**${rawRoll.name}** ${rollString}\n`;
+
+			quickRolls.push({
+				rollName: `${characterName}: ${rawRoll.name}`.toLowerCase(),
+				user: user.id,
+				specs: specs.unwrap(),
+				active: false,
+				importInfo: { type, character: characterId.toHexString() }
+			});
+		});
+
+		display = display.trim();
+		return { display, quickRolls };
+	}
+
+
+	private makeImportButtons(user: User, character: ObjectId, type: 'Import' | 'Update' = 'Import'): ActionRowBuilder<ButtonBuilder> {
+		const idString = `RollImport|${user.id}|${character.toHexString()}`;
+		return new ActionRowBuilder<ButtonBuilder>().addComponents([
+			new ButtonBuilder()
+				.setCustomId(`${idString}|all`)
+				.setLabel(`${type} All Rolls`)
+				.setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId(`${idString}|attack`)
+				.setLabel(`${type} Attack Rolls`)
+				.setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId(`${idString}|attribute`)
+				.setLabel(`${type} Attribute Rolls`)
+				.setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId(`${idString}|save`)
+				.setLabel(`${type} Saving Throws`)
+				.setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId(`${idString}|ability`)
+				.setLabel(`${type} Ability Check Rolls`)
+				.setStyle(ButtonStyle.Primary)
+		]);
 	}
 
 	public async chatInputImportNew(interaction: ChatInputCommandInteraction) {
 		await interaction.deferReply();
-		await this.importRolls(interaction.user, 'http://localhost:8080/rolls?characterId=segalb855_97199668');
-		return interaction.editReply('Logged');
+		const out = await this.importRolls(interaction.user, interaction.options.getString('url', true));
+		return interaction.editReply(out);
+	}
+
+	public async msgImportNew(msg: Message, args: Args) {
+		const response = await sendLoadingMessage(msg);
+		const url = await args.pick('string');
+		const out = await this.importRolls(msg.author, url);
+		return response.edit({ ...out, content: ' ' });
+	}
+
+	private async deleteCharacter(character: WrapResult<WithId<RollImportCharacter>>): Promise<string> {
+		if (character.isErr()) {
+			const { identifier, message } = character.err().unwrap();
+			return this.formatErrorMessage(identifier, message);
+		}
+		await this.container.db.quickRolls.deleteMany({ 'importInfo.character': character.unwrap()._id.toHexString() });
+		await this.container.db.rollImportCharacters.findOneAndDelete(character.unwrap());
+
+		return `${character.unwrap().name}'s quick rolls have been deleted.`;
+	}
+
+	public async chatInputImportDelete(interaction: ChatInputCommandInteraction) {
+		await interaction.deferReply({ ephemeral: true });
+		const character = await resolveRollImportCharacter(interaction.options.getString('character', true), interaction.user);
+
+		const out = await this.deleteCharacter(character);
+
+		return interaction.editReply(out);
+	}
+
+	private async updateCharacter(character: WrapResult<WithId<RollImportCharacter>>, user: User): Promise<MessageParts|string> {
+		if (character.isErr()) {
+			const { identifier, message } = character.err().unwrap();
+			return this.formatErrorMessage(identifier, message);
+		}
+		await this.deleteCharacter(character);
+		return this.importRolls(user, character.unwrap().url);
+	}
+
+	public async chatInputImportUpdate(interaction: ChatInputCommandInteraction) {
+		await interaction.deferReply();
+		const character = await resolveRollImportCharacter(interaction.options.getString('character', true), interaction.user);
+
+		const out = await this.updateCharacter(character, interaction.user);
+
+		return interaction.editReply(out);
 	}
 
 }

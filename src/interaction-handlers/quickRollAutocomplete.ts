@@ -24,7 +24,7 @@ export class QuickRollAutocomplete extends InteractionHandler {
 		const cashedOptions = this.autoCompleteCache.get(interaction.user.id);
 
 		if (!cashedOptions || Date.now() - cashedOptions.setAt > 60e3) {
-			const quickRolls = await this.container.db.quickRolls.find({ user: interaction.user.id }).toArray();
+			const quickRolls = await this.container.db.quickRolls.find({ user: interaction.user.id, active: true }).toArray();
 			const options = quickRolls.map(qr => qr.rollName);
 			this.autoCompleteCache.set(interaction.user.id, { setAt: Date.now(), options });
 			return this.some(options);
@@ -34,8 +34,10 @@ export class QuickRollAutocomplete extends InteractionHandler {
 	}
 
 	public override run(interaction: AutocompleteInteraction, result: InteractionHandler.ParseResult<this>) {
-		const filtered = result.filter(option => option.startsWith(interaction.options.getFocused()));
-		interaction.respond(filtered.map(option => ({ name: option, value: option })));
+		const focused = interaction.options.getFocused();
+		const startsWith = result.filter(option => option.startsWith(focused));
+		const includes = result.filter(option => option.includes(focused) && !option.startsWith(focused));
+		interaction.respond([...startsWith, ...includes].map(option => ({ name: option, value: option })).slice(0, 25));
 	}
 
 }

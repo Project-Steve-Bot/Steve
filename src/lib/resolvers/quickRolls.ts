@@ -7,7 +7,8 @@ import type { ResolverError } from '../types/resolverError';
 export async function resolveQuickRoll(parameter: string, user: User): Promise<Result<WithId<QuickRoll>, ResolverError>> {
 	const quickRoll = await container.db.quickRolls.findOne({
 		user: user.id,
-		rollName: parameter.toLowerCase()
+		rollName: parameter.toLowerCase(),
+		active: true
 	});
 
 	if (!quickRoll) {
