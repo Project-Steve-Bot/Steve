@@ -10,7 +10,8 @@ import type {
 	ChannelRename,
 	QuickRoll,
 	IDhint,
-	RPCharter
+	RPCharter,
+	RollImportCharacter
 } from '@lib/types/database';
 
 export interface SteveCollections {
@@ -24,6 +25,7 @@ export interface SteveCollections {
 	quickRolls: Collection<QuickRoll>;
 	idHints: Collection<IDhint>;
 	rpCharacters: Collection<RPCharter>;
+	rollImportCharacters: Collection<RollImportCharacter>;
 }
 
 export async function startMongo() {
@@ -46,7 +48,8 @@ export async function startMongo() {
 		channelRename: database.collection<ChannelRename>('channelRename'),
 		quickRolls: database.collection<QuickRoll>('quickRolls'),
 		idHints: database.collection<IDhint>('idHints'),
-		rpCharacters: database.collection<RPCharter>('rpCharacters')
+		rpCharacters: database.collection<RPCharter>('rpCharacters'),
+		rollImportCharacters: database.collection<RollImportCharacter>('rollImportCharacters')
 	};
 
 	container.mongo = mongo;

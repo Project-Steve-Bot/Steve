@@ -1,7 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, Command, CommandOptions } from '@sapphire/framework';
 import {
-	AutocompleteInteraction,
 	Guild,
 	Message,
 	EmbedBuilder,
@@ -39,7 +38,7 @@ interface DiceResult {
 })
 export class RollCommand extends SteveCommand {
 
-	private autoCompleteCache: Map<string, { setAt: number, options: string[] }> = new Map();
+	// private autoCompleteCache: Map<string, { setAt: number, options: string[] }> = new Map();
 
 	public override registerApplicationCommands(registry: Command.Registry) {
 		registry.registerChatInputCommand(builder => {
@@ -49,7 +48,7 @@ export class RollCommand extends SteveCommand {
 				.addStringOption(option =>
 					option
 						.setName('dice')
-						.setDescription('Use standard dice notation or a quick roll that you setup using the managequickrolls command')
+						.setDescription('Use standard dice notation or a quick roll that you setup using the quickrolls command')
 						.setRequired(true)
 						.setAutocomplete(true)
 				);
@@ -75,11 +74,11 @@ export class RollCommand extends SteveCommand {
 		return out;
 	}
 
-	public async autocompleteRun(interaction: AutocompleteInteraction) {
-		const options = await this.fetchAutoCompleteOptions(interaction.user.id);
-		const filtered = options.filter(option => option.startsWith(interaction.options.getFocused()));
-		interaction.respond(filtered.map(option => ({ name: option, value: option })));
-	}
+	// public async autocompleteRun(interaction: AutocompleteInteraction) {
+	// 	const options = await this.fetchAutoCompleteOptions(interaction.user.id);
+	// 	const filtered = options.filter(option => option.startsWith(interaction.options.getFocused()));
+	// 	interaction.respond(filtered.map(option => ({ name: option, value: option })));
+	// }
 
 	public async messageRun(msg: Message, args: Args) {
 		const input = await args.restResult('roll');
@@ -231,17 +230,17 @@ export class RollCommand extends SteveCommand {
 		return total;
 	}
 
-	private async fetchAutoCompleteOptions(userId: string): Promise<string[]> {
-		const cashedOptions = this.autoCompleteCache.get(userId);
+	// private async fetchAutoCompleteOptions(userId: string): Promise<string[]> {
+	// 	const cashedOptions = this.autoCompleteCache.get(userId);
 
-		if (!cashedOptions || Date.now() - cashedOptions.setAt > 60e3) {
-			const quickRolls = await this.container.db.quickRolls.find({ user: userId }).toArray();
-			const options = quickRolls.map(qr => qr.rollName);
-			this.autoCompleteCache.set(userId, { setAt: Date.now(), options });
-			return options;
-		}
+	// 	if (!cashedOptions || Date.now() - cashedOptions.setAt > 60e3) {
+	// 		const quickRolls = await this.container.db.quickRolls.find({ user: userId }).toArray();
+	// 		const options = quickRolls.map(qr => qr.rollName);
+	// 		this.autoCompleteCache.set(userId, { setAt: Date.now(), options });
+	// 		return options;
+	// 	}
 
-		return cashedOptions.options;
-	}
+	// 	return cashedOptions.options;
+	// }
 
 }

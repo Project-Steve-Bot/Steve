@@ -7,10 +7,9 @@ export class QuickRollArgument extends Argument<WithId<QuickRoll>> {
 
 	public async run(parameter: string, context: Argument.Context): Argument.AsyncResult<WithId<QuickRoll>> {
 		const resolved = await resolveQuickRoll(parameter, context.message.author);
-		return resolved.mapErrInto(identifier => this.error({
+		return resolved.mapErrInto(error => this.error({
+			...error,
 			parameter,
-			identifier,
-			message: `Quick roll \`${parameter}\` does not exist.`,
 			context
 		}));
 	}
