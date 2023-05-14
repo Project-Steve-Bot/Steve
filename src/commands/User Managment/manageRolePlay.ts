@@ -4,7 +4,7 @@ import type { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands
 import type { Command } from '@sapphire/framework';
 import { AutocompleteInteraction, Collection, EmbedBuilder } from 'discord.js';
 import type { RPCharter } from '@lib/types/database';
-import { Filter, ObjectId, WithId } from 'mongodb';
+import { type Filter, ObjectId, type WithId } from 'mongodb';
 
 @ApplyOptions<SubcommandOptions>({
 	name: 'character',

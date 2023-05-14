@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, type InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
 import type { AutocompleteInteraction } from 'discord.js';
 import { getLongCommandName } from '../lib/utils';
 

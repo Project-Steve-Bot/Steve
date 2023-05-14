@@ -24,7 +24,7 @@ export class UserCommand extends SteveCommand {
 			return send(msg, 'Please provide a timezone.');
 		}
 
-		const input = inputResult.unwrap()
+		const input = inputResult.unwrap();
 		if (!this.timezoneRegex.test(input)) {
 			return send(msg, oneLine`${input} is not a valid timezone.
 			Timezones are assumed to be relative to GMT and should be in the format of \`(+|-)<hours>(:minutes)\``);

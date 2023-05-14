@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import type { CommandOptions } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { ChannelType, ColorResolvable, Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
+import { ChannelType, type ColorResolvable, Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
 import prettyMilliseconds from 'pretty-ms';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import type { Reminder } from '@lib/types/database';

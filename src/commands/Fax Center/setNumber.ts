@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, MessageCommandContext, CommandOptions, UserError } from '@sapphire/framework';
+import { Args, type MessageCommandContext, type CommandOptions, UserError } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { sendLoadingMessage } from '@lib/utils';

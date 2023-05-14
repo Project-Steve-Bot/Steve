@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, CommandOptions, UserError } from '@sapphire/framework';
+import { Args, Command, type CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, time, TimestampStyles } from 'discord.js';
+import { type EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, time, TimestampStyles } from 'discord.js';
 import parse from 'parse-duration';
 import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';

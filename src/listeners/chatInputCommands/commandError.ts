@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { ChatInputCommandErrorPayload, Events, Listener } from '@sapphire/framework';
-import { ChatInputSubcommandErrorPayload, SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
+import { type ChatInputCommandErrorPayload, Events, Listener } from '@sapphire/framework';
+import { type ChatInputSubcommandErrorPayload, SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
 import type { CommandInteraction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({

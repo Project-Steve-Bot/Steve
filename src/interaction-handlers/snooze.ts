@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, type InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType, StringSelectMenuBuilder, time, TimestampStyles } from 'discord.js';
 import { generateSnoozeButtons } from '../lib/utils';
 import parse from 'parse-duration';

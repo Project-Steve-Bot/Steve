@@ -1,4 +1,4 @@
-import { Command, CommandOptions, PieceContext } from '@sapphire/framework';
+import { Command, type CommandOptions, type PieceContext } from '@sapphire/framework';
 import { PermissionsBitField } from 'discord.js';
 
 export abstract class SteveCommand extends Command {

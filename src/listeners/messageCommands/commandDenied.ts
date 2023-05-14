@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { MessageCommandDeniedPayload, Events, Listener, UserError } from '@sapphire/framework';
+import { type MessageCommandDeniedPayload, Events, Listener, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<Listener.Options>({

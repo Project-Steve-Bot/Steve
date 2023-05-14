@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Events, Listener, ChatInputCommandSuccessPayload } from '@sapphire/framework';
+import { Events, Listener, type ChatInputCommandSuccessPayload } from '@sapphire/framework';
 
 @ApplyOptions<Listener.Options>({
 	event: Events.ChatInputCommandSuccess,

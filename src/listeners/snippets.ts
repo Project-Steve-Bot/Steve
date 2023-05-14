@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Events, Listener, UnknownMessageCommandPayload } from '@sapphire/framework';
+import { Events, Listener, type UnknownMessageCommandPayload } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<Listener.Options>({

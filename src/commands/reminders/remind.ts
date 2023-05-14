@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, CommandOptions, UserError } from '@sapphire/framework';
+import { Args, Command, type CommandOptions, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Guild, Message, time, TimestampStyles, User } from 'discord.js';
 import parse from 'parse-duration';

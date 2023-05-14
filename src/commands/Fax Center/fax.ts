@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ColorResolvable, Message, AttachmentBuilder, EmbedBuilder, TextChannel, cleanContent } from 'discord.js';
+import { type ColorResolvable, Message, AttachmentBuilder, EmbedBuilder, TextChannel, cleanContent } from 'discord.js';
 import { createCanvas, loadImage, Image } from 'canvas';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 
