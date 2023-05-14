@@ -1151,7 +1151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:^6.0.0":
+"@octokit/plugin-paginate-rest@npm:^6.1.0":
   version: 6.1.0
   resolution: "@octokit/plugin-paginate-rest@npm:6.1.0"
   dependencies:
@@ -1171,7 +1171,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:^7.0.0":
+"@octokit/plugin-rest-endpoint-methods@npm:^7.1.0":
   version: 7.1.0
   resolution: "@octokit/plugin-rest-endpoint-methods@npm:7.1.0"
   dependencies:
@@ -1208,15 +1208,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:19.0.7":
-  version: 19.0.7
-  resolution: "@octokit/rest@npm:19.0.7"
+"@octokit/rest@npm:19.0.8":
+  version: 19.0.8
+  resolution: "@octokit/rest@npm:19.0.8"
   dependencies:
     "@octokit/core": ^4.1.0
-    "@octokit/plugin-paginate-rest": ^6.0.0
+    "@octokit/plugin-paginate-rest": ^6.1.0
     "@octokit/plugin-request-log": ^1.0.4
-    "@octokit/plugin-rest-endpoint-methods": ^7.0.0
-  checksum: 1f970c4de2cf3d1691d3cf5dd4bfa5ac205629e76417b5c51561e1beb5b4a7e6c65ba647f368727e67e5243418e06ca9cdafd9e733173e1529385d4f4d053d3d
+    "@octokit/plugin-rest-endpoint-methods": ^7.1.0
+  checksum: 86276924a2458cb1cb672d496dee45752ea14c57ca146f148cc51160179600c4071e1d8c4fd593bb20a6b5ca51cc94451d6cb4457865c174090e3e3f9bae597c
   languageName: node
   linkType: hard
 
@@ -4571,7 +4571,7 @@ __metadata:
   resolution: "steve@workspace:."
   dependencies:
     "@discordjs/collection": 1.5.1
-    "@octokit/rest": 19.0.7
+    "@octokit/rest": 19.0.8
     "@sapphire/decorators": 6.0.1
     "@sapphire/discord-utilities": 3.0.2
     "@sapphire/discord.js-utilities": 6.0.6
