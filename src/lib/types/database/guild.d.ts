@@ -15,4 +15,5 @@ export interface DbGuild {
 	assignableRoles?: string[];
 	count?: CountData;
 	voteToPin?: number;
+	mentionSomeone?: boolean;
 }

@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, MessageCommandSuccessPayload, Events, Listener, LogLevel } from '@sapphire/framework';
+import { Command, type MessageCommandSuccessPayload, Events, Listener, LogLevel } from '@sapphire/framework';
 // @ts-expect-error ts(6133)
 import type { Logger } from '@sapphire/plugin-logger';
 import { cyan } from 'colorette';

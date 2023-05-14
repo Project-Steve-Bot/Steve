@@ -1,5 +1,5 @@
 import { Argument } from '@sapphire/framework';
-import { ColorResolvable, resolveColor } from 'discord.js';
+import { type ColorResolvable, resolveColor } from 'discord.js';
 
 export class ColorArgument extends Argument<ColorResolvable> {
 

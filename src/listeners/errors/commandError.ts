@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { MessageCommandErrorPayload, Events, Listener, ChatInputCommandErrorPayload } from '@sapphire/framework';
+import { type MessageCommandErrorPayload, Events, Listener, type ChatInputCommandErrorPayload } from '@sapphire/framework';
 import { buildErrorPayload } from '@lib/utils';
-import { ChatInputSubcommandErrorPayload, SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
+import { type ChatInputSubcommandErrorPayload, SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
 
 @ApplyOptions<Listener.Options>({
 	event: Events.MessageCommandError,

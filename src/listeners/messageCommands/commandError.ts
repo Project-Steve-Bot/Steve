@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Events, Listener, MessageCommandErrorPayload } from '@sapphire/framework';
+import { Events, Listener, type MessageCommandErrorPayload } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
 import type { Message } from 'discord.js';

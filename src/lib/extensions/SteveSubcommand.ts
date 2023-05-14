@@ -1,5 +1,5 @@
 import type { PieceContext } from '@sapphire/framework';
-import { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
+import { Subcommand, type SubcommandOptions } from '@sapphire/plugin-subcommands';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Message, PermissionsBitField } from 'discord.js';
 

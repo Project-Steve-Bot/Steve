@@ -1,6 +1,6 @@
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { ApplyOptions } from '@sapphire/decorators';
-import { CommandOptions, version as sapphireVersion } from '@sapphire/framework';
+import { type CommandOptions, version as sapphireVersion } from '@sapphire/framework';
 import { Message, EmbedBuilder, version as discordVersion } from 'discord.js';
 import { readFileSync } from 'fs';
 import prettyMilliseconds from 'pretty-ms';

@@ -3,9 +3,9 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import { oneLine } from 'common-tags';
 import {
-	Channel,
+	type Channel,
 	Collection,
-	ColorResolvable,
+	type ColorResolvable,
 	Guild,
 	Message,
 	ActionRowBuilder,

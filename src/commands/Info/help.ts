@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args, CommandOptions, DetailedDescriptionCommand, MessageCommandContext } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { EmbedField, Message, EmbedBuilder, ChannelType } from 'discord.js';
+import { type EmbedField, Message, EmbedBuilder, ChannelType } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { splitMessage } from '@lib/utils';
 

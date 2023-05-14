@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Events, Listener, ListenerErrorPayload } from '@sapphire/framework';
+import { Events, Listener, type ListenerErrorPayload } from '@sapphire/framework';
 import { buildErrorPayload } from '@lib/utils';
 
 @ApplyOptions<Listener.Options>({

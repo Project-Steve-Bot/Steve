@@ -1,6 +1,6 @@
 import { container, Events, SapphireClient } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonBuilder, ClientOptions, EmbedBuilder, TextChannel } from 'discord.js';
-import { schedule, ScheduledTask } from 'node-cron';
+import { ActionRowBuilder, ButtonBuilder, type ClientOptions, EmbedBuilder, TextChannel } from 'discord.js';
+import { schedule, type ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
 import { generateSnoozeButtons, getChannel, pickRandom } from '@lib/utils';
 

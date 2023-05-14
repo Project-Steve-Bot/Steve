@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, MessageCommandContext, UserError } from '@sapphire/framework';
+import { Args, type MessageCommandContext, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
 import { Message, EmbedBuilder } from 'discord.js';

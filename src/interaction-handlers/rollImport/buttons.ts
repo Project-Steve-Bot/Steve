@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, type InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction } from 'discord.js';
 
 @ApplyOptions<InteractionHandlerOptions>({

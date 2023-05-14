@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
-import { Interaction, EmbedBuilder } from 'discord.js';
+import { type Interaction, EmbedBuilder } from 'discord.js';
 import { envParseArray } from '@lib/env-parser';
 import { stripIndents } from 'common-tags';
 

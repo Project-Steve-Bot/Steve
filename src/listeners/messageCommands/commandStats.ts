@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { MessageCommandSuccessPayload, Events, Listener } from '@sapphire/framework';
+import { type MessageCommandSuccessPayload, Events, Listener } from '@sapphire/framework';
 
 @ApplyOptions<Listener.Options>({
 	event: Events.MessageCommandSuccess,

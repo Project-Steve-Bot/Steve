@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { Listener, ListenerOptions, PieceContext, Store } from '@sapphire/framework';
+import { Listener, type ListenerOptions, type PieceContext, Store } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
 import { Collection, WebhookClient } from 'discord.js';
 import { readFileSync } from 'fs';

@@ -4,7 +4,7 @@ import {
 	Guild,
 	Message,
 	EmbedBuilder,
-	TextBasedChannel,
+	type TextBasedChannel,
 	User
 } from 'discord.js';
 import { oneLine } from 'common-tags';

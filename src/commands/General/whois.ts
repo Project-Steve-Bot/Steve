@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Args, CommandOptions } from '@sapphire/framework';
-import { ColorResolvable, Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
+import { type ColorResolvable, Message, EmbedBuilder, time, TimestampStyles } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 
 @ApplyOptions<CommandOptions>({
