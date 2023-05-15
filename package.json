@@ -13,7 +13,7 @@
 		"@octokit/rest": "19.0.8",
 		"@sapphire/decorators": "6.0.1",
 		"@sapphire/discord-utilities": "3.0.3",
-		"@sapphire/discord.js-utilities": "6.0.6",
+		"@sapphire/discord.js-utilities": "6.1.0",
 		"@sapphire/fetch": "2.4.1",
 		"@sapphire/framework": "4.4.3",
 		"@sapphire/pieces": "3.6.3",
