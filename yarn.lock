@@ -3749,10 +3749,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"module-alias@npm:2.2.2":
-  version: 2.2.2
-  resolution: "module-alias@npm:2.2.2"
-  checksum: 4b5543f834b484033e5bd184096ca8276b9195e32e88883ee6ea8d3a4789d97c470d26f5fa7271bd7a26588bf67e4d27dbdb594ee327aef1c9619d855dc78342
+"module-alias@npm:2.2.3":
+  version: 2.2.3
+  resolution: "module-alias@npm:2.2.3"
+  checksum: 6169187f69de8dcf8af8fab4d9e53ada6338a43f7670d38d0b27a089c28f9eb18d85a6fd46f11b54c63079a68449b85d071d7db0ac067f9f7faedbcd6231456d
   languageName: node
   linkType: hard
 
@@ -4661,7 +4661,7 @@ __metadata:
     dotenv-cra: 3.0.3
     eslint: 8.42.0
     eslint-plugin-deprecation: 1.4.1
-    module-alias: 2.2.2
+    module-alias: 2.2.3
     mongodb: 4.16.0
     node-cron: 3.0.2
     npm-run-all: 4.1.5
