@@ -141,6 +141,7 @@ export class Snooze extends InteractionHandler {
 						},
 						{
 							label: 'Random (between 1 week and 3 years)',
+							// @ts-expect-error ts(2532)
 							value: `${Math.floor(Math.random() * ((parse('3y') - parse('1w')) + parse('1w')))}`,
 							emoji: '❓'
 						}

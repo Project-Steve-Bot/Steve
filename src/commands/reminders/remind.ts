@@ -84,7 +84,7 @@ export class RemindCommand extends SteveCommand {
 		guild: Guild | null,
 		rawRepeat: string | null
 	): Promise<string> {
-		const repeat = rawRepeat ? parse(rawRepeat) : null;
+		const repeat = rawRepeat ? parse(rawRepeat) ?? null : null;
 		if (repeat && repeat < 60e3) {
 			throw new UserError({
 				identifier: 'RemindRepeatTooShort',

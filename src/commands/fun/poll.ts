@@ -150,6 +150,7 @@ export class PollCommand extends SteveCommand {
 		}
 
 		choices = choices.map((choice, idx) => `${NUMBER_EMOTES[idx]} ${choice}`);
+		// @ts-expect-error ts(2532)
 		const expires = new Date(Date.now() + parse(rawExpires ?? '1d'));
 
 		const embed = new EmbedBuilder()
