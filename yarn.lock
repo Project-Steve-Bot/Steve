@@ -1605,10 +1605,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:17.0.23":
-  version: 17.0.23
-  resolution: "@types/node@npm:17.0.23"
-  checksum: a3517554737cbb042e76c30d0e5482192ac4d9bea0eeb086e2622d9cabf460a0eb52a696b99fcd18e7fcc93c96db6cc7ae507f6608f256ef0b5c1d8c87a5a470
+"@types/node@npm:17.0.45":
+  version: 17.0.45
+  resolution: "@types/node@npm:17.0.45"
+  checksum: aa04366b9103b7d6cfd6b2ef64182e0eaa7d4462c3f817618486ea0422984c51fc69fd0d436eae6c9e696ddfdbec9ccaa27a917f7c2e8c75c5d57827fe3d95e8
   languageName: node
   linkType: hard
 
@@ -4825,7 +4825,7 @@ __metadata:
     "@sapphire/type": 2.4.0
     "@sapphire/utilities": 3.11.2
     "@types/common-tags": 1.8.1
-    "@types/node": 17.0.23
+    "@types/node": 17.0.45
     "@types/node-cron": 3.0.7
     "@types/ws": 8.5.5
     "@typescript-eslint/eslint-plugin": 5.59.9
