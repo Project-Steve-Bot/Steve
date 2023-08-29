@@ -11,7 +11,7 @@
 	"dependencies": {
 		"@discordjs/collection": "1.5.3",
 		"@octokit/rest": "19.0.13",
-		"@sapphire/decorators": "6.0.1",
+		"@sapphire/decorators": "6.0.2",
 		"@sapphire/discord-utilities": "3.0.3",
 		"@sapphire/discord.js-utilities": "6.1.0",
 		"@sapphire/fetch": "2.4.1",
