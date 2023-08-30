@@ -1063,18 +1063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/pieces@npm:3.6.3":
-  version: 3.6.3
-  resolution: "@sapphire/pieces@npm:3.6.3"
-  dependencies:
-    "@discordjs/collection": ^1.5.1
-    "@sapphire/utilities": ^3.11.1
-    tslib: ^2.5.0
-  checksum: cd515b5bdc5f250cfdf6b249e1dc15a41269d9d73a224c15ff3acbc6d311244ed6c517e69c00af1b364316f1e133f43bb920e283eb914fbefaf1e7b61c33a8a1
-  languageName: node
-  linkType: hard
-
-"@sapphire/pieces@npm:^3.7.0":
+"@sapphire/pieces@npm:3.7.0, @sapphire/pieces@npm:^3.7.0":
   version: 3.7.0
   resolution: "@sapphire/pieces@npm:3.7.0"
   dependencies:
@@ -4846,7 +4835,7 @@ __metadata:
     "@sapphire/discord.js-utilities": 6.1.0
     "@sapphire/fetch": 2.4.1
     "@sapphire/framework": 4.5.3
-    "@sapphire/pieces": 3.6.3
+    "@sapphire/pieces": 3.7.0
     "@sapphire/plugin-editable-commands": 3.0.3
     "@sapphire/plugin-logger": 3.0.6
     "@sapphire/plugin-subcommands": 4.0.1
