@@ -46,7 +46,7 @@
 		"@lib": "dist/lib"
 	},
 	"devDependencies": {
-		"@sapphire/ts-config": "4.0.1",
+		"@sapphire/ts-config": "5.0.0",
 		"@types/common-tags": "1.8.1",
 		"@types/node": "17.0.45",
 		"@types/node-cron": "3.0.8",
