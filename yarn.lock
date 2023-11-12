@@ -1650,10 +1650,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/common-tags@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@types/common-tags@npm:1.8.1"
-  checksum: bec6f68c8c434834380abd1dc057aa6ba26661bb0c65c700b65049e9b104d7be96a987d93dbe8726be68554a23a52514a6967d8903fdb51fb8c78cf909d1e4c1
+"@types/common-tags@npm:1.8.4":
+  version: 1.8.4
+  resolution: "@types/common-tags@npm:1.8.4"
+  checksum: 9fad055269bd31eecd910fbf34acb80332b0c21e0fe8fd459df2dec11c183a3da3c96590964289ebd63a39658c23ca4412cc116558cde5a43a2738ff8056d765
   languageName: node
   linkType: hard
 
@@ -4869,7 +4869,7 @@ __metadata:
     "@sapphire/type": 2.4.0
     "@sapphire/utilities": 3.13.0
     "@skyra/env-utilities": ^1.2.1
-    "@types/common-tags": 1.8.1
+    "@types/common-tags": 1.8.4
     "@types/node": 17.0.45
     "@types/node-cron": 3.0.8
     "@types/ws": 8.5.5
