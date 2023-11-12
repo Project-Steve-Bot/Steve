@@ -1,5 +1,5 @@
 import { container, Events, SapphireClient } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonBuilder, type ClientOptions, EmbedBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, type ClientOptions, EmbedBuilder, TextChannel, ComponentType } from 'discord.js';
 import { schedule, type ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
 import { generateSnoozeButtons, getChannel, pickRandom } from '@lib/utils';
@@ -102,7 +102,7 @@ export class SteveBoi extends SapphireClient {
 				newButtons.push(
 					new ActionRowBuilder<ButtonBuilder>()
 						.addComponents(row.components.map(button =>
-							new ButtonBuilder({ ...button.data, disabled: true })
+							new ButtonBuilder({ ...button.data, disabled: true, type: ComponentType.Button })
 						))
 				);
 			});

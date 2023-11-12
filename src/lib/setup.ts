@@ -14,7 +14,7 @@ import { srcDir } from '@lib/constants';
 import { container } from '@sapphire/framework';
 
 // Read env var
-config({ path: join(srcDir, '.env') });
+config({ env: join(srcDir, '.env') });
 
 // Set default inspection depth
 inspect.defaultOptions.depth = 1;
