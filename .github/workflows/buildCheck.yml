@@ -1,6 +1,7 @@
 name: Build and Lint Check
 
 on:
+  push:
   pull_request:
   workflow_dispatch:
   
