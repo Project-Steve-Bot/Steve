@@ -1202,6 +1202,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@skyra/env-utilities@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@skyra/env-utilities@npm:1.2.1"
+  dependencies:
+    dotenv: ^16.3.0
+    dotenv-expand: ^10.0.0
+  checksum: a2695d2ce23a90d33a0de41c8edfb63599740528b82c93df395ea13163b84c48ce76423bbfaf99c49e54cb22e112fad90126c4616a4da9dbee702b625640921c
+  languageName: node
+  linkType: hard
+
 "@smithy/abort-controller@npm:^2.0.12":
   version: 2.0.12
   resolution: "@smithy/abort-controller@npm:2.0.12"
@@ -2486,27 +2496,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-cra@npm:3.0.3":
-  version: 3.0.3
-  resolution: "dotenv-cra@npm:3.0.3"
-  dependencies:
-    dotenv: ^10.0.0
-    dotenv-expand: ^5.1.0
-  checksum: 2e4b60113757273685453a30f405601258f8d73066babad772f22d238bf9dd5f93d92e7e6e22c76bf1d4f74a2e4f694be78bb2e324bd7d9b36e0476d61abc930
-  languageName: node
-  linkType: hard
-
-"dotenv-expand@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "dotenv-expand@npm:5.1.0"
-  checksum: 8017675b7f254384915d55f9eb6388e577cf0a1231a28d54b0ca03b782be9501b0ac90ac57338636d395fa59051e6209e9b44b8ddf169ce6076dffb5dea227d3
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^10.0.0":
+"dotenv-expand@npm:^10.0.0":
   version: 10.0.0
-  resolution: "dotenv@npm:10.0.0"
-  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  resolution: "dotenv-expand@npm:10.0.0"
+  checksum: 2a38b470efe0abcb1ac8490421a55e1d764dc9440fd220942bce40965074f3fb00b585f4346020cb0f0f219966ee6b4ee5023458b3e2953fe5b3214de1b314ee
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.3.0":
+  version: 16.3.1
+  resolution: "dotenv@npm:16.3.1"
+  checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
   languageName: node
   linkType: hard
 
@@ -4811,6 +4811,7 @@ __metadata:
     "@sapphire/ts-config": ^5.0.0
     "@sapphire/type": 2.4.0
     "@sapphire/utilities": 3.13.0
+    "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.1
     "@types/node": 17.0.45
     "@types/node-cron": 3.0.8
@@ -4825,7 +4826,6 @@ __metadata:
     colorette: 2.0.20
     common-tags: 1.8.2
     discord.js: 14.13.0
-    dotenv-cra: 3.0.3
     eslint: 8.48.0
     eslint-plugin-deprecation: 1.5.0
     module-alias: 2.2.3

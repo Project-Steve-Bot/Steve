@@ -6,15 +6,15 @@ import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-subcommands/register';
 import { createColors } from 'colorette';
-import { config } from 'dotenv-cra';
 import { join } from 'path';
 import { inspect } from 'util';
 import { WebhookClient } from 'discord.js';
 import { srcDir } from '@lib/constants';
 import { container } from '@sapphire/framework';
+import { setup } from '@skyra/env-utilities';
 
 // Read env var
-config({ env: join(srcDir, '.env') });
+setup({ path: join(srcDir, '.env') });
 
 // Set default inspection depth
 inspect.defaultOptions.depth = 1;
