@@ -1091,13 +1091,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/plugin-subcommands@npm:4.2.1":
-  version: 4.2.1
-  resolution: "@sapphire/plugin-subcommands@npm:4.2.1"
+"@sapphire/plugin-subcommands@npm:4.3.0":
+  version: 4.3.0
+  resolution: "@sapphire/plugin-subcommands@npm:4.3.0"
   dependencies:
     "@sapphire/utilities": ^3.13.0
     tslib: ^2.6.2
-  checksum: 046ad26109b78c9a1a1904894ed9af864ae97847519ed680b67733378998df288d82d0c48b6e317bce312f78b971a309f83aef340bc4b32e070108850e787cad
+  checksum: dd93ad0b7da7723969edc99a17e407f7f5cc895e16deb7cd33d61e6ce04b284615a427711a4411a2a332d450a523ca16f94f8ea538fdd1a9622878dba442077b
   languageName: node
   linkType: hard
 
@@ -4853,7 +4853,7 @@ __metadata:
     "@sapphire/pieces": 3.7.0
     "@sapphire/plugin-editable-commands": 3.0.3
     "@sapphire/plugin-logger": 3.0.6
-    "@sapphire/plugin-subcommands": 4.2.1
+    "@sapphire/plugin-subcommands": 4.3.0
     "@sapphire/stopwatch": 1.5.0
     "@sapphire/time-utilities": 1.7.10
     "@sapphire/ts-config": ^5.0.0
