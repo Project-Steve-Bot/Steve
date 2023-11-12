@@ -37,7 +37,7 @@ export class rollImport extends InteractionHandler {
 				new ActionRowBuilder<ButtonBuilder>()
 					.addComponents(row.components.map(button =>
 						new ButtonBuilder({
-							...button.data, 
+							...button.data,
 							type: ComponentType.Button,
 							disabled: button.disabled || importAll || button.customId?.includes(type)
 						})
