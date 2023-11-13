@@ -609,7 +609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/collection@npm:^2.0.0":
+"@discordjs/collection@npm:2.0.0, @discordjs/collection@npm:^2.0.0":
   version: 2.0.0
   resolution: "@discordjs/collection@npm:2.0.0"
   checksum: c2d05fa2b9a27bb64e93e2836bbe44c835d21f85e28cd934f6e2a81fef423ab0415968cca9d066b83347539edc8ea9afa8075d80bd62594e39f09eb881052c49
@@ -4876,7 +4876,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "steve@workspace:."
   dependencies:
-    "@discordjs/collection": 1.5.3
+    "@discordjs/collection": 2.0.0
     "@octokit/rest": 20.0.2
     "@sapphire/decorators": 6.0.2
     "@sapphire/discord-utilities": 3.1.1
