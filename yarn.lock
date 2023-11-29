@@ -1066,12 +1066,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/plugin-editable-commands@npm:3.0.3":
-  version: 3.0.3
-  resolution: "@sapphire/plugin-editable-commands@npm:3.0.3"
+"@sapphire/plugin-editable-commands@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@sapphire/plugin-editable-commands@npm:3.1.0"
   dependencies:
     "@skyra/editable-commands": ^3.0.1
-  checksum: c4b6953df71447eb74f4b2e36709f04897e63798ac4bab6237da210dfe59b5cdbfd8f5eb31ca83367c2de69957b49a83d1a663de06825a534bcd039788456019
+  checksum: 0302d8c45b3396b5263cccce243bb72405e5934102a8326012b4adb30766c8005537fd86bb6466ebeeedc898c2b29ba162cfca54452fcc2bdc184fe522406b3c
   languageName: node
   linkType: hard
 
@@ -4844,7 +4844,7 @@ __metadata:
     "@sapphire/fetch": 2.4.1
     "@sapphire/framework": ^4.7.2
     "@sapphire/pieces": 3.10.0
-    "@sapphire/plugin-editable-commands": 3.0.3
+    "@sapphire/plugin-editable-commands": 3.1.0
     "@sapphire/plugin-logger": 3.0.7
     "@sapphire/plugin-subcommands": ^5.0.0
     "@sapphire/stopwatch": 1.5.0
