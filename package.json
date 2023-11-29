@@ -12,7 +12,7 @@
 		"@discordjs/collection": "2.0.0",
 		"@octokit/rest": "20.0.2",
 		"@sapphire/decorators": "6.0.2",
-		"@sapphire/discord-utilities": "3.1.1",
+		"@sapphire/discord-utilities": "3.2.0",
 		"@sapphire/discord.js-utilities": "7.0.2",
 		"@sapphire/fetch": "2.4.1",
 		"@sapphire/framework": "^4.7.2",
