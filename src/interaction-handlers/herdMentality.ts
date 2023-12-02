@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonInteraction, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 @ApplyOptions<InteractionHandlerOptions>({
 	name: 'HerdMentalityButtonHandler',
@@ -17,7 +17,7 @@ export class HerdMentalityButtonHandler extends InteractionHandler {
 
 		if (!manager) {
 			interaction.reply({
-				content: 'I don\'t know how you managed it but somehow, you clicked a button on a game that doesn\'t exits',
+				content: 'I don\'t know how you managed it but somehow, you clicked a button on a game that\'s over',
 				ephemeral: true
 			});
 			throw new Error(`NoHerdFound\nNo HerdMentalityManager found for ${interaction.customId}`);
@@ -40,17 +40,21 @@ export class HerdMentalityButtonHandler extends InteractionHandler {
 						content: 'I\'m sorry, but I can\'t let you do that',
 						ephemeral: true
 					});
+					break;
 				}
 
 				await manager.sendQuestion();
 				break;
 			case 'AddAnswer':
 				await interaction.showModal(new ModalBuilder()
-					.setTitle(manager.currentQuestionText)
+					.setTitle(manager.currentQuestionText.length <= 45
+						? manager.currentQuestionText
+						: `${manager.currentQuestionText.slice(0, 42)}...`)
 					.setCustomId(`Herd|SubmitAnswer|${manager.id}`)
 					.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(
 						new TextInputBuilder()
 							.setCustomId('Answer')
+							.setLabel('What\'s your answer?')
 							.setStyle(TextInputStyle.Short)
 							.setRequired(true)
 					))
@@ -75,6 +79,39 @@ export class HerdMentalityButtonHandler extends InteractionHandler {
 				interaction.reply({ content: 'Something went wrong!', ephemeral: true });
 				break;
 		}
+	}
+
+}
+
+@ApplyOptions<InteractionHandlerOptions>({
+	name: 'HerdMentalityModalHandler',
+	interactionHandlerType: InteractionHandlerTypes.ModalSubmit
+})
+export class HerdMentalityModalHandler extends InteractionHandler {
+
+	public parse(interaction: ModalSubmitInteraction) {
+		if (!interaction.customId.startsWith('Herd|')) {
+			return this.none();
+		}
+
+		const manager = this.container.hmGames.get(interaction.customId.split('|').at(-1) ?? '');
+
+		if (!manager) {
+			interaction.reply({
+				content: 'I don\'t know how you managed it but somehow, you submitted an answer to a game that\'s over',
+				ephemeral: true
+			});
+			throw new Error(`NoHerdFound\nNo HerdMentalityManager found for ${interaction.customId}`);
+		}
+
+		return this.some(manager);
+	}
+
+	public async run(interaction: ModalSubmitInteraction, manager: InteractionHandler.ParseResult<this>) {
+		await interaction.deferUpdate();
+
+		const answer = interaction.fields.getTextInputValue('Answer');
+		await manager.addAnswer(interaction.user.id, answer);
 	}
 
 }

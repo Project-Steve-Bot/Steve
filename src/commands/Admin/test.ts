@@ -9,7 +9,8 @@ import { HerdMentalityManager } from '@lib/HerdMentality';
 	description: 'hm',
 	aliases: ['hm'],
 	preconditions: ['OwnerOnly'],
-	runIn: 'GUILD_TEXT'
+	runIn: 'GUILD_TEXT',
+	enabled: false
 })
 export class UserCommand extends SteveCommand {
 
