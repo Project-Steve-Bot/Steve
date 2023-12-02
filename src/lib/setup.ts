@@ -6,15 +6,16 @@ import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-subcommands/register';
 import { createColors } from 'colorette';
-import { config } from 'dotenv-cra';
 import { join } from 'path';
 import { inspect } from 'util';
-import { WebhookClient } from 'discord.js';
+import { Collection, WebhookClient } from 'discord.js';
 import { srcDir } from '@lib/constants';
 import { container } from '@sapphire/framework';
+import { setup } from '@skyra/env-utilities';
+import { HerdMentalityManager } from './HerdMentality';
 
 // Read env var
-config({ path: join(srcDir, '.env') });
+setup({ path: join(srcDir, '.env') });
 
 // Set default inspection depth
 inspect.defaultOptions.depth = 1;
@@ -26,3 +27,5 @@ container.hooks = {
 	discordLogs: process.env.LOG_HOOK ? new WebhookClient({ url: process.env.LOG_HOOK }) : null,
 	suggest: process.env.SUGGEST_HOOK ? new WebhookClient({ url: process.env.SUGGEST_HOOK }) : null
 };
+
+container.hmGames = new Collection<string, HerdMentalityManager>();

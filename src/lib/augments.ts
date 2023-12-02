@@ -3,6 +3,7 @@ import type { DbGuild } from '@lib/types/database';
 import type { Octokit } from '@octokit/rest';
 import type { Collection, WebhookClient } from 'discord.js';
 import type { MongoClient } from 'mongodb';
+import { HerdMentalityManager } from './HerdMentality';
 declare module '@sapphire/framework' {
 	export interface DetailedDescriptionCommandObject {
 		usage?: string;
@@ -30,6 +31,7 @@ declare module '@sapphire/pieces' {
 		gitHub: Octokit | null;
 		idHits: Map<string, string[]>;
 		rpChannels: Map<string, WebhookClient>;
+		hmGames: Collection<string, HerdMentalityManager>;
 	}
 }
 

@@ -1,4 +1,4 @@
-import type { PieceContext } from '@sapphire/framework';
+import type { Command } from '@sapphire/framework';
 import { Subcommand, type SubcommandOptions } from '@sapphire/plugin-subcommands';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Message, PermissionsBitField } from 'discord.js';
@@ -7,7 +7,7 @@ export abstract class SteveSubcommand extends Subcommand {
 
 	private cmdNames: string[];
 
-	public constructor(context: PieceContext, options: SubcommandOptions) {
+	public constructor(context: Command.LoaderContext, options: SubcommandOptions) {
 		const needsDefault = options.subcommands?.every(subcommand =>
 			subcommand.type === 'method' || subcommand.type === undefined
 				? !subcommand.default

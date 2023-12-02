@@ -27,7 +27,7 @@ export class UserCommand extends SteveCommand {
 
 		await this.container.db.guilds.updateOne(
 			{ id: msg.guild.id },
-			{ $set: { channels: { rolls: channel?.id } } },
+			{ $set: { 'channels.rolls': channel?.id } },
 			{ upsert: true }
 		);
 

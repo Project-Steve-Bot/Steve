@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, type InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType } from 'discord.js';
 
 @ApplyOptions<InteractionHandlerOptions>({
 	interactionHandlerType: InteractionHandlerTypes.Button
@@ -36,7 +36,11 @@ export class rollImport extends InteractionHandler {
 			newButtons.push(
 				new ActionRowBuilder<ButtonBuilder>()
 					.addComponents(row.components.map(button =>
-						new ButtonBuilder({ ...button.data, disabled: button.disabled || importAll || button.customId?.includes(type) })
+						new ButtonBuilder({
+							...button.data,
+							type: ComponentType.Button,
+							disabled: button.disabled || importAll || button.customId?.includes(type)
+						})
 					))
 			);
 		});

@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { Listener, type ListenerOptions, type PieceContext, Store } from '@sapphire/framework';
+import { Listener, type ListenerOptions, Store } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
 import { Collection, WebhookClient } from 'discord.js';
 import { readFileSync } from 'fs';
@@ -10,7 +10,7 @@ export class UserEvent extends Listener {
 
 	private readonly style = dev ? yellow : blue;
 
-	public constructor(context: PieceContext, options?: ListenerOptions) {
+	public constructor(context: Listener.LoaderContext, options?: ListenerOptions) {
 		super(context, {
 			...options,
 			once: true

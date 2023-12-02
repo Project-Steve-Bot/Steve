@@ -1,0 +1,19 @@
+name: Build and Lint Check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Lint
+        run: yarn lint
