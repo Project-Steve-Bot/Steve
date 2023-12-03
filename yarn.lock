@@ -1030,8 +1030,8 @@ __metadata:
   linkType: hard
 
 "@sapphire/framework@npm:^4.7.2":
-  version: 4.8.3
-  resolution: "@sapphire/framework@npm:4.8.3"
+  version: 4.8.4
+  resolution: "@sapphire/framework@npm:4.8.4"
   dependencies:
     "@discordjs/builders": ^1.7.0
     "@sapphire/discord-utilities": ^3.2.0
@@ -1042,7 +1042,7 @@ __metadata:
     "@sapphire/result": ^2.6.4
     "@sapphire/stopwatch": ^1.5.0
     "@sapphire/utilities": ^3.13.0
-  checksum: 70f46849f0ea2630f7ab0046c7248120e96d3e8c7453c1ea54b424e7e10ab22968d5ace9c0b494d817580604156dbca992d1dc8d27636082b5a2df901357fa31
+  checksum: a94cff06f2a2e49e4757839f5858a59638aa43cfc67fabd14054dd5f10d34d099f6c383c85dcb1161f521f063209e07fd10fd40fa523af9f7e4f74dcb663cd36
   languageName: node
   linkType: hard
 
