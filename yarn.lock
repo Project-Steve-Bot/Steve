@@ -983,12 +983,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/decorators@npm:6.0.2":
-  version: 6.0.2
-  resolution: "@sapphire/decorators@npm:6.0.2"
+"@sapphire/decorators@npm:6.0.3":
+  version: 6.0.3
+  resolution: "@sapphire/decorators@npm:6.0.3"
   dependencies:
-    tslib: ^2.6.0
-  checksum: b24f33ee14c2014efec9b29ef947e59adc66001e6e4e5f6601063d4e4c86dd0a30bd8eb2c5b67a6231473e76018db1120f416cc94d650280b21462dfe8ca0a02
+    tslib: ^2.6.2
+  checksum: b8f1022a516e29ce4fa85e40184ef00507094bf6afb1c23216dc3926e48d1ebcd401c2ac8c8f7159e1f70af1bcbd3e6e76c6ab22d92f4af5c6a7666c119fe544
   languageName: node
   linkType: hard
 
@@ -4838,7 +4838,7 @@ __metadata:
   dependencies:
     "@discordjs/collection": 2.0.0
     "@octokit/rest": 20.0.2
-    "@sapphire/decorators": 6.0.2
+    "@sapphire/decorators": 6.0.3
     "@sapphire/discord-utilities": 3.2.0
     "@sapphire/discord.js-utilities": 7.1.2
     "@sapphire/fetch": 2.4.1
@@ -5124,7 +5124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.2, tslib@npm:^2.3.1, tslib@npm:^2.4.0, tslib@npm:^2.5.0, tslib@npm:^2.6.0, tslib@npm:^2.6.2":
+"tslib@npm:2.6.2, tslib@npm:^2.3.1, tslib@npm:^2.4.0, tslib@npm:^2.5.0, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
