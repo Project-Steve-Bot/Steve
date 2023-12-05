@@ -1154,7 +1154,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/stopwatch@npm:1.5.0, @sapphire/stopwatch@npm:^1.5.0":
+"@sapphire/stopwatch@npm:1.5.1":
+  version: 1.5.1
+  resolution: "@sapphire/stopwatch@npm:1.5.1"
+  dependencies:
+    tslib: ^2.6.2
+  checksum: b91c8843b973515c5f71889ce0ebdd84ead2da369126e60d9e91f36efa6281e8c36c1f57e63b34b982241958943a35c75087ff4aa7b82f4248fccb3aa5a038d7
+  languageName: node
+  linkType: hard
+
+"@sapphire/stopwatch@npm:^1.5.0":
   version: 1.5.0
   resolution: "@sapphire/stopwatch@npm:1.5.0"
   dependencies:
@@ -4882,7 +4891,7 @@ __metadata:
     "@sapphire/plugin-editable-commands": 3.1.0
     "@sapphire/plugin-logger": 3.0.7
     "@sapphire/plugin-subcommands": ^5.0.0
-    "@sapphire/stopwatch": 1.5.0
+    "@sapphire/stopwatch": 1.5.1
     "@sapphire/time-utilities": 1.7.10
     "@sapphire/ts-config": ^5.0.0
     "@sapphire/type": 2.4.1
