@@ -22,7 +22,7 @@
 		"@sapphire/plugin-subcommands": "^5.0.0",
 		"@sapphire/stopwatch": "1.5.1",
 		"@sapphire/time-utilities": "1.7.11",
-		"@sapphire/type": "2.4.1",
+		"@sapphire/type": "2.4.3",
 		"@sapphire/utilities": "3.13.0",
 		"@skyra/env-utilities": "^1.2.1",
 		"axios": "1.6.2",
