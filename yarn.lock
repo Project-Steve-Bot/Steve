@@ -4034,9 +4034,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:4.17.1":
-  version: 4.17.1
-  resolution: "mongodb@npm:4.17.1"
+"mongodb@npm:4.17.2":
+  version: 4.17.2
+  resolution: "mongodb@npm:4.17.2"
   dependencies:
     "@aws-sdk/credential-providers": ^3.186.0
     "@mongodb-js/saslprep": ^1.1.0
@@ -4048,7 +4048,7 @@ __metadata:
       optional: true
     "@mongodb-js/saslprep":
       optional: true
-  checksum: e7f280570d0f23d60c308b2a484ed55762ec8e523946c0de1a0b3b398f24efcf1916a745e5407f32cd1c105b2f19d8ac75474c92f73cdf651affe3430a963f54
+  checksum: 483d91b9b7f042162559ad781308e2f3df8c1217d87bffe65152ea5e7365c6b8de31b44533fa95dd596cb71d86fdbeecc703e1465f6cbd139ba63505fcf7add2
   languageName: node
   linkType: hard
 
@@ -4921,7 +4921,7 @@ __metadata:
     eslint: 8.55.0
     eslint-plugin-deprecation: 1.5.0
     module-alias: 2.2.3
-    mongodb: 4.17.1
+    mongodb: 4.17.2
     node-cron: 3.0.3
     npm-run-all: 4.1.5
     parse-duration: 1.1.0
