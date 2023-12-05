@@ -1226,17 +1226,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/utilities@npm:3.13.0, @sapphire/utilities@npm:^3.13.0":
-  version: 3.13.0
-  resolution: "@sapphire/utilities@npm:3.13.0"
-  checksum: c2f901c104459e01a24af71871294b700ff188925cf050558880486de6564792df2b7549796dd9fd6f309c12af7d4e2b2d2f4069ec9d4c27d9c3998eca3ac9a9
-  languageName: node
-  linkType: hard
-
-"@sapphire/utilities@npm:^3.14.0":
+"@sapphire/utilities@npm:3.14.0, @sapphire/utilities@npm:^3.14.0":
   version: 3.14.0
   resolution: "@sapphire/utilities@npm:3.14.0"
   checksum: 98bea8dc12ac60696c499dbfd76cdaf2d3a04eeea73d14512e3f91808d8dd2609a3a4d9b0d4c4a76e666dfd1d2e8fa69995d34d562ae412316d013a1db5820d8
+  languageName: node
+  linkType: hard
+
+"@sapphire/utilities@npm:^3.13.0":
+  version: 3.13.0
+  resolution: "@sapphire/utilities@npm:3.13.0"
+  checksum: c2f901c104459e01a24af71871294b700ff188925cf050558880486de6564792df2b7549796dd9fd6f309c12af7d4e2b2d2f4069ec9d4c27d9c3998eca3ac9a9
   languageName: node
   linkType: hard
 
@@ -4902,7 +4902,7 @@ __metadata:
     "@sapphire/time-utilities": 1.7.11
     "@sapphire/ts-config": ^5.0.0
     "@sapphire/type": 2.4.3
-    "@sapphire/utilities": 3.13.0
+    "@sapphire/utilities": 3.14.0
     "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.4
     "@types/node": 17.0.45
