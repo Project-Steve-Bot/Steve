@@ -992,7 +992,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/discord-utilities@npm:3.2.0, @sapphire/discord-utilities@npm:^3.2.0":
+"@sapphire/discord-utilities@npm:3.2.1":
+  version: 3.2.1
+  resolution: "@sapphire/discord-utilities@npm:3.2.1"
+  dependencies:
+    discord-api-types: ^0.37.65
+  checksum: 1f31fafc378402c0cec84953ce0f4d67ceb644d6a5f2ec210c6b1bc063721216bf1c0113ca111e32b6539394e76ebb01445a04e3b7407d1d1ec34717a11c69cb
+  languageName: node
+  linkType: hard
+
+"@sapphire/discord-utilities@npm:^3.2.0":
   version: 3.2.0
   resolution: "@sapphire/discord-utilities@npm:3.2.0"
   dependencies:
@@ -2514,7 +2523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:^0.37.63":
+"discord-api-types@npm:^0.37.63, discord-api-types@npm:^0.37.65":
   version: 0.37.65
   resolution: "discord-api-types@npm:0.37.65"
   checksum: 32727b6b117dbe71c73861939950d35fe5ea4e3b6bf558d2c581d68e4ffbf5a10cb06fd2c01e996dbc8e32a7deeb1cd09d3b2ca2b5ff4d63797be16a1ee86185
@@ -4839,7 +4848,7 @@ __metadata:
     "@discordjs/collection": 2.0.0
     "@octokit/rest": 20.0.2
     "@sapphire/decorators": 6.0.3
-    "@sapphire/discord-utilities": 3.2.0
+    "@sapphire/discord-utilities": 3.2.1
     "@sapphire/discord.js-utilities": 7.1.2
     "@sapphire/fetch": 2.4.1
     "@sapphire/framework": ^4.7.2
