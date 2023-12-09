@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, StringSelectMenuInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 @ApplyOptions<InteractionHandlerOptions>({
 	name: 'HerdMentalityButtonHandler',
@@ -35,6 +35,7 @@ export class HerdMentalityButtonHandler extends InteractionHandler {
 				await manager.addPlayer(interaction.user.id);
 				break;
 			case 'Start':
+			case 'Next':
 				if (!args.includes(interaction.user.id)) {
 					await interaction.reply({
 						content: 'I\'m sorry, but I can\'t let you do that',
@@ -76,8 +77,8 @@ export class HerdMentalityButtonHandler extends InteractionHandler {
 				break;
 
 			default:
-				interaction.reply({ content: 'Something went wrong!', ephemeral: true });
-				break;
+				await interaction.reply({ content: 'Something went wrong!', ephemeral: true });
+				throw new Error(`HMUnknownAction: ${action}`);
 		}
 	}
 
@@ -112,6 +113,44 @@ export class HerdMentalityModalHandler extends InteractionHandler {
 
 		const answer = interaction.fields.getTextInputValue('Answer');
 		await manager.addAnswer(interaction.user.id, answer);
+	}
+
+}
+
+@ApplyOptions<InteractionHandlerOptions>({
+	name: 'HerdMentalitySelectHandler',
+	interactionHandlerType: InteractionHandlerTypes.SelectMenu
+})
+export class HerdMentalitySelectHandler extends InteractionHandler {
+
+	public parse(interaction: StringSelectMenuInteraction) {
+		if (!interaction.customId.startsWith('Herd|')) {
+			return this.none();
+		}
+
+		const manager = this.container.hmGames.get(interaction.customId.split('|').at(-1) ?? '');
+
+		if (!manager) {
+			interaction.reply({
+				content: 'I don\'t know how you managed it but somehow, you submitted an answer to a game that\'s over',
+				ephemeral: true
+			});
+			throw new Error(`NoHerdFound\nNo HerdMentalityManager found for ${interaction.customId}`);
+		}
+
+		return this.some(manager);
+	}
+
+	public async run(interaction: StringSelectMenuInteraction, manager: InteractionHandler.ParseResult<this>) {
+		if (!interaction.customId.includes(interaction.user.id)) {
+			await interaction.reply({
+				content: 'Sorry but you can\'t use this select menu',
+				ephemeral: true
+			});
+			return;
+		}
+		await interaction.deferUpdate();
+		manager.chooseWinners(interaction.values);
 	}
 
 }

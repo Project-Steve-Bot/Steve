@@ -6,11 +6,9 @@ import { sendLoadingMessage } from '@lib/utils';
 import { HerdMentalityManager } from '@lib/HerdMentality';
 
 @ApplyOptions<CommandOptions>({
-	description: 'hm',
-	aliases: ['hm'],
-	preconditions: ['OwnerOnly'],
-	runIn: 'GUILD_TEXT',
-	enabled: false
+	description: 'Start a game of Herd Mentality',
+	aliases: ['herd', 'hm'],
+	runIn: 'GUILD_TEXT'
 })
 export class UserCommand extends SteveCommand {
 
