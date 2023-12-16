@@ -1,5 +1,16 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection, ComponentType, EmbedBuilder, GuildMember, Message } from 'discord.js';
-import { sendLoadingMessage } from './utils';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Collection,
+	ComponentEmojiResolvable,
+	EmbedBuilder,
+	GuildMember,
+	Message,
+	StringSelectMenuBuilder,
+	StringSelectMenuOptionBuilder
+} from 'discord.js';
+import { pluralize, sendLoadingMessage } from './utils';
 import { promptList } from '../assets/herdMentalityPrompts.json';
 
 export class HerdMentalityManager {
@@ -28,10 +39,12 @@ export class HerdMentalityManager {
 	}
 
 	private get endGameButton() {
-		return new ButtonBuilder()
-			.setCustomId(`Herd|End|${this.judge.id}|${this.id}`)
-			.setLabel('End Game')
-			.setStyle(ButtonStyle.Danger);
+		return this.makeButton({
+			action: 'End',
+			label: 'End Game',
+			judgeOnly: true,
+			style: ButtonStyle.Danger
+		});
 	}
 
 	public get currentQuestionText() {
@@ -47,15 +60,19 @@ export class HerdMentalityManager {
 		const buttons = new ActionRowBuilder<ButtonBuilder>();
 
 		buttons.addComponents(
-			new ButtonBuilder()
-				.setCustomId(`Herd|Join|${this.id}`)
-				.setLabel('Join!')
-				.setStyle(ButtonStyle.Primary),
-			new ButtonBuilder()
-				.setCustomId(`Herd|Start|${this.judge.id}|${this.id}`)
-				.setLabel('Start Game')
-				.setStyle(ButtonStyle.Success)
-				.setEmoji('✅'),
+			this.makeButton({
+				action: 'Join',
+				label: 'Join!',
+				judgeOnly: false,
+				style: ButtonStyle.Primary
+			}),
+			this.makeButton({
+				action: 'Start',
+				label: 'Start Game',
+				judgeOnly: true,
+				style: ButtonStyle.Success,
+				emote: '✅'
+			}),
 			this.endGameButton
 		);
 
@@ -71,13 +88,57 @@ export class HerdMentalityManager {
 	}
 
 	public async addPlayer(playerId: string) {
-		this.players.set(playerId, 'Joined');
-		await this.updatePlayerStats('Click below to join!\n**Players**');
+		this.players.set(playerId, this.currentQuestion ? 'Waiting...' : 'Joined');
+		this.points.set(playerId, 0);
+		await this.updatePlayerStats(this.currentQuestion ? '' : 'Click below to join!\n**Players**');
 	}
 
 	public async endRound() {
 		this.players.forEach((_, player) => this.players.set(player, this.answers.get(player) ?? 'Did not answer ☹️'));
-		await this.updatePlayerStats(`${this.judge.displayName}, pick the winners!`);
+		const selectablePlayers = this.players.filter(resp => resp !== 'Did not answer ☹️');
+		const components = [
+			new ActionRowBuilder<StringSelectMenuBuilder>()
+				.addComponents(
+					new StringSelectMenuBuilder()
+						.setCustomId(`Herd|Winners|${this.judge.id}|${this.id}`)
+						.setPlaceholder('Choose the winners!')
+						.setMinValues(0)
+						.setMaxValues(selectablePlayers.size)
+						.addOptions(selectablePlayers.map((_, id) =>
+							new StringSelectMenuOptionBuilder()
+								.setValue(id)
+								.setLabel(this.judge.guild.members.cache.get(id)?.displayName ?? id)
+						))
+				),
+			/* For the Future
+			new ActionRowBuilder<StringSelectMenuBuilder>()
+				.addComponents(
+					new StringSelectMenuBuilder()
+						.setCustomId(`Herd|Cow|${this.judge.id}|${this.id}`)
+						.setPlaceholder('Choose a Cow of Shame')
+						.setMinValues(0)
+						.setMaxValues(1)
+						.addOptions(this.players.map((_, id) =>
+							new StringSelectMenuOptionBuilder()
+								.setValue(id)
+								.setLabel(this.judge.guild.members.cache.get(id)?.displayName ?? id)
+						))
+				),
+			*/
+			new ActionRowBuilder<ButtonBuilder>()
+				.addComponents(
+					this.makeButton({
+						action: 'Next',
+						label: 'Next Prompt!',
+						judgeOnly: true,
+						style: ButtonStyle.Primary,
+						emote: '⏭️'
+					}),
+					this.endGameButton
+				)
+		];
+
+		await this.updatePlayerStats(`${this.judge.displayName}, pick the winners!`).then(msg => msg.edit({ components }));
 	}
 
 	public async endGame() {
@@ -107,13 +168,23 @@ export class HerdMentalityManager {
 				.setColor('Aqua');
 
 			buttons.addComponents(
-				new ButtonBuilder()
-					.setCustomId(`Herd|AddAnswer|${this.id}`)
-					.setLabel('Answer!')
-					.setStyle(ButtonStyle.Primary)
-					.setEmoji('📝'),
+				this.makeButton({
+					action: 'AddAnswer',
+					judgeOnly: false,
+					label: 'Answer!',
+					style: ButtonStyle.Primary,
+					emote: '📝'
+				}),
+				this.makeButton({
+					action: 'EndRound',
+					judgeOnly: true,
+					label: 'End Round Early',
+					style: ButtonStyle.Secondary,
+					emote: '⏭️'
+				}),
 				this.endGameButton
 			);
+			this.questions.delete(questionId);
 		}
 
 		await this.updateBoard();
@@ -136,6 +207,57 @@ export class HerdMentalityManager {
 		}
 	}
 
+	public async chooseWinners(winners: string[]) {
+		this.players.forEach((_, player) => {
+			if (winners.includes(player)) {
+				const newPoints = (this.points.get(player) ?? 0) + 1;
+				this.points.set(player, newPoints);
+				this.players.set(player, `${newPoints} ${pluralize('point', newPoints)}: ${this.answers.get(player) ?? 'No answer'} - Winner! `);
+			} else {
+				const points = this.points.get(player) ?? 0;
+				this.players.set(player, `${points} ${pluralize('point', points)} : ${this.answers.get(player) ?? 'No answer'}`);
+			}
+		});
+
+		const components = [
+			new ActionRowBuilder<StringSelectMenuBuilder>()
+				.addComponents(
+					new StringSelectMenuBuilder()
+						.setCustomId(`Herd|Winners|${this.judge.id}|${this.id}`)
+						.setPlaceholder('Choose the winners!')
+						.addOptions(new StringSelectMenuOptionBuilder().setLabel('Dummy').setValue('Dummy'))
+						.setDisabled(true)
+				),
+			/* For the Future
+			new ActionRowBuilder<StringSelectMenuBuilder>()
+				.addComponents(
+					new StringSelectMenuBuilder()
+						.setCustomId(`Herd|Cow|${this.judge.id}|${this.id}`)
+						.setPlaceholder('Choose a Cow of Shame')
+						.setMinValues(0)
+						.setMaxValues(1)
+						.addOptions(this.players.map((_, id) =>
+							new StringSelectMenuOptionBuilder()
+								.setValue(id)
+								.setLabel(this.judge.guild.members.cache.get(id)?.displayName ?? id)
+						))
+				),
+			*/
+			new ActionRowBuilder<ButtonBuilder>()
+				.addComponents(
+					this.makeButton({
+						action: 'Next',
+						label: 'Next Prompt!',
+						judgeOnly: true,
+						style: ButtonStyle.Primary,
+						emote: '⏭️'
+					}),
+					this.endGameButton
+				)
+		];
+		await this.updatePlayerStats().then(msg => msg.edit({ components }));
+	}
+
 	// Game Management
 	private async updateBoard(): Promise<Message> {
 		if (this.currentBoard.id !== this.currentBoard.channel.lastMessageId) {
@@ -146,7 +268,7 @@ export class HerdMentalityManager {
 		return this.currentBoard;
 	}
 
-	private async updatePlayerStats(description = '') {
+	private async updatePlayerStats(description = ''): Promise<Message> {
 		const currentEmbed = this.currentBoard.embeds.at(0);
 
 		if (!currentEmbed) {
@@ -159,7 +281,7 @@ export class HerdMentalityManager {
 
 		const newEmbed = new EmbedBuilder(currentEmbed.data).setDescription(newContent);
 
-		await this.currentBoard.edit({ embeds: [newEmbed] });
+		return this.currentBoard.edit({ embeds: [newEmbed] });
 	}
 
 	private async disableBoard(board: Message) {
@@ -170,17 +292,24 @@ export class HerdMentalityManager {
 		}
 
 		await board.edit({
-			components: [
-				new ActionRowBuilder<ButtonBuilder>().addComponents(
-					buttons.components.map(({ data }) => new ButtonBuilder({
-						...data,
-						type: ComponentType.Button,
-						disabled: true
-					}))
-				)
-			]
+			content: 'This game is now over',
+			components: []
 		});
 		return;
+	}
+
+	// Utilities
+	private makeButton(options: { action:string, judgeOnly: boolean, label:string, style: ButtonStyle, emote ?: ComponentEmojiResolvable }): ButtonBuilder {
+		const button = new ButtonBuilder()
+			.setCustomId(`Herd|${options.action}|${options.judgeOnly ? `${this.judge.id}|` : ''}${this.id}`)
+			.setLabel(options.label)
+			.setStyle(options.style);
+
+		if (options.emote) {
+			button.setEmoji(options.emote);
+		}
+
+		return button;
 	}
 
 };
