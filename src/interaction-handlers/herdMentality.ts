@@ -61,6 +61,17 @@ export class HerdMentalityButtonHandler extends InteractionHandler {
 					))
 				);
 				break;
+			case 'EndRound':
+				if (!args.includes(interaction.user.id)) {
+					await interaction.reply({
+						content: 'I\'m sorry, but I can\'t let you do that',
+						ephemeral: true
+					});
+					break;
+				}
+
+				await manager.endRound();
+				break;
 			case 'End':
 				if (!args.includes(interaction.user.id)) {
 					await interaction.reply({
@@ -150,7 +161,7 @@ export class HerdMentalitySelectHandler extends InteractionHandler {
 			return;
 		}
 		await interaction.deferUpdate();
-		manager.chooseWinners(interaction.values);
+		await manager.chooseWinners(interaction.values);
 	}
 
 }
