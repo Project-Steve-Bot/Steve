@@ -43,14 +43,14 @@ export class UserEvent extends Listener {
 	}
 
 	private async createRPchannelCache() {
-		this.container.rpChannels = new Map();
+		this.container.rpChannels = new Collection();
 		const guilds = await this.container.db.guilds.find().toArray();
 
 		guilds.forEach(guild => {
-			const rpChannel = guild.channels?.rolePlay;
-			if (rpChannel) {
-				this.container.rpChannels.set(rpChannel.channel, new WebhookClient({ url: rpChannel.hook }));
-			}
+			const rpChannels = guild.channels?.rolePlay;
+			rpChannels?.forEach(({ channel, hook }) => {
+				this.container.rpChannels.set(channel, new WebhookClient({ url: hook }));
+			});
 		});
 	}
 

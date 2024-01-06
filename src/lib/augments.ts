@@ -30,7 +30,7 @@ declare module '@sapphire/pieces' {
 		statusUpdateFlag: number;
 		gitHub: Octokit | null;
 		idHits: Map<string, string[]>;
-		rpChannels: Map<string, WebhookClient>;
+		rpChannels: Collection<string, WebhookClient>;
 		hmGames: Collection<string, HerdMentalityManager>;
 	}
 }
