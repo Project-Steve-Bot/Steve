@@ -10,7 +10,7 @@ export interface DbGuild {
 		rolePlay?: {
 			channel: string;
 			hook: string;
-		}
+		}[];
 	};
 	assignableRoles?: string[];
 	count?: CountData;
