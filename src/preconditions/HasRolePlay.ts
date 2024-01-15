@@ -28,7 +28,7 @@ export class UserPrecondition extends Precondition {
 	private async checkRP(guild: Guild): Promise<boolean> {
 		const dbGuild = await this.container.db.guilds.findOne({ id: guild.id });
 
-		return 'channel' in (dbGuild?.channels?.rolePlay ?? { no: '' });
+		return Array.isArray(dbGuild?.channels?.rolePlay);
 	}
 
 }
