@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, type CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
-import { type EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, time, TimestampStyles } from 'discord.js';
+import { type EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, time, TimestampStyles, ApplicationCommandType, userMention } from 'discord.js';
 import parse from 'parse-duration';
 import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
@@ -57,7 +57,13 @@ export class PollCommand extends SteveCommand {
 						.setName('anonymous')
 						.setDescription('Hides who voted for what at the end of the poll (default false)')
 				);
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
+
+		registry.registerContextMenuCommand(builder => {
+			builder
+				.setName('Poll: Show Voters')
+				.setType(ApplicationCommandType.Message);
+		});
 	}
 
 	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
@@ -190,6 +196,32 @@ export class PollCommand extends SteveCommand {
 		});
 
 		return { content: ' ', embeds: [embed], components };
+	}
+
+	public async contextMenuRun(interaction: Command.ContextMenuCommandInteraction) {
+		if (!interaction.isMessageContextMenuCommand()) {
+			return interaction.reply({ content: 'This maze wasn\'t meant for you... What did you do.', ephemeral: true });
+		}
+
+		const poll = await this.container.db.polls.findOne({ messageId: interaction.targetMessage.id });
+
+		if (!poll) {
+			return interaction.reply({ content: 'This message either has no poll or the poll has ended.', ephemeral: true });
+		}
+
+		if (poll.anonymous) {
+			return interaction.reply({
+				content: 'This poll has been set to anonymous mode and therefor I can\'t show you the voters.',
+				ephemeral: true
+			});
+		}
+
+		return interaction.reply({
+			content: `## Votes as of ${time(Date.now(), TimestampStyles.ShortDateTime)}
+${poll.choices.map((choice, idx) => `${NUMBER_EMOTES[idx]} ${choice.voters.map(userMention).join(', ')}`).join('\n')}`,
+			allowedMentions: {},
+			ephemeral: true
+		});
 	}
 
 }

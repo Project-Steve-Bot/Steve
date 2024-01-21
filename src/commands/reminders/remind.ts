@@ -41,7 +41,7 @@ export class RemindCommand extends SteveCommand {
 				.addStringOption(option => option
 					.setName('repeat')
 					.setDescription('How often do you want me to remind you?'));
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
 	}
 
 	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
