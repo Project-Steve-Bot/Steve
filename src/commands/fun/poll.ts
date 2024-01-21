@@ -217,7 +217,7 @@ export class PollCommand extends SteveCommand {
 		}
 
 		return interaction.reply({
-			content: `## Votes as of ${time(Date.now(), TimestampStyles.ShortDateTime)}
+			content: `## Votes as of ${time(new Date(), TimestampStyles.ShortDateTime)}
 ${poll.choices.map((choice, idx) => `${NUMBER_EMOTES[idx]} ${choice.voters.map(userMention).join(', ')}`).join('\n')}`,
 			allowedMentions: {},
 			ephemeral: true
