@@ -57,7 +57,7 @@ export class PollCommand extends SteveCommand {
 						.setName('anonymous')
 						.setDescription('Hides who voted for what at the end of the poll (default false)')
 				);
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
 	}
 
 	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

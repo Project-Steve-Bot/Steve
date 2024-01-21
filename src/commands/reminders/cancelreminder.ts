@@ -26,7 +26,7 @@ export class UserCommand extends SteveCommand {
 						.setRequired(true)
 						.setAutocomplete(true)
 				)
-		, { idHints: this.container.idHits.get(this.name) });
+		);
 	}
 
 	public async chatInputRun(interaction: ChatInputCommandInteraction) {

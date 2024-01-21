@@ -145,7 +145,7 @@ export class UserCommand extends SteveSubcommand {
 								)
 						)
 				);
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
 	}
 
 	private async create(user: User, rollName: string, specs: WrapResult<RollSpec[][]>): Promise<string> {

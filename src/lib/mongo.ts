@@ -9,7 +9,6 @@ import type {
 	CmdStats,
 	ChannelRename,
 	QuickRoll,
-	IDhint,
 	RPCharter,
 	RollImportCharacter
 } from '@lib/types/database';
@@ -23,7 +22,6 @@ export interface SteveCollections {
 	cmdStats: Collection<CmdStats>;
 	channelRename: Collection<ChannelRename>;
 	quickRolls: Collection<QuickRoll>;
-	idHints: Collection<IDhint>;
 	rpCharacters: Collection<RPCharter>;
 	rollImportCharacters: Collection<RollImportCharacter>;
 }
@@ -47,7 +45,6 @@ export async function startMongo() {
 		cmdStats: database.collection<CmdStats>('commandStats'),
 		channelRename: database.collection<ChannelRename>('channelRename'),
 		quickRolls: database.collection<QuickRoll>('quickRolls'),
-		idHints: database.collection<IDhint>('idHints'),
 		rpCharacters: database.collection<RPCharter>('rpCharacters'),
 		rollImportCharacters: database.collection<RollImportCharacter>('rollImportCharacters')
 	};

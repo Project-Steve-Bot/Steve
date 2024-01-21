@@ -14,7 +14,7 @@ export class UserCommand extends SteveCommand {
 			builder
 				.setName(this.name)
 				.setDescription(this.description);
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
 	}
 
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

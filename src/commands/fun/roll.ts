@@ -52,7 +52,7 @@ export class RollCommand extends SteveCommand {
 						.setRequired(true)
 						.setAutocomplete(true)
 				);
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
 	}
 
 	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

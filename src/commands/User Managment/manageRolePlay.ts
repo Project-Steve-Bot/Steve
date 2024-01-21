@@ -82,7 +82,7 @@ export class UserCommand extends SteveSubcommand {
 								.setAutocomplete(true)
 						)
 				);
-		}, { idHints: this.container.idHits.get(this.name) });
+		});
 	}
 
 	public async chatInputCreate(interaction: Subcommand.ChatInputCommandInteraction) {
