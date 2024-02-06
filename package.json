@@ -75,5 +75,5 @@
 		"clean:purge": "rimraf node_modules dist yarn.lock package-lock.json",
 		"updeps": "yarn clean:purge && yarn install"
 	},
-	"packageManager": "yarn@3.7.0"
+	"packageManager": "yarn@3.8.0"
 }
