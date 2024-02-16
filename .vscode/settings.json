@@ -39,10 +39,12 @@
 		"sreply",
 		"sudoreply",
 		"tagq",
+		"timeslot",
 		"timespan",
 		"udel",
 		"unfaxed",
 		"viewremind"
 	],
-	"debug.javascript.unmapMissingSources": true
+	"debug.javascript.unmapMissingSources": true,
+	"WhiteSource Advise.Diff.BaseBranch": "main"
 }

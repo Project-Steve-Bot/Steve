@@ -1,10 +1,18 @@
 import { Precondition } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import type { CommandInteraction, Message } from 'discord.js';
 
 export class UserPrecondition extends Precondition {
 
 	public async messageRun(message: Message) {
 		return message.guildId === '700378785605877820'
+			? this.ok()
+			: this.error({
+				message: 'This command can only be run in the Server By Committiee'
+			});
+	}
+
+	public chatInputRun(interaction: CommandInteraction) {
+		return interaction.guildId === '700378785605877820'
 			? this.ok()
 			: this.error({
 				message: 'This command can only be run in the Server By Committiee'
