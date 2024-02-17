@@ -11,7 +11,7 @@ date.plugin(meridiem);
 
 @ApplyOptions<CommandOptions>({
 	description: 'See who\'s live right now on the Project for Awesome',
-	preconditions: ['CommitteeOnly']
+	preconditions: [['CommitteeOnly', 'DMOnly']]
 })
 export class UserCommand extends SteveCommand {
 
