@@ -149,7 +149,7 @@ export class UserCommand extends SteveSubcommand {
 			};
 		}));
 
-		const background = await loadImage(readFileSync(`${__dirname}../../../../src/assets/committieeLeaderboardBackground.svg`));
+		const background = await loadImage(readFileSync(`${__dirname}/../../../src/assets/committieeLeaderboardBackground.svg`));
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext('2d');
 		ctx.font = '35px Sans';
