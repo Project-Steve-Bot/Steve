@@ -10,3 +10,4 @@ export * from './quickRoll';
 export * from './idHint';
 export * from './rpCharacter';
 export * from './rollImportCharacter';
+export * from './meetup';
