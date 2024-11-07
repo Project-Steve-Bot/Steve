@@ -7,6 +7,7 @@ import prettyMilliseconds from 'pretty-ms';
 import { oneLine, stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { resolveDurationOrTimestamp } from '@lib/resolvers';
+import { getDSTOffset } from '@lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Create a new reminder',
@@ -99,6 +100,8 @@ export class RemindCommand extends SteveCommand {
 		}
 
 		const expires = isDur ? new Date(durationOrTimestamp + Date.now()) : durationOrTimestamp;
+
+		expires.setHours(expires.getHours() + getDSTOffset(expires));
 
 		const mode = guild ? 'public' : 'private';
 
