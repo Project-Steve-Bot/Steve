@@ -2,7 +2,7 @@ import { container, Events, SapphireClient } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, type ClientOptions, EmbedBuilder, TextChannel, ComponentType } from 'discord.js';
 import { schedule, type ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
-import { generateSnoozeButtons, getChannel, pickRandom } from '@lib/utils';
+import { generateSnoozeButtons, getChannel, getDSTOffset, pickRandom } from '@lib/utils';
 
 export class SteveBoi extends SapphireClient {
 
@@ -68,11 +68,14 @@ export class SteveBoi extends SapphireClient {
 			});
 
 			if (reminder.repeat) {
+				const expires = new Date(now.getTime() + reminder.repeat);
+				expires.setHours(expires.getHours() + getDSTOffset(expires));
+
 				container.db.reminder.findOneAndReplace(
 					{ _id: reminder._id },
 					{
 						...reminder,
-						expires: new Date(now.getTime() + reminder.repeat)
+						expires
 					}
 				);
 			} else {

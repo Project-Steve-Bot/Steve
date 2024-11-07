@@ -307,3 +307,13 @@ export function getLongCommandName(interaction: AutocompleteInteraction): string
 
 	return `${longName} ${interaction.options.getFocused(true).name}`;
 }
+
+/**
+ * Calculates the Daylight Saving Time (DST) offset of a given date in hours.
+ * @param {Date} date The date to get the DST offset for.
+ * @returns {number} The DST offset in hours.
+ */
+export function getDSTOffset(date: Date): number {
+	const now = new Date(date.toISOString()).setTime(Date.now());
+	return (date.getTimezoneOffset() - new Date(now).getTimezoneOffset()) / 60;
+}
