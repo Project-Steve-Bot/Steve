@@ -39,7 +39,7 @@
 		"node-cron": "3.0.3",
 		"parse-duration": "1.1.0",
 		"pdf2json": "^3.0.3",
-		"pretty-ms": "7.0.1",
+		"pretty-ms": "8.0.0",
 		"reflect-metadata": "0.1.13"
 	},
 	"_moduleAliases": {
