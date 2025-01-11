@@ -63,7 +63,7 @@ export class RollCommand extends SteveCommand {
 			return interaction.reply(`\`${parameter}\` is not a valid quick roll or spec.`);
 		}
 
-		const rollResult = this.preformRolls(resolvedRoll.unwrap());
+		const rollResult = this.preformRolls(resolvedRoll.unwrap(), interaction.guildId ?? undefined);
 		const out = interaction.reply(rollResult);
 
 		if (interaction.inGuild()) {
@@ -86,7 +86,7 @@ export class RollCommand extends SteveCommand {
 			return send(msg, input.err().unwrap().message);
 		}
 
-		const rollResult = this.preformRolls(input.unwrap());
+		const rollResult = this.preformRolls(input.unwrap(), msg.guildId ?? undefined);
 		const out = send(msg, rollResult);
 
 		if (msg.inGuild()) {
@@ -96,7 +96,7 @@ export class RollCommand extends SteveCommand {
 		return out;
 	}
 
-	private preformRolls(input: RollSpec[][]): string {
+	private preformRolls(input: RollSpec[][], guildId?: string): string {
 		const runs: string[] = [];
 		input.forEach(specs => {
 			const diceResults: DiceResult[] = [];
@@ -132,7 +132,7 @@ export class RollCommand extends SteveCommand {
 				diceResults.push({ spec, rolls: rolls });
 			});
 
-			runs.push(this.createResultString(diceResults));
+			runs.push(this.createResultString(diceResults, guildId));
 		});
 
 		return runs.join('\n');
@@ -155,7 +155,7 @@ export class RollCommand extends SteveCommand {
 		return Math.floor(Math.random() * sides) + 1;
 	}
 
-	private createResultString(diceResults: DiceResult[]): string {
+	private createResultString(diceResults: DiceResult[], guildId?: string): string {
 		const addTotal = diceResults.length > 1 || diceResults[0].spec.count > 1 || diceResults[0].spec.modifier !== 0;
 		const prefix = addTotal ? '> ' : '';
 		let output = '';
@@ -191,6 +191,11 @@ export class RollCommand extends SteveCommand {
 
 			total += this.sumRolls(rolls) + spec.modifier;
 		});
+
+		// Beeg six logic
+		if (guildId === '989658500563095562' && total === 6) {
+			return '# BEEG SIX';
+		}
 
 		return `${output}${addTotal ? `> **Total: ${total}**\n` : ''}`;
 	}
