@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
-import { Message, ActionRowBuilder, StringSelectMenuBuilder, User, ChannelType, ComponentType } from 'discord.js';
+import { Message, ActionRowBuilder, StringSelectMenuBuilder, User,  ComponentType } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { getChannel, getGuild, sendLoadingMessage } from '@lib/utils';
 
@@ -37,7 +37,7 @@ export class UserCommand extends SteveCommand {
 
 			dbGuild.channels.fax.forEach(async (channelId) => {
 				const channel = await getChannel(channelId);
-				if (!channel?.isTextBased() || channel.type === ChannelType.DM || channel.partial) return;
+				if (!channel?.isSendable() || channel.isDMBased()) return;
 
 				dropdown.addOptions({
 					label: `#${channel.name}`,

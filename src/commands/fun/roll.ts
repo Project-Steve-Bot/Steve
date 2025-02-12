@@ -4,7 +4,6 @@ import {
 	Guild,
 	Message,
 	EmbedBuilder,
-	type TextBasedChannel,
 	User
 } from 'discord.js';
 import { oneLine } from 'common-tags';
@@ -141,8 +140,9 @@ export class RollCommand extends SteveCommand {
 	private async logRolls(result: string, guild: Guild, author: User) {
 		const rollLogId = (await this.container.db.guilds.findOne({ id: guild.id }))?.channels?.rolls;
 		if (!rollLogId) return;
+		const rollLog = await guild.channels.fetch(rollLogId);
+		if (!rollLog?.isSendable()) return;
 
-		const rollLog = await guild.channels.fetch(rollLogId) as TextBasedChannel;
 		rollLog.send({ embeds: [new EmbedBuilder()
 			.setAuthor({ name: `${author.tag} rolled...`, iconURL: author.displayAvatarURL() })
 			.setDescription(result)
