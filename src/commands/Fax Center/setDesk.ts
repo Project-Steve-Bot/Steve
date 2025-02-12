@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { CommandOptions } from '@sapphire/framework';
-import { Message, ActionRowBuilder, StringSelectMenuBuilder, User,  ComponentType } from 'discord.js';
+import { Message, ActionRowBuilder, StringSelectMenuBuilder, User, ComponentType } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { getChannel, getGuild, sendLoadingMessage } from '@lib/utils';
 
