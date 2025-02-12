@@ -243,7 +243,7 @@ export class UserCommand extends SteveSubcommand {
 
 		const pfpLog = await this.container.client.channels.fetch(process.env.RP_PFP_CHANNEL ?? '');
 
-		if (!pfpLog || !pfpLog.isTextBased()) return undefined;
+		if (!pfpLog || !pfpLog.isSendable()) return undefined;
 
 		ephemeralAttachment.name = ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`;
 

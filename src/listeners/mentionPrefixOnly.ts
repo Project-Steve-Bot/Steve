@@ -5,6 +5,7 @@ export class UserEvent extends Listener<'mentionPrefixOnly'> {
 
 	public async run(message: Message) {
 		const prefix = this.container.client.options.defaultPrefix;
+		if (!message.channel.isSendable()) return;
 		return message.channel.send(
 			prefix
 				? `My prefix in this guild is: \`${prefix}\``

@@ -1,19 +1,18 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Command, CommandOptions } from '@sapphire/framework';
-import date from 'date-and-time';
-import meridiem from 'date-and-time/plugin/meridiem';
+import ical from 'node-ical';
 import { EmbedBuilder, Message, TimestampStyles, time as discordTime } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { p4aSchedule } from '../../assets/P4A24Schedule.json';
 import { send } from '@sapphire/plugin-editable-commands';
-
-date.plugin(meridiem);
+import { writeFileSync } from 'fs';
 
 @ApplyOptions<CommandOptions>({
 	description: 'See who\'s live right now on the Project for Awesome',
 	preconditions: [['CommitteeOnly', 'DMOnly']]
 })
 export class UserCommand extends SteveCommand {
+
+	private icalURL25 = 'https://calendar.google.com/calendar/ical/c_b4abece77b5d42e59a82e68ef19a543c873b1177d53296529eb89cee0d179b5b%40group.calendar.google.com/public/basic.ics';
 
 	public override registerApplicationCommands(registry: Command.Registry) {
 		registry.registerChatInputCommand(builder => {
@@ -24,45 +23,41 @@ export class UserCommand extends SteveCommand {
 	}
 
 	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		interaction.reply({ embeds: [this.buildEmbed()] });
+		interaction.reply({ embeds: [await this.buildEmbed()] });
 	}
 
 	public async messageRun(msg: Message) {
-		return send(msg, { embeds: [this.buildEmbed()] });
+		return send(msg, { embeds: [await this.buildEmbed()] });
 	}
 
-	private buildEmbed(): EmbedBuilder {
+	private async buildEmbed(): Promise<EmbedBuilder> {
 		const embed = new EmbedBuilder()
-			.setThumbnail('https://projectforawesome.com/assets/2024/Social/p4a_2024_profile.png')
+			.setThumbnail('https://www.projectforawesome.com/assets/2025/Social/Profile_Lilac.png')
 			.setColor('#1B9C64');
 
-		const trueDateSchedule: timeslot[] = p4aSchedule.map(({ tag, hosts, time }) => ({
-			tag: tag === 'Live' || tag === 'Dark' || tag === 'Optional' ? tag : 'Unknown',
-			hosts,
-			time: date.parse(time, 'M/D/YYYY h:mma Z')
-		}));
+		const schedule = await this.getIcalData();
+		writeFileSync('schedule.json', JSON.stringify(schedule, null, '\t'));
 
-		const nextSlotIdx = trueDateSchedule.findIndex(timeslot => timeslot.time.getTime() > Date.now());
+		const now = new Date();
+		const currentSlot = schedule.find(slot => slot.end > now && slot.start < now);
 
-		if (nextSlotIdx < 0) {
-			return embed
-				.setTitle('The P4A is over. See you next year');
+		if (!currentSlot) {
+			return embed.setTitle('The Project for Awesome is almost here! See you soon!');
 		}
 
-		const currentSlot = trueDateSchedule[nextSlotIdx - 1];
-		const nextSlot = trueDateSchedule[nextSlotIdx];
+		const nextSlot = schedule.find(slot => slot.end > currentSlot?.end && slot.start < currentSlot?.end);
 
 		switch (currentSlot.tag) {
 			case 'Live':
 				embed.setTitle(`Live now: ${currentSlot.hosts}`)
-					.setDescription(`**${currentSlot.hosts}** Will be live until ${discordTime(nextSlot.time, TimestampStyles.ShortTime)}
-Next up, its ${nextSlot.hosts}`)
+					.setDescription(`**${currentSlot.hosts}** Will be live until ${discordTime(currentSlot.end, TimestampStyles.ShortTime)}
+${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 					.setURL('https://projectforawesome.com/live');
 				break;
 			case 'Optional':
 				embed.setTitle(`${currentSlot.hosts} might be live now, but they might not`)
-					.setDescription(`**${currentSlot.hosts}** Will be live until ${discordTime(nextSlot.time, TimestampStyles.ShortTime)}
-Next up, its ${nextSlot.hosts}`)
+					.setDescription(`**${currentSlot.hosts}** Will be live until ${discordTime(currentSlot.end, TimestampStyles.ShortTime)}
+${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 					.setURL('https://projectforawesome.com/live'); ;
 				break;
 			case 'Dark':
@@ -80,10 +75,38 @@ Next up, its ${nextSlot.hosts}`)
 		return embed;
 	}
 
+	private async getIcalData(): Promise<timeslot[]> {
+		const rawIcalData = await ical.fromURL(this.icalURL25);
+
+		const events = Object.values(rawIcalData).filter(event => event.type === 'VEVENT') as ical.VEvent[];
+
+		writeFileSync('events.json', JSON.stringify(events, null, '\t'));
+
+		return events.map(event => {
+			let tag: 'Live'|'Dark'|'Optional' = 'Live';
+
+			if (event.summary.toLowerCase().includes('optional')) {
+				tag = 'Optional';
+			}
+
+			if (event.summary.toLowerCase().includes('downtime')) {
+				tag = 'Dark';
+			}
+
+			return {
+				start: event.start,
+				end: event.end,
+				tag,
+				hosts: event.summary
+			};
+		});
+	}
+
 }
 
 type timeslot = {
-	time: Date,
+	start: Date,
+	end: Date,
 	tag: 'Live'|'Dark'|'Optional'|'Unknown',
 	hosts: string
 };

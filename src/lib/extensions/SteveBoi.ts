@@ -58,7 +58,7 @@ export class SteveBoi extends SapphireClient {
 				= this.channels.cache.get(reminder.channel)
 				?? await this.channels.fetch(reminder.channel);
 
-			if (!channel?.isTextBased()) return;
+			if (!channel?.isSendable()) return;
 
 			await channel.send({
 				content: `<@${reminder.user}>, you asked me to remind you about this:\n${reminder.content}`,
