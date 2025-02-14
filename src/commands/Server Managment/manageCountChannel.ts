@@ -42,14 +42,14 @@ export class UserCommand extends SteveCommand {
 			started: new Date()
 		};
 
-		const newGuild = (await this.container.db.guilds.findOneAndUpdate(
+		const newGuild = await this.container.db.guilds.findOneAndUpdate(
 			{ id: msg.guild.id },
 			{ $set: {
 				'channels.count': channel?.id,
 				count: countData
 			} },
 			{ upsert: true }
-		)).value;
+		);
 
 		if (channel && newGuild) {
 			this.container.client.countChannels.set(channel.id, newGuild);

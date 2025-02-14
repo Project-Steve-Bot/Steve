@@ -46,7 +46,7 @@ export class UserEvent extends Listener {
 			return resetCount(msg, `Sorry mate but ${newNumber} isn't what comes next.`);
 		}
 
-		const newGuild = (await this.container.db.guilds.findOneAndUpdate(
+		const newGuild = await this.container.db.guilds.findOneAndUpdate(
 			{ id: msg.guildId },
 			{
 				$inc: { 'count.counter': 1 },
@@ -54,7 +54,7 @@ export class UserEvent extends Listener {
 				$addToSet: { 'count.participants': msg.author.id }
 			},
 			{ returnDocument: 'after' }
-		)).value;
+		);
 
 		if (!newGuild) {
 			msg.channel.send('FIRE! FIRE! SOMETHING BROKE AND IDK WHATS GOING ON!');

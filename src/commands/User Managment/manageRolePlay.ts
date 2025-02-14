@@ -176,11 +176,11 @@ export class UserCommand extends SteveSubcommand {
 
 		const response = await this.container.db.rpCharacters.findOneAndDelete(filter);
 
-		if (!response.value) {
+		if (!response) {
 			return interaction.reply({ content: 'You have no character in this server to delete.', ephemeral: true });
 		}
 
-		return interaction.reply({ embeds: [this.buildCharacterEmbed(response.value, 'delete')], ephemeral: true });
+		return interaction.reply({ embeds: [this.buildCharacterEmbed(response, 'delete')], ephemeral: true });
 	}
 
 	public async autocompleteRun(interaction: AutocompleteInteraction) {
