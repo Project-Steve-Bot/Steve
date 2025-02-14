@@ -4,7 +4,6 @@ import ical from 'node-ical';
 import { EmbedBuilder, Message, TimestampStyles, time as discordTime } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { send } from '@sapphire/plugin-editable-commands';
-import { writeFileSync } from 'fs';
 
 @ApplyOptions<CommandOptions>({
 	description: 'See who\'s live right now on the Project for Awesome',
@@ -36,7 +35,6 @@ export class UserCommand extends SteveCommand {
 			.setColor('#1B9C64');
 
 		const schedule = await this.getIcalData();
-		writeFileSync('schedule.json', JSON.stringify(schedule, null, '\t'));
 
 		const now = new Date();
 		const currentSlot = schedule.find(slot => slot.end > now && slot.start < now);
@@ -45,7 +43,9 @@ export class UserCommand extends SteveCommand {
 			return embed.setTitle('The Project for Awesome is almost here! See you soon!');
 		}
 
-		const nextSlot = schedule.find(slot => slot.end > currentSlot?.end && slot.start < currentSlot?.end);
+		const nextSlotTime = new Date(currentSlot.end);
+		nextSlotTime.setMinutes(currentSlot.end.getMinutes() + 1);
+		const nextSlot = schedule.find(slot => slot.end > nextSlotTime && slot.start < nextSlotTime);
 
 		switch (currentSlot.tag) {
 			case 'Live':
@@ -79,8 +79,6 @@ ${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 		const rawIcalData = await ical.fromURL(this.icalURL25);
 
 		const events = Object.values(rawIcalData).filter(event => event.type === 'VEVENT') as ical.VEvent[];
-
-		writeFileSync('events.json', JSON.stringify(events, null, '\t'));
 
 		return events.map(event => {
 			let tag: 'Live'|'Dark'|'Optional' = 'Live';

@@ -33,7 +33,7 @@ export class UserCommand extends SteveCommand {
 		const channel = channelResult.unwrap();
 
 		const added
-			= !guildSettings?.channels?.rolePlay?.map(rp => rp.channel)?.includes(channel.id) ?? true;
+			= !(guildSettings?.channels?.rolePlay?.map(rp => rp.channel)?.includes(channel.id) ?? false);
 
 		if (!added) {
 			await this.removeRPchannel(msg.guildId, channel.id);
