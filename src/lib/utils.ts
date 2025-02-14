@@ -132,11 +132,11 @@ export async function resetCount(msg: Message, reason: string, ping = false, del
 		started: new Date()
 	};
 
-	const newGuild = (await container.db.guilds.findOneAndUpdate(
+	const newGuild = await container.db.guilds.findOneAndUpdate(
 		{ _id: dbGuild._id },
 		{ $set: { count: newCountData } },
 		{ returnDocument: 'after' }
-	)).value;
+	);
 
 	if (!newGuild) {
 		msg.channel.send('FIRE! FIRE! SOMETHING BROKE AND IDK WHATS GOING ON!');
