@@ -36,7 +36,7 @@ export class UserCommand extends SteveCommand {
 		});
 
 		const added
-			= !guildSettings?.channels?.fax?.includes(channel.id) ?? true;
+			= !(guildSettings?.channels?.fax?.includes(channel.id) ?? false);
 
 		if (added) {
 			await this.container.db.guilds.updateOne(

@@ -666,14 +666,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/type@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@sapphire/type@npm:2.4.4"
+"@sapphire/type@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "@sapphire/type@npm:2.6.0"
   dependencies:
     "@discordjs/node-pre-gyp": ^0.4.5
-    nan: ^2.18.0
-    tslib: ^2.6.2
-  checksum: ee95e089267ee6f1eeb4669f7ad5fbbeab0051ad8d57a8049aeedbbd1b3e7ff01925135a4be31b97a9ffde1efbf3bb873fea5afd1445c62431f633dc80b5f45a
+    nan: ^2.22.0
+    tslib: ^2.8.1
+  checksum: 3c54e255160f8ea8aeb5f8b4de30ccfc2585ae63b968c06f80d27735f03601cab24d21f9dda0d75d5593a2c8045631de53cb16719412874906fb8a7986814325
   languageName: node
   linkType: hard
 
@@ -3286,7 +3286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.17.0, nan@npm:^2.18.0":
+"nan@npm:^2.17.0, nan@npm:^2.22.0":
   version: 2.22.0
   resolution: "nan@npm:2.22.0"
   dependencies:
@@ -4271,7 +4271,7 @@ __metadata:
     "@sapphire/stopwatch": 1.5.2
     "@sapphire/time-utilities": 1.7.12
     "@sapphire/ts-config": ^5.0.0
-    "@sapphire/type": 2.4.4
+    "@sapphire/type": ^2.6.0
     "@sapphire/utilities": 3.15.3
     "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.4
@@ -4303,7 +4303,7 @@ __metadata:
     rimraf: 4.4.1
     tsc-watch: 6.0.4
     tslib: 2.6.2
-    typescript: 5.3.3
+    typescript: ^5.7.3
   languageName: unknown
   linkType: soft
 
@@ -4661,17 +4661,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.3.3":
-  version: 5.3.3
-  resolution: "typescript@npm:5.3.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 2007ccb6e51bbbf6fde0a78099efe04dc1c3dfbdff04ca3b6a8bc717991862b39fd6126c0c3ebf2d2d98ac5e960bcaa873826bb2bb241f14277034148f41f6a2
-  languageName: node
-  linkType: hard
-
-"typescript@npm:^5.4.2":
+"typescript@npm:^5.4.2, typescript@npm:^5.7.3":
   version: 5.7.3
   resolution: "typescript@npm:5.7.3"
   bin:
@@ -4681,17 +4671,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@5.3.3#~builtin<compat/typescript>":
-  version: 5.3.3
-  resolution: "typescript@patch:typescript@npm%3A5.3.3#~builtin<compat/typescript>::version=5.3.3&hash=e012d7"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 4e604a9e107ce0c23b16a2f8d79d0531d4d8fe9ebbb7a8c395c66998c39892f0e0a071ef0b0d4e66420a8ec2b8d6cfd9cdb29ba24f25b37cba072e9282376df9
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@^5.4.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@^5.4.2#~builtin<compat/typescript>, typescript@patch:typescript@^5.7.3#~builtin<compat/typescript>":
   version: 5.7.3
   resolution: "typescript@patch:typescript@npm%3A5.7.3#~builtin<compat/typescript>::version=5.7.3&hash=d69c25"
   bin:
