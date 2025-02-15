@@ -10,8 +10,8 @@
 	},
 	"dependencies": {
 		"@discordjs/collection": "2.0.0",
-		"@octokit/rest": "20.0.2",
-		"@sapphire/decorators": "6.0.4",
+		"@octokit/rest": "20.1.1",
+		"@sapphire/decorators": "6.1.1",
 		"@sapphire/discord-utilities": "3.2.2",
 		"@sapphire/discord.js-utilities": "7.1.6",
 		"@sapphire/fetch": "2.4.2",
@@ -21,11 +21,11 @@
 		"@sapphire/plugin-logger": "3.0.7",
 		"@sapphire/plugin-subcommands": "^5.0.0",
 		"@sapphire/stopwatch": "1.5.2",
-		"@sapphire/time-utilities": "1.7.12",
+		"@sapphire/time-utilities": "1.7.14",
 		"@sapphire/type": "^2.6.0",
-		"@sapphire/utilities": "3.15.3",
+		"@sapphire/utilities": "3.18.2",
 		"@skyra/env-utilities": "^1.2.1",
-		"axios": "1.6.7",
+		"axios": "1.7.9",
 		"canvas": "2.11.2",
 		"chart.js": "3.9.1",
 		"chartjs-node-canvas": "4.1.6",
@@ -41,7 +41,7 @@
 		"parse-duration": "1.1.0",
 		"pdf2json": "^3.0.3",
 		"pretty-ms": "7.0.1",
-		"reflect-metadata": "0.1.13"
+		"reflect-metadata": "0.2.2"
 	},
 	"_moduleAliases": {
 		"@root": "dist",
@@ -52,15 +52,15 @@
 		"@types/common-tags": "1.8.4",
 		"@types/node": "20.10.5",
 		"@types/node-cron": "3.0.11",
-		"@types/ws": "8.5.10",
+		"@types/ws": "8.5.14",
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
-		"eslint": "8.56.0",
+		"eslint": "8.57.1",
 		"eslint-plugin-deprecation": "1.5.0",
 		"npm-run-all": "4.1.5",
 		"rimraf": "4.4.1",
-		"tsc-watch": "6.0.4",
-		"tslib": "2.6.2",
+		"tsc-watch": "6.2.1",
+		"tslib": "2.8.1",
 		"typescript": "^5.7.3"
 	},
 	"scripts": {
@@ -77,5 +77,5 @@
 		"clean:purge": "rimraf node_modules dist yarn.lock package-lock.json",
 		"updeps": "yarn clean:purge && yarn install"
 	},
-	"packageManager": "yarn@3.8.0"
+	"packageManager": "yarn@3.8.7"
 }
