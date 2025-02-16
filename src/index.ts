@@ -51,7 +51,7 @@ const main = async () => {
 		client.user?.setPresence({
 			activities: [
 				{
-					type: ActivityType.Playing,
+					type: ActivityType.Custom,
 					name: `${prefix}help`
 				}
 			]
