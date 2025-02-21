@@ -3514,10 +3514,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse-duration@npm:1.1.0":
-  version: 1.1.0
-  resolution: "parse-duration@npm:1.1.0"
-  checksum: 3cfc10aa61b3a06373a347289e1704de47d5d845c79330bbab20b54c02567f3710ba84544a3a44a986c3381c68670d89542fe9de607fb0814e52f78b34893cd9
+"parse-duration@npm:1.1.2":
+  version: 1.1.2
+  resolution: "parse-duration@npm:1.1.2"
+  checksum: c31ebdee783935afe250fd79cdfab9d14e196ee2a810e6a7abbdef6d945a1b88797972437c9e5ed10e8e1cb5cd68b7cc13e9ac9721839f0cb1c2f5fe837d99d9
   languageName: node
   linkType: hard
 
@@ -4255,7 +4255,7 @@ __metadata:
     node-cron: 3.0.3
     node-ical: ^0.20.1
     npm-run-all: 4.1.5
-    parse-duration: 1.1.0
+    parse-duration: 1.1.2
     pdf2json: ^3.0.3
     pretty-ms: 7.0.1
     reflect-metadata: 0.2.2

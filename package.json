@@ -38,7 +38,7 @@
 		"mongodb": "^6.13.0",
 		"node-cron": "3.0.3",
 		"node-ical": "^0.20.1",
-		"parse-duration": "1.1.0",
+		"parse-duration": "1.1.2",
 		"pdf2json": "^3.0.3",
 		"pretty-ms": "7.0.1",
 		"reflect-metadata": "0.2.2"
