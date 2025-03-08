@@ -43,7 +43,7 @@ export class UserCommand extends SteveCommand {
 		const currentSlot = schedule.find(slot => slot.end > now && slot.start < now);
 
 		if (!currentSlot) {
-			return embed.setTitle('The Project for Awesome is almost here! See you soon!');
+			return embed.setTitle('The Project for Awesome is over. See you next year!');
 		}
 
 		const nextSlotTime = new Date(currentSlot.end);
