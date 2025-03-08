@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, type InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, MessageFlags, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 
 @ApplyOptions<InteractionHandlerOptions>({
 	interactionHandlerType: InteractionHandlerTypes.Button,
@@ -9,25 +9,23 @@ import { ActionRowBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteracti
 export class TheButtonClick extends InteractionHandler {
 
 	public async parse(interaction: ButtonInteraction) {
-		if (interaction.customId !== 'SafetyButton') {
+		if (!interaction.customId.startsWith('SafetyButton')) {
 			return this.none();
 		}
 
-		return this.some();
+		const [, userId] = interaction.customId.split('|');
+		return this.some(userId);
 	}
 
-	public async run(interaction: ButtonInteraction) {
-		if (!process.env.OWNERS) {
-			throw new Error('No Owners defined');
-		}
-		await this.container.client.users.fetch(process.env.OWNERS).then(owner => owner.send('**The Button** was pressed'));
+	public async run(interaction: ButtonInteraction, userId: InteractionHandler.ParseResult<this>) {
+		await this.container.client.users.fetch(userId).then(user => user.send('**The Button** was pressed'));
 
 		interaction.showModal(new ModalBuilder()
-			.setCustomId('SafetyModal')
+			.setCustomId(`SafetyModal|${userId}`)
 			.setTitle('You clicked The Button')
 			.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(
 				new TextInputBuilder()
-					.setCustomId('SafetyContext')
+					.setCustomId(`SafetyContext`)
 					.setLabel('Add context to your click?')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('Please click submit with this box empty if you wish to not add context')
@@ -45,26 +43,23 @@ export class TheButtonClick extends InteractionHandler {
 export class TheButtonModal extends InteractionHandler {
 
 	public async parse(interaction: ModalSubmitInteraction) {
-		if (interaction.customId !== 'SafetyModal') {
+		if (!interaction.customId.startsWith('SafetyModal')) {
 			return this.none();
 		}
 
-		return this.some();
+		const [, userId] = interaction.customId.split('|');
+		return this.some(userId);
 	}
 
-	public async run(interaction: ModalSubmitInteraction) {
-		if (!process.env.OWNERS) {
-			throw new Error('No Owners defined');
-		}
-
+	public async run(interaction: ModalSubmitInteraction, userId: InteractionHandler.ParseResult<this>) {
 		const input = interaction.fields.getTextInputValue('SafetyContext');
 
-		await this.container.client.users.fetch(process.env.OWNERS)
-			.then(owner => owner.send(input === '' ? 'No context provided' : input));
+		await this.container.client.users.fetch(userId)
+			.then(user => user.send(input === '' ? 'No context provided' : input));
 
 		interaction.reply({
 			content: `${input === '' ? 'No additional context was sent' : 'I\'ve sent that context'}`,
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 
