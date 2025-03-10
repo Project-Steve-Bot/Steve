@@ -3216,14 +3216,14 @@ __metadata:
   linkType: hard
 
 "mongodb@npm:^6.13.0":
-  version: 6.13.1
-  resolution: "mongodb@npm:6.13.1"
+  version: 6.14.2
+  resolution: "mongodb@npm:6.14.2"
   dependencies:
     "@mongodb-js/saslprep": ^1.1.9
     bson: ^6.10.3
     mongodb-connection-string-url: ^3.0.0
   peerDependencies:
-    "@aws-sdk/credential-providers": ^3.632.0
+    "@aws-sdk/credential-providers": ^3.188.0
     "@mongodb-js/zstd": ^1.1.0 || ^2.0.0
     gcp-metadata: ^5.2.0
     kerberos: ^2.0.1
@@ -3245,7 +3245,7 @@ __metadata:
       optional: true
     socks:
       optional: true
-  checksum: d2506139ca0ca61e30bca642472ce77589fcbf39784b2029c16d693b7ba27023a7e1f95f3c3b62fe7fee8a4cd5680e0add136f6941188d32f4d4e0fda6f0a97b
+  checksum: 5971364a340a794f26175e2c8b28b22a052ba030da14b70506ca2e2ded4d0b88f1b3274f180fe993700827dcc62f2b8fed280f6c1d8cd0d48c5a97423a2f057b
   languageName: node
   linkType: hard
 
