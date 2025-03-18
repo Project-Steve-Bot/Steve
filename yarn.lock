@@ -715,12 +715,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.19":
-  version: 20.17.19
-  resolution: "@types/node@npm:20.17.19"
+"@types/node@npm:20.17.24":
+  version: 20.17.24
+  resolution: "@types/node@npm:20.17.24"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 4eb29628e293d47494c1fe8eaacbaf9f1317cc2ada176a74753d0ea6e3ff6cb5f3e97ba3baa1435d9934950f0fec5693272f2805387f2e70c119038ee7608c20
+  checksum: 05d3ca5d8741d10368edeff01318e4e615a7654b0c6bd05415f8cd0a2f851ac8e04c2cac319442c20fe372d1bdba9dd1f40dda014e97902516f82058b68ef6c4
   languageName: node
   linkType: hard
 
@@ -747,7 +747,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.5.14, @types/ws@npm:^8.5.10":
+"@types/ws@npm:8.18.0":
+  version: 8.18.0
+  resolution: "@types/ws@npm:8.18.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 517b97e6d5603902d547b2287cbeebc741303948fd356a81e0322b60aa763dfec5792b6674a8c51b95923a58f3664b9a1ba4c1b4379b07ddd638f52fda031e3d
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^8.5.10":
   version: 8.5.14
   resolution: "@types/ws@npm:8.5.14"
   dependencies:
@@ -1141,14 +1150,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.8.1":
-  version: 1.8.1
-  resolution: "axios@npm:1.8.1"
+"axios@npm:1.8.3":
+  version: 1.8.3
+  resolution: "axios@npm:1.8.3"
   dependencies:
     follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 3c434b86bb690046b5861134e9cee9b273467f0d82b64b9074f7da5004855826833736a1c6a9c05bf9af225ddd52b3da857a99d59e6736490b18e2cbc1ccb67e
+  checksum: 85fc8ad7d968e43ea9da5513310637d29654b181411012ee14cc0a4b3662782e6c81ac25eea40b5684f86ed2d8a01fa6fc20b9b48c4da14ef4eaee848fea43bc
   languageName: node
   linkType: hard
 
@@ -3216,14 +3225,14 @@ __metadata:
   linkType: hard
 
 "mongodb@npm:^6.13.0":
-  version: 6.13.1
-  resolution: "mongodb@npm:6.13.1"
+  version: 6.14.2
+  resolution: "mongodb@npm:6.14.2"
   dependencies:
     "@mongodb-js/saslprep": ^1.1.9
     bson: ^6.10.3
     mongodb-connection-string-url: ^3.0.0
   peerDependencies:
-    "@aws-sdk/credential-providers": ^3.632.0
+    "@aws-sdk/credential-providers": ^3.188.0
     "@mongodb-js/zstd": ^1.1.0 || ^2.0.0
     gcp-metadata: ^5.2.0
     kerberos: ^2.0.1
@@ -3245,7 +3254,7 @@ __metadata:
       optional: true
     socks:
       optional: true
-  checksum: d2506139ca0ca61e30bca642472ce77589fcbf39784b2029c16d693b7ba27023a7e1f95f3c3b62fe7fee8a4cd5680e0add136f6941188d32f4d4e0fda6f0a97b
+  checksum: 5971364a340a794f26175e2c8b28b22a052ba030da14b70506ca2e2ded4d0b88f1b3274f180fe993700827dcc62f2b8fed280f6c1d8cd0d48c5a97423a2f057b
   languageName: node
   linkType: hard
 
@@ -4245,12 +4254,12 @@ __metadata:
     "@sapphire/utilities": 3.18.2
     "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.4
-    "@types/node": 20.17.19
+    "@types/node": 20.17.24
     "@types/node-cron": 3.0.11
-    "@types/ws": 8.5.14
+    "@types/ws": 8.18.0
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
-    axios: 1.8.1
+    axios: 1.8.3
     canvas: 2.11.2
     chart.js: 3.9.1
     chartjs-node-canvas: 4.1.6
