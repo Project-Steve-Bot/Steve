@@ -1150,14 +1150,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.8.3":
-  version: 1.8.3
-  resolution: "axios@npm:1.8.3"
+"axios@npm:1.8.4":
+  version: 1.8.4
+  resolution: "axios@npm:1.8.4"
   dependencies:
     follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 85fc8ad7d968e43ea9da5513310637d29654b181411012ee14cc0a4b3662782e6c81ac25eea40b5684f86ed2d8a01fa6fc20b9b48c4da14ef4eaee848fea43bc
+  checksum: e901dc1730bdcd769839b3d93ae6d6457a53d79b19a0eb623ebfea333441259ab51e63ca118baa47a5156567401466ac739f31087b4ee5e6770ab2e227484538
   languageName: node
   linkType: hard
 
@@ -3225,8 +3225,8 @@ __metadata:
   linkType: hard
 
 "mongodb@npm:^6.13.0":
-  version: 6.14.2
-  resolution: "mongodb@npm:6.14.2"
+  version: 6.15.0
+  resolution: "mongodb@npm:6.15.0"
   dependencies:
     "@mongodb-js/saslprep": ^1.1.9
     bson: ^6.10.3
@@ -3254,7 +3254,7 @@ __metadata:
       optional: true
     socks:
       optional: true
-  checksum: 5971364a340a794f26175e2c8b28b22a052ba030da14b70506ca2e2ded4d0b88f1b3274f180fe993700827dcc62f2b8fed280f6c1d8cd0d48c5a97423a2f057b
+  checksum: 2572d10d47becfd72f200e972114097570db78e0ae5e259804c09903029d3906ab01d2b47b609cc33c9adf487682dd0562e9a457d0d0e6ab7645512c4abb7727
   languageName: node
   linkType: hard
 
@@ -4259,7 +4259,7 @@ __metadata:
     "@types/ws": 8.18.0
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
-    axios: 1.8.3
+    axios: 1.8.4
     canvas: 2.11.2
     chart.js: 3.9.1
     chartjs-node-canvas: 4.1.6
