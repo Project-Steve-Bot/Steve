@@ -699,6 +699,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "@types/luxon@npm:3.4.2"
+  checksum: 6f92d5bd02e89f310395753506bcd9cef3a56f5940f7a50db2a2b9822bce753553ac767d143cb5b4f9ed5ddd4a84e64f89ff538082ceb4d18739af7781b56925
+  languageName: node
+  linkType: hard
+
 "@types/node-cron@npm:3.0.11":
   version: 3.0.11
   resolution: "@types/node-cron@npm:3.0.11"
@@ -715,12 +722,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.19":
-  version: 20.17.19
-  resolution: "@types/node@npm:20.17.19"
+"@types/node@npm:20.17.24":
+  version: 20.17.24
+  resolution: "@types/node@npm:20.17.24"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 4eb29628e293d47494c1fe8eaacbaf9f1317cc2ada176a74753d0ea6e3ff6cb5f3e97ba3baa1435d9934950f0fec5693272f2805387f2e70c119038ee7608c20
+  checksum: 05d3ca5d8741d10368edeff01318e4e615a7654b0c6bd05415f8cd0a2f851ac8e04c2cac319442c20fe372d1bdba9dd1f40dda014e97902516f82058b68ef6c4
   languageName: node
   linkType: hard
 
@@ -747,7 +754,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.5.14, @types/ws@npm:^8.5.10":
+"@types/ws@npm:8.18.0":
+  version: 8.18.0
+  resolution: "@types/ws@npm:8.18.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 517b97e6d5603902d547b2287cbeebc741303948fd356a81e0322b60aa763dfec5792b6674a8c51b95923a58f3664b9a1ba4c1b4379b07ddd638f52fda031e3d
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^8.5.10":
   version: 8.5.14
   resolution: "@types/ws@npm:8.5.14"
   dependencies:
@@ -1141,14 +1157,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.8.1":
-  version: 1.8.1
-  resolution: "axios@npm:1.8.1"
+"axios@npm:1.8.4":
+  version: 1.8.4
+  resolution: "axios@npm:1.8.4"
   dependencies:
     follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 3c434b86bb690046b5861134e9cee9b273467f0d82b64b9074f7da5004855826833736a1c6a9c05bf9af225ddd52b3da857a99d59e6736490b18e2cbc1ccb67e
+  checksum: e901dc1730bdcd769839b3d93ae6d6457a53d79b19a0eb623ebfea333441259ab51e63ca118baa47a5156567401466ac739f31087b4ee5e6770ab2e227484538
   languageName: node
   linkType: hard
 
@@ -2924,6 +2940,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "luxon@npm:3.5.0"
+  checksum: f290fe5788c8e51e748744f05092160d4be12150dca70f9fadc0d233e53d60ce86acd82e7d909a114730a136a77e56f0d3ebac6141bbb82fd310969a4704825b
+  languageName: node
+  linkType: hard
+
 "magic-bytes.js@npm:^1.10.0":
   version: 1.10.0
   resolution: "magic-bytes.js@npm:1.10.0"
@@ -3216,14 +3239,14 @@ __metadata:
   linkType: hard
 
 "mongodb@npm:^6.13.0":
-  version: 6.13.1
-  resolution: "mongodb@npm:6.13.1"
+  version: 6.15.0
+  resolution: "mongodb@npm:6.15.0"
   dependencies:
     "@mongodb-js/saslprep": ^1.1.9
     bson: ^6.10.3
     mongodb-connection-string-url: ^3.0.0
   peerDependencies:
-    "@aws-sdk/credential-providers": ^3.632.0
+    "@aws-sdk/credential-providers": ^3.188.0
     "@mongodb-js/zstd": ^1.1.0 || ^2.0.0
     gcp-metadata: ^5.2.0
     kerberos: ^2.0.1
@@ -3245,7 +3268,7 @@ __metadata:
       optional: true
     socks:
       optional: true
-  checksum: d2506139ca0ca61e30bca642472ce77589fcbf39784b2029c16d693b7ba27023a7e1f95f3c3b62fe7fee8a4cd5680e0add136f6941188d32f4d4e0fda6f0a97b
+  checksum: 2572d10d47becfd72f200e972114097570db78e0ae5e259804c09903029d3906ab01d2b47b609cc33c9adf487682dd0562e9a457d0d0e6ab7645512c4abb7727
   languageName: node
   linkType: hard
 
@@ -3522,13 +3545,6 @@ __metadata:
   dependencies:
     callsites: ^3.0.0
   checksum: 6ba8b255145cae9470cf5551eb74be2d22281587af787a2626683a6c20fbb464978784661478dd2a3f1dad74d1e802d403e1b03c1a31fab310259eec8ac560ff
-  languageName: node
-  linkType: hard
-
-"parse-duration@npm:1.1.0":
-  version: 1.1.0
-  resolution: "parse-duration@npm:1.1.0"
-  checksum: 3cfc10aa61b3a06373a347289e1704de47d5d845c79330bbab20b54c02567f3710ba84544a3a44a986c3381c68670d89542fe9de607fb0814e52f78b34893cd9
   languageName: node
   linkType: hard
 
@@ -4245,12 +4261,13 @@ __metadata:
     "@sapphire/utilities": 3.18.2
     "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.4
-    "@types/node": 20.17.19
+    "@types/luxon": ^3.4.2
+    "@types/node": 20.17.24
     "@types/node-cron": 3.0.11
-    "@types/ws": 8.5.14
+    "@types/ws": 8.18.0
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
-    axios: 1.8.1
+    axios: 1.8.4
     canvas: 2.11.2
     chart.js: 3.9.1
     chartjs-node-canvas: 4.1.6
@@ -4261,12 +4278,12 @@ __metadata:
     discord.js: ^14.18.0
     eslint: 8.57.1
     eslint-plugin-deprecation: 1.5.0
+    luxon: ^3.5.0
     module-alias: 2.2.3
     mongodb: ^6.13.0
     node-cron: 3.0.3
     node-ical: ^0.20.1
     npm-run-all: 4.1.5
-    parse-duration: 1.1.0
     pdf2json: ^3.0.3
     pretty-ms: 7.0.1
     reflect-metadata: 0.2.2

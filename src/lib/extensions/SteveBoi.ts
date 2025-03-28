@@ -2,7 +2,8 @@ import { container, Events, SapphireClient } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, type ClientOptions, EmbedBuilder, TextChannel, ComponentType } from 'discord.js';
 import { schedule, type ScheduledTask } from 'node-cron';
 import type { CmdStats, DbGuild } from '@lib/types/database';
-import { generateSnoozeButtons, getChannel, getDSTOffset, pickRandom } from '@lib/utils';
+import { generateSnoozeButtons, getChannel, pickRandom } from '@lib/utils';
+import { DateTime, Duration } from 'luxon';
 
 export class SteveBoi extends SapphireClient {
 
@@ -68,8 +69,13 @@ export class SteveBoi extends SapphireClient {
 			});
 
 			if (reminder.repeat) {
-				const expires = new Date(now.getTime() + reminder.repeat);
-				expires.setHours(expires.getHours() + getDSTOffset(expires));
+				const dbUser = await container.db.users.findOne({ id: reminder.user });
+				const zone = dbUser?.timezone;
+				const expires = DateTime.now().setZone(zone).plus(
+					typeof reminder.repeat === 'number'
+						? Duration.fromMillis(reminder.repeat)
+						: Duration.fromObject(reminder.repeat)
+				).toJSDate();
 
 				container.db.reminder.findOneAndReplace(
 					{ _id: reminder._id },

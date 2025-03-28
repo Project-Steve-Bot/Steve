@@ -8,4 +8,5 @@ export interface DbUser {
 		text?: string;
 		background?: string;
 	};
+	dateTimeFormats?: string[];
 }

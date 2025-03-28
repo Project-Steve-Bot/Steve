@@ -1,7 +1,8 @@
 import { Argument } from '@sapphire/framework';
 import { resolveTimestamp } from '@lib/resolvers';
+import { DateTime } from 'luxon';
 
-export class TimestampArgument extends Argument<Date> {
+export class TimestampArgument extends Argument<DateTime> {
 
 	public async run(parameter: string, context: Argument.Context) {
 		const resolved = await resolveTimestamp(parameter, context.message.author);
@@ -17,6 +18,6 @@ export class TimestampArgument extends Argument<Date> {
 
 declare module '@sapphire/framework' {
 	interface ArgType {
-		timestamp: Date;
+		timestamp: DateTime;
 	}
 }

@@ -2,10 +2,11 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, type CommandOptions, UserError } from '@sapphire/framework';
 import { chunk } from '@sapphire/utilities';
 import { type EmbedAuthorData, Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, time, TimestampStyles, ApplicationCommandType, userMention } from 'discord.js';
-import parse from 'parse-duration';
 import { stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { getLoadingMessage, sendLoadingMessage } from '@lib/utils';
+import { DateTime, Duration } from 'luxon';
+import { resolveDuration } from '@lib/resolvers';
 
 const NUMBER_EMOTES = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
 
@@ -156,8 +157,8 @@ export class PollCommand extends SteveCommand {
 		}
 
 		choices = choices.map((choice, idx) => `${NUMBER_EMOTES[idx]} ${choice}`);
-		// @ts-expect-error ts(2532)
-		const expires = new Date(Date.now() + parse(rawExpires ?? '1d'));
+		const length = rawExpires ? resolveDuration(rawExpires).unwrap() : Duration.fromObject({ day: 1 });
+		const expires = DateTime.now().plus(length).toJSDate();
 
 		const embed = new EmbedBuilder()
 			.setTitle(question)

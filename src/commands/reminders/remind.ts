@@ -2,12 +2,10 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, type CommandOptions, UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Guild, Message, time, TimestampStyles, User } from 'discord.js';
-import parse from 'parse-duration';
-import prettyMilliseconds from 'pretty-ms';
 import { oneLine, stripIndent } from 'common-tags';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { resolveDurationOrTimestamp } from '@lib/resolvers';
-import { getDSTOffset } from '@lib/utils';
+import { resolveDuration, resolveDurationOrTimestamp } from '@lib/resolvers';
+import { DateTime, Duration } from 'luxon';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Create a new reminder',
@@ -48,13 +46,8 @@ export class RemindCommand extends SteveCommand {
 	public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		await interaction.deferReply();
 		const rawDurationOrTime = interaction.options.getString('durationortimestamp', true);
-		const durationOrTimeResult = await resolveDurationOrTimestamp(rawDurationOrTime, interaction.user);
+		const durationOrTimestamp = await this.processDurationOrTimestamp(rawDurationOrTime, interaction.user);
 
-		if (durationOrTimeResult.isErr()) {
-			return interaction.editReply('Please provide a valid duration or timestamp.');
-		}
-
-		const durationOrTimestamp = durationOrTimeResult.unwrap();
 		const content = interaction.options.getString('content', true);
 		const rawRepeat = interaction.options.getString('repeat');
 
@@ -63,45 +56,70 @@ export class RemindCommand extends SteveCommand {
 	}
 
 	public async messageRun(msg: Message, args: Args) {
-		const durationOrTimeResult = await args.pickResult('durationOrTimestamp');
-		if (durationOrTimeResult.isErr()) {
-			return send(msg, 'Please provide a valid duration or timestamp.');
-		}
+		const rawDurationOrTime = await args.pickResult('string');
+		const durationOrTimestamp = await this.processDurationOrTimestamp(rawDurationOrTime.unwrap(), msg.author);
 
-		const durOrTime = durationOrTimeResult.unwrap();
 		const content = await args.rest('string');
 		const rawRepeat = args.getOption('repeat', 'every');
 
-		const response = await this.setReminder(content, durOrTime, msg.author, msg.channelId, msg.guild, rawRepeat);
+		const response = await this.setReminder(content, durationOrTimestamp, msg.author, msg.channelId, msg.guild, rawRepeat);
 
 		return send(msg, response);
 	}
 
+	private async processDurationOrTimestamp(input: string, user: User): Promise<DateTime | Duration> {
+		const possibleDurOrTime = await resolveDurationOrTimestamp(input, user);
+		if (possibleDurOrTime.isOk()) {
+			return possibleDurOrTime.unwrap();
+		}
+
+		const errorType = possibleDurOrTime.err().unwrap();
+		if (errorType === 'InvalidDurationOrTimestamp') {
+			throw new UserError({ identifier: errorType });
+		}
+
+		const dbUser = await this.container.db.users.findOne({ id: user.id });
+		const formats = dbUser?.dateTimeFormats;
+		const zone = dbUser?.timezone;
+		if (!formats) {
+			throw new Error('No formats for UnknownFormat Error, this should be impossible');
+		}
+
+		const now = DateTime.now().setZone(zone);
+		const message = `The timestamp you provided did not match any of your set formats. Your Current formats are:
+${formats.map(format => `\`${format}\`: ${now.toFormat(format)}`).join('\n')}`;
+
+		throw new UserError({ identifier: errorType, message });
+	}
+
 	private async setReminder(
 		content: string,
-		durationOrTimestamp: Date | number,
+		durationOrTimestamp: DateTime | Duration,
 		user: User,
 		executionChannel: string,
 		guild: Guild | null,
 		rawRepeat: string | null
 	): Promise<string> {
-		const repeat = rawRepeat ? parse(rawRepeat) ?? null : null;
-		if (repeat && repeat < 60e3) {
+		const repeat = rawRepeat ? resolveDuration(rawRepeat).unwrap() : null;
+		if (repeat && repeat.as('minutes') < 1) {
 			throw new UserError({
 				identifier: 'RemindRepeatTooShort',
 				message: 'A reminder cannot repeat faster than once a minute.'
 			});
 		}
+		console.log(durationOrTimestamp);
+		const isDur = Duration.isDuration(durationOrTimestamp);
 
-		const isDur = typeof durationOrTimestamp === 'number';
-
-		if (!isDur && durationOrTimestamp.getTime() < Date.now()) {
+		if (!isDur && durationOrTimestamp < DateTime.now()) {
 			return 'Sorry but I can\'t send reminders into the past.';
 		}
+		const dbUser = await this.container.db.users.findOne({ id: user.id });
+		const zone = dbUser?.timezone;
 
-		const expires = isDur ? new Date(durationOrTimestamp + Date.now()) : durationOrTimestamp;
-
-		expires.setHours(expires.getHours() + getDSTOffset(expires));
+		const expires = isDur
+			// Makes a new DateTime in the users timezone and then adds the duration to it
+			? DateTime.now().setZone(zone).plus(durationOrTimestamp).toJSDate()
+			: durationOrTimestamp.toJSDate();
 
 		const mode = guild ? 'public' : 'private';
 
@@ -113,14 +131,14 @@ export class RemindCommand extends SteveCommand {
 			content,
 			user: user.id,
 			mode,
-			repeat,
+			repeat: repeat?.toObject() ?? null,
 			channel,
 			expires
 		});
 
 		return oneLine`I'll remind you about that at ${time(expires, TimestampStyles.ShortDateTime)}${
 			repeat
-				? `and again every ${prettyMilliseconds(repeat, { verbose: true })}`
+				? `and again every ${repeat.toHuman()}`
 				: ''
 		}.`;
 	}

@@ -4,18 +4,17 @@ import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
 import { oneLine } from 'common-tags';
+import { IANAZone } from 'luxon';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Set the timezone for commands that use date times.',
 	detailedDescription: {
 		usage: '<timezone>',
-		examples: ['+5', '-3:30', '+0'],
-		extendedHelp: 'Timezones must be hours relative to GMT.'
+		examples: ['America/New_York', 'Australia/Melbourne', 'Europe/London'],
+		extendedHelp: 'The full list of timezones can be found [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)'
 	}
 })
 export class UserCommand extends SteveCommand {
-
-	private timezoneRegex = /^[-+]\d?\d(:[03]0)?$/i;
 
 	public async messageRun(msg: Message, args: Args) {
 		const inputResult = await args.pickResult('string');
@@ -25,16 +24,16 @@ export class UserCommand extends SteveCommand {
 		}
 
 		const input = inputResult.unwrap();
-		if (!this.timezoneRegex.test(input)) {
-			return send(msg, oneLine`${input} is not a valid timezone.
-			Timezones are assumed to be relative to GMT and should be in the format of \`(+|-)<hours>(:minutes)\``);
+		const zone = IANAZone.create(input);
+
+		if (!zone.isValid) {
+			return send(msg, oneLine`\`${input}\` does not seem to be a valid timezone.
+				You can find the full list of timezones [here](<https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>)`);
 		}
 
-		const timezone = input.includes(':') ? input : `${input}:00`;
+		await this.container.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { timezone: zone.name } }, { upsert: true });
 
-		await this.container.db.users.findOneAndUpdate({ id: msg.author.id }, { $set: { timezone } }, { upsert: true });
-
-		return send(msg, `Your timezone has been set to ${timezone}`);
+		return send(msg, `Your timezone has been set to ${zone.name}`);
 	}
 
 }
