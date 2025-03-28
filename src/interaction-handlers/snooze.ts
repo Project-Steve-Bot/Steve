@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, type InteractionHandlerOptions, InteractionHandlerTypes } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType, StringSelectMenuBuilder, time, TimestampStyles } from 'discord.js';
 import { generateSnoozeButtons } from '../lib/utils';
-import parse from 'parse-duration';
+import { Duration } from 'luxon';
 
 @ApplyOptions<InteractionHandlerOptions>({
 	interactionHandlerType: InteractionHandlerTypes.Button
@@ -81,68 +81,97 @@ export class Snooze extends InteractionHandler {
 					.addOptions([
 						{
 							label: '5 minutes',
-							value: `${parse('5m')}`
+							value: Duration.fromObject({
+								minutes: 5
+							}).toMillis().toString()
 						},
 						{
 							label: '10 minutes',
-							value: `${parse('10m')}`
+							value: Duration.fromObject({
+								minutes: 10
+							}).toMillis().toString()
 						},
 						{
 							label: '15 minutes',
-							value: `${parse('15m')}`
+							value: Duration.fromObject({
+								minutes: 15
+							}).toMillis().toString()
 						},
 						{
 							label: '30 minutes',
-							value: `${parse('30m')}`
+							value: Duration.fromObject({
+								minutes: 30
+							}).toMillis().toString()
 						},
 						{
 							label: '1 hour',
-							value: `${parse('1h')}`
+							value: Duration.fromObject({
+								hours: 1
+							}).toMillis().toString()
 						},
 						{
 							label: '2 hours',
-							value: `${parse('2h')}`
+							value: Duration.fromObject({
+								hours: 2
+							}).toMillis().toString()
 						},
 						{
 							label: '3 hours',
-							value: `${parse('3h')}`
+							value: Duration.fromObject({
+								hours: 3
+							}).toMillis().toString()
 						},
 						{
 							label: '4 hours',
-							value: `${parse('4h')}`
+							value: Duration.fromObject({
+								hours: 4
+							}).toMillis().toString()
 						},
 						{
 							label: '5 hours',
-							value: `${parse('5h')}`
+							value: Duration.fromObject({
+								hours: 5
+							}).toMillis().toString()
 						},
 						{
 							label: '6 hours',
-							value: `${parse('6h')}`
+							value: Duration.fromObject({
+								hours: 6
+							}).toMillis().toString()
 						},
 						{
 							label: '7 hours',
-							value: `${parse('7h')}`
+							value: Duration.fromObject({
+								hours: 7
+							}).toMillis().toString()
 						},
 						{
 							label: '8 hours',
-							value: `${parse('8h')}`
+							value: Duration.fromObject({
+								hours: 8
+							}).toMillis().toString()
 						},
 						{
 							label: '1 day',
-							value: `${parse('1d')}`
+							value: Duration.fromObject({
+								days: 1
+							}).toMillis().toString()
 						},
 						{
 							label: '3 days',
-							value: `${parse('3d')}`
+							value: Duration.fromObject({
+								days: 3
+							}).toMillis().toString()
 						},
 						{
 							label: '1 week',
-							value: `${parse('1w')}`
+							value: Duration.fromObject({
+								weeks: 1
+							}).toMillis().toString()
 						},
 						{
 							label: 'Random (between 1 week and 3 years)',
-							// @ts-expect-error ts(2532)
-							value: `${Math.floor(Math.random() * ((parse('3y') - parse('1w')) + parse('1w')))}`,
+							value: `${Math.floor(Math.random() * ((94608000000 - 604800000) + 604800000))}`,
 							emoji: '❓'
 						}
 					])

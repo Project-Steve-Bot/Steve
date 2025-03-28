@@ -1,7 +1,8 @@
 import { Argument } from '@sapphire/framework';
 import { resolveDuration } from '@lib/resolvers';
+import { Duration } from 'luxon';
 
-export class DurationArgument extends Argument<number> {
+export class DurationArgument extends Argument<Duration> {
 
 	public run(parameter: string, context: Argument.Context) {
 		const resolved = resolveDuration(parameter);
@@ -17,6 +18,6 @@ export class DurationArgument extends Argument<number> {
 
 declare module '@sapphire/framework' {
 	interface ArgType {
-		duration: number;
+		duration: Duration;
 	}
 }

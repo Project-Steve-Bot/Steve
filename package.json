@@ -34,11 +34,11 @@
 		"common-tags": "1.8.2",
 		"date-and-time": "^3.1.1",
 		"discord.js": "^14.18.0",
+		"luxon": "^3.5.0",
 		"module-alias": "2.2.3",
 		"mongodb": "^6.13.0",
 		"node-cron": "3.0.3",
 		"node-ical": "^0.20.1",
-		"parse-duration": "1.1.0",
 		"pdf2json": "^3.0.3",
 		"pretty-ms": "7.0.1",
 		"reflect-metadata": "0.2.2"
@@ -50,6 +50,7 @@
 	"devDependencies": {
 		"@sapphire/ts-config": "^5.0.0",
 		"@types/common-tags": "1.8.4",
+		"@types/luxon": "^3.4.2",
 		"@types/node": "20.17.24",
 		"@types/node-cron": "3.0.11",
 		"@types/ws": "8.18.0",

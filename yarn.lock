@@ -699,6 +699,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "@types/luxon@npm:3.4.2"
+  checksum: 6f92d5bd02e89f310395753506bcd9cef3a56f5940f7a50db2a2b9822bce753553ac767d143cb5b4f9ed5ddd4a84e64f89ff538082ceb4d18739af7781b56925
+  languageName: node
+  linkType: hard
+
 "@types/node-cron@npm:3.0.11":
   version: 3.0.11
   resolution: "@types/node-cron@npm:3.0.11"
@@ -2933,6 +2940,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "luxon@npm:3.5.0"
+  checksum: f290fe5788c8e51e748744f05092160d4be12150dca70f9fadc0d233e53d60ce86acd82e7d909a114730a136a77e56f0d3ebac6141bbb82fd310969a4704825b
+  languageName: node
+  linkType: hard
+
 "magic-bytes.js@npm:^1.10.0":
   version: 1.10.0
   resolution: "magic-bytes.js@npm:1.10.0"
@@ -3531,13 +3545,6 @@ __metadata:
   dependencies:
     callsites: ^3.0.0
   checksum: 6ba8b255145cae9470cf5551eb74be2d22281587af787a2626683a6c20fbb464978784661478dd2a3f1dad74d1e802d403e1b03c1a31fab310259eec8ac560ff
-  languageName: node
-  linkType: hard
-
-"parse-duration@npm:1.1.0":
-  version: 1.1.0
-  resolution: "parse-duration@npm:1.1.0"
-  checksum: 3cfc10aa61b3a06373a347289e1704de47d5d845c79330bbab20b54c02567f3710ba84544a3a44a986c3381c68670d89542fe9de607fb0814e52f78b34893cd9
   languageName: node
   linkType: hard
 
@@ -4254,6 +4261,7 @@ __metadata:
     "@sapphire/utilities": 3.18.2
     "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.4
+    "@types/luxon": ^3.4.2
     "@types/node": 20.17.24
     "@types/node-cron": 3.0.11
     "@types/ws": 8.18.0
@@ -4270,12 +4278,12 @@ __metadata:
     discord.js: ^14.18.0
     eslint: 8.57.1
     eslint-plugin-deprecation: 1.5.0
+    luxon: ^3.5.0
     module-alias: 2.2.3
     mongodb: ^6.13.0
     node-cron: 3.0.3
     node-ical: ^0.20.1
     npm-run-all: 4.1.5
-    parse-duration: 1.1.0
     pdf2json: ^3.0.3
     pretty-ms: 7.0.1
     reflect-metadata: 0.2.2
