@@ -71,7 +71,7 @@ export class SteveBoi extends SapphireClient {
 			if (reminder.repeat) {
 				const dbUser = await container.db.users.findOne({ id: reminder.user });
 				const zone = dbUser?.timezone;
-				const expires = DateTime.now().setZone(zone).plus(
+				const expires = DateTime.fromJSDate(reminder.expires).setZone(zone).plus(
 					typeof reminder.repeat === 'number'
 						? Duration.fromMillis(reminder.repeat)
 						: Duration.fromObject(reminder.repeat)

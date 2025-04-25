@@ -107,7 +107,7 @@ ${formats.map(format => `\`${format}\`: ${now.toFormat(format)}`).join('\n')}`;
 				message: 'A reminder cannot repeat faster than once a minute.'
 			});
 		}
-		console.log(durationOrTimestamp);
+
 		const isDur = Duration.isDuration(durationOrTimestamp);
 
 		if (!isDur && durationOrTimestamp < DateTime.now()) {
