@@ -24,7 +24,7 @@
 		"@sapphire/time-utilities": "1.7.14",
 		"@sapphire/type": "^2.6.0",
 		"@sapphire/utilities": "3.18.2",
-		"@skyra/env-utilities": "^1.2.1",
+		"@skyra/env-utilities": "^2.0.0",
 		"axios": "1.8.4",
 		"canvas": "2.11.2",
 		"chart.js": "3.9.1",
