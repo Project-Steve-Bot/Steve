@@ -1,10 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { SteveSubcommand } from '@lib/extensions/SteveSubcommand';
 import type { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
-import type { Command } from '@sapphire/framework';
+import { UserError, type Command } from '@sapphire/framework';
 import { AutocompleteInteraction, Collection, EmbedBuilder } from 'discord.js';
 import type { RPCharter } from '@lib/types/database';
 import { type Filter, ObjectId, type WithId } from 'mongodb';
+import axios from 'axios';
 
 @ApplyOptions<SubcommandOptions>({
 	name: 'character',
@@ -87,13 +88,13 @@ export class UserCommand extends SteveSubcommand {
 
 	public async chatInputCreate(interaction: Subcommand.ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
-			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
+			return interaction.reply({ content: 'This command must be run in a server.', flags: 'Ephemeral' });
 		}
-
+		await interaction.deferReply({ flags: 'Ephemeral' });
 		const characters = await this.fetchUserCharacters(interaction.user.id, interaction.guildId);
 
 		if (characters.some(character => character.prefix === interaction.options.getString('prefix'))) {
-			return interaction.reply({ content: 'You already have another character using that prefix', ephemeral: true });
+			return interaction.editReply('You already have another character using that prefix');
 		}
 
 		const rpCharacter: RPCharter = {
@@ -106,14 +107,14 @@ export class UserCommand extends SteveSubcommand {
 
 		await this.container.db.rpCharacters.insertOne(rpCharacter);
 
-		return interaction.reply({ embeds: [this.buildCharacterEmbed(rpCharacter, 'add')], ephemeral: true });
+		return interaction.editReply({ embeds: [this.buildCharacterEmbed(rpCharacter, 'add')] });
 	}
 
 	public async chatInputEdit(interaction: Subcommand.ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
-			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
+			return interaction.reply({ content: 'This command must be run in a server.', flags: 'Ephemeral' });
 		}
-
+		await interaction.deferReply({ flags: 'Ephemeral' });
 		let filter: Filter<RPCharter>;
 
 		try {
@@ -129,7 +130,7 @@ export class UserCommand extends SteveSubcommand {
 		const preChange = await this.container.db.rpCharacters.findOne(filter);
 
 		if (!preChange) {
-			return interaction.reply({ content: 'That character was not found', ephemeral: true });
+			return interaction.editReply('That character was not found');
 		}
 
 		const characters = await this.fetchUserCharacters(interaction.user.id, interaction.guildId);
@@ -138,7 +139,7 @@ export class UserCommand extends SteveSubcommand {
 			!character._id.equals(preChange._id)
 			&& character.prefix === interaction.options.getString('prefix'))
 		) {
-			return interaction.reply({ content: 'You already have another character using that prefix', ephemeral: true });
+			return interaction.editReply('You already have another character using that prefix');
 		}
 
 		const rpCharacter: RPCharter = {
@@ -154,14 +155,14 @@ export class UserCommand extends SteveSubcommand {
 			rpCharacter
 		);
 
-		return interaction.reply({ embeds: [this.buildCharacterEmbed(rpCharacter, 'edit', preChange.name)], ephemeral: true });
+		return interaction.editReply({ embeds: [this.buildCharacterEmbed(rpCharacter, 'edit', preChange.name)] });
 	}
 
 	public async chatInputRemove(interaction: Subcommand.ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
-			return interaction.reply({ content: 'This command must be run in a server.', ephemeral: true });
+			return interaction.reply({ content: 'This command must be run in a server.', flags: 'Ephemeral' });
 		}
-
+		await interaction.deferReply({ flags: 'Ephemeral' });
 		let filter: Filter<RPCharter>;
 
 		try {
@@ -177,10 +178,10 @@ export class UserCommand extends SteveSubcommand {
 		const response = await this.container.db.rpCharacters.findOneAndDelete(filter);
 
 		if (!response) {
-			return interaction.reply({ content: 'You have no character in this server to delete.', ephemeral: true });
+			return interaction.editReply('You have no character in this server to delete.');
 		}
 
-		return interaction.reply({ embeds: [this.buildCharacterEmbed(response, 'delete')], ephemeral: true });
+		return interaction.editReply({ embeds: [this.buildCharacterEmbed(response, 'delete')] });
 	}
 
 	public async autocompleteRun(interaction: AutocompleteInteraction) {
@@ -239,17 +240,29 @@ export class UserCommand extends SteveSubcommand {
 
 	private async getPfpURL(interaction: Subcommand.ChatInputCommandInteraction): Promise<string | undefined> {
 		const ephemeralAttachment = interaction.options.getAttachment('pfp');
-		if (!ephemeralAttachment) return undefined;
+		if (!ephemeralAttachment) return;
 
-		const pfpLog = await this.container.client.channels.fetch(process.env.RP_PFP_CHANNEL ?? '');
+		if (!['image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/apng', 'image/tiff'].includes(ephemeralAttachment.contentType ?? '')) {
+			throw new UserError({
+				identifier: 'InvalidFiletype',
+				message: `Sorry but files of type ${ephemeralAttachment.contentType ?? 'unknown'} cannot be used as pfps.`
+			});
+		}
 
-		if (!pfpLog || !pfpLog.isSendable()) return undefined;
+		const image = await axios.get<Buffer>(ephemeralAttachment.url, { responseType: 'arraybuffer' });
 
-		ephemeralAttachment.name = ephemeralAttachment.name ?? `pfp.${ephemeralAttachment.contentType}`;
+		const data = new FormData();
+		data.append('image', image.data.toString('base64'));
+		data.append('type', 'base64');
+		data.append('title', 'Steve upload');
 
-		const logMsg = await pfpLog.send({ files: [ephemeralAttachment] });
+		const imgurResponse = await axios.post<{data: {link: string}}>('https://api.imgur.com/3/image', data, {
+			headers: {
+				Authorization: 'Client-ID 546c25a59c58ad7'
+			}
+		});
 
-		return logMsg.attachments.first()?.url;
+		return imgurResponse.data.data.link;
 	}
 
 }
