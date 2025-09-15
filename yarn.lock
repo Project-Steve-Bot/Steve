@@ -3558,10 +3558,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse-ms@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "parse-ms@npm:2.1.0"
-  checksum: d5c66c76cca8df5bd0574e2d11b9c3752893b59b466e74308d4a2f09760dc5436a1633f549cad300fc8c3c19154d14959a3b8333d3b2f7bd75898fe18149d564
+"parse-ms@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "parse-ms@npm:4.0.0"
+  checksum: 673c801d9f957ff79962d71ed5a24850163f4181a90dd30c4e3666b3a804f53b77f1f0556792e8b2adbb5d58757907d1aa51d7d7dc75997c2a56d72937cbc8b7
   languageName: node
   linkType: hard
 
@@ -3683,12 +3683,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-ms@npm:7.0.1":
-  version: 7.0.1
-  resolution: "pretty-ms@npm:7.0.1"
+"pretty-ms@npm:9.3.0":
+  version: 9.3.0
+  resolution: "pretty-ms@npm:9.3.0"
   dependencies:
-    parse-ms: ^2.1.0
-  checksum: d76c4920283b48be91f1d3797a2ce4bd51187d58d2a609ae993c028f73c92d16439449d857af57ccad91ae3a38b30c87307f5589749a056102ebb494c686957e
+    parse-ms: ^4.0.0
+  checksum: d8640516d03cba70fa7f56a05fad2beeac564f3741baa89817ccfaa0f4129ba6868f53e986f4a56955f92974df0d105df6de91dbd1a7ace1a37401650062a678
   languageName: node
   linkType: hard
 
@@ -4285,7 +4285,7 @@ __metadata:
     node-ical: ^0.20.1
     npm-run-all: 4.1.5
     pdf2json: ^3.0.3
-    pretty-ms: 7.0.1
+    pretty-ms: 9.3.0
     reflect-metadata: 0.2.2
     rimraf: 4.4.1
     tsc-watch: 6.2.1
