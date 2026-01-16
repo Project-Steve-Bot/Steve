@@ -1,7 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { UserError, type Command, type CommandOptions } from '@sapphire/framework';
 import { SteveCommand } from '@lib/extensions/SteveCommand';
-import { ChannelType } from 'discord.js';
+import { ChannelType, MessageCreateOptions } from 'discord.js';
+import axios from 'axios';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Condense a category into a summary channel',
@@ -40,7 +41,7 @@ export class UserCommand extends SteveCommand {
 			type: ChannelType.GuildText
 		});
 
-		const messages: string[] = [];
+		const messages: (MessageCreateOptions | string)[] = [];
 
 		for (const channel of category.children.cache.sort((a, b) => a.position - b.position).values()) {
 			if (channel.type === ChannelType.GuildText) {
@@ -49,8 +50,20 @@ export class UserCommand extends SteveCommand {
 					.replace(/\w\S*/g, text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase())
 				}`);
 
-				await channel.messages.fetch().then(channelMessages => {
-					messages.push(...channelMessages.map(message => message.content));
+				await channel.messages.fetch().then(async channelMessages => {
+					messages.push(...await Promise.all(channelMessages.map(async (message) => {
+						if (message.attachments.size === 0 && message.content !== '') {
+							return message.content;
+						}
+						const files = await Promise.all(message.attachments.map(async (attachment) => ({
+							name: attachment.name,
+							attachment: (await axios.get<Buffer>(attachment.url, { responseType: 'arraybuffer' })).data
+						})));
+						return {
+							content: message.content,
+							files
+						};
+					})));
 				});
 			}
 		};
