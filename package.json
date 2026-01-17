@@ -17,7 +17,7 @@
 		"@sapphire/fetch": "2.4.2",
 		"@sapphire/framework": "^4.7.2",
 		"@sapphire/pieces": "3.10.0",
-		"@sapphire/plugin-editable-commands": "3.1.0",
+		"@sapphire/plugin-editable-commands": "4.0.4",
 		"@sapphire/plugin-logger": "3.0.7",
 		"@sapphire/plugin-subcommands": "^5.0.0",
 		"@sapphire/stopwatch": "1.5.2",
