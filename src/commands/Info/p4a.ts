@@ -12,8 +12,8 @@ import axios from 'axios';
 })
 export class UserCommand extends SteveCommand {
 
-	private icalURL25 = 'https://calendar.google.com/calendar/ical/c_b4abece77b5d42e59a82e68ef19a543c873b1177d53296529eb89cee0d179b5b%40group.calendar.google.com/public/basic.ics';
-	private statsURL = 'https://www.projectforawesome.com/data?req=stats';
+	private icalURL26 = 'https://calendar.google.com/calendar/ical/c_5d6b041dcd674b0c1348d0c1dda354027dbb9b361e57fae4f7f16e5256ba1735%40group.calendar.google.com/public/basic.ics';
+	private apiBaseURL = 'https://api.projectforawesome.com/api';
 
 	public override registerApplicationCommands(registry: Command.Registry) {
 		registry.registerChatInputCommand(builder => {
@@ -33,8 +33,8 @@ export class UserCommand extends SteveCommand {
 
 	private async buildEmbed(): Promise<EmbedBuilder> {
 		const embed = new EmbedBuilder()
-			.setThumbnail('https://www.projectforawesome.com/assets/2025/Social/Profile_Lilac.png')
-			.setColor('#1B9C64');
+			.setThumbnail('https://p4a-assets.sfo3.cdn.digitaloceanspaces.com/dev/P4_A_Logo_Characters_04dd9f5f9d.png')
+			.setColor('#363a94');
 
 		const statsPromise = this.getStats();
 		const schedule = await this.getIcalData();
@@ -43,6 +43,10 @@ export class UserCommand extends SteveCommand {
 		const currentSlot = schedule.find(slot => slot.end > now && slot.start < now);
 
 		if (!currentSlot) {
+			const earliest = schedule.map(slot => slot.start).reduce((a, b) => a < b ? a : b, schedule[0].start);
+			if (now < earliest) {
+				return embed.setTitle(`The project for awesome starts ${discordTime(earliest, TimestampStyles.RelativeTime)}`);
+			}
 			return embed.setTitle('The Project for Awesome is over. See you next year!');
 		}
 
@@ -80,15 +84,22 @@ ${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 		if (stats) {
 			embed.addFields([
 				{ name: 'Total Raised', value: stats.total, inline: true },
-				{ name: 'Total Votes', value: stats.votes, inline: true }
+				{ name: 'Total Videos Submitted', value: stats.submissions, inline: true }
 			]);
+			if (stats.featured) {
+				embed.addFields({
+					name: 'Featured Video',
+					value: `[${stats.featured.title}](${stats.featured.link})`,
+					inline: false
+				});
+			}
 		}
 
 		return embed;
 	}
 
-	private async getIcalData(): Promise<timeslot[]> {
-		const rawIcalData = await ical.fromURL(this.icalURL25);
+	private async getIcalData(): Promise<Timeslot[]> {
+		const rawIcalData = await ical.fromURL(this.icalURL26);
 
 		const events = Object.values(rawIcalData).filter(event => event.type === 'VEVENT') as ical.VEvent[];
 
@@ -112,31 +123,154 @@ ${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 		});
 	}
 
-	private async getStats(): Promise<stats> {
-		const response = await axios.get<stats>(this.statsURL);
+	private async getStats(): Promise<Stats> {
+		const summaryResponse = await axios.get<Summary>(`${this.apiBaseURL}/raised-funds/v1/summary`);
+
+		const params = {
+			'filters[Phase][$eq]': 'Approved',
+			'pagination[page]': '1',
+			'pagination[pageSize]': '1',
+			'fields[0]': 'Title',
+			'fields[1]': 'Slug',
+			'fields[2]': 'externalThumbnailUrl',
+			'fields[3]': 'Phase',
+			'fields[4]': 'featuredAt',
+			'fields[5]': 'publishedAt',
+			'fields[6]': 'isFeatured',
+			'fields[7]': 'isUpdated',
+			'fields[8]': 'oembed',
+			'populate[charity]': 'true',
+			'populate[thumbnail]': 'true',
+			'sort[0]': 'featuredAt:desc',
+			'sort[1]': 'isUpdated:desc'
+		};
+		const submissionResponse = await axios.get<Submissions>(`${this.apiBaseURL}/submissions`, { params });
+		const featuredResponse = await axios.get<Submissions>(`${this.apiBaseURL}/submissions`, { params: {
+			...params,
+			'filters[isFeatured][$eq]': 'true'
+		} });
+
 		const usDollar = new Intl.NumberFormat('en-US', {
 			style: 'currency',
 			currency: 'USD'
 		});
 
+		const rawFeatured = featuredResponse.data.data.pop();
+		const featured = rawFeatured
+			? {
+				title: rawFeatured.Title,
+				thumbnail: rawFeatured.externalThumbnailUrl,
+				link: `https://projectforawesome.com/videos/${rawFeatured.Slug}`
+			}
+			: null;
 		return {
-			total: usDollar.format(parseFloat(response.data.total)),
-			votes: response.data.votes,
-			donations: usDollar.format(parseFloat(response.data.donations))
+			total: usDollar.format(summaryResponse.data.totals.grandTotal),
+			submissions: `${submissionResponse.data.meta.pagination.total}`,
+			featured
 		};
 	}
 
 }
 
-type timeslot = {
+type Timeslot = {
 	start: Date,
 	end: Date,
 	tag: 'Live'|'Dark'|'Optional'|'Unknown',
 	hosts: string
 };
 
-type stats = {
+type Stats = {
 	total: string,
-	votes: string,
-	donations: string
+	submissions: string,
+	featured: {
+		title: string,
+		thumbnail: string,
+		link: string
+	} | null
 };
+
+type Summary = {
+	tiltify: {
+		amountRaised: number
+		currency: string
+	}
+	bankAmount: number
+	funds: {
+		key: string
+		label: string
+		type: string
+		baseAmount: number
+		matchAmount: number
+		displayAmount: number
+		bucketTotal: number
+		cap?: number
+		remainingCap?: number
+		percentToCap?: number
+		currency: string
+		secondaryBase?: number
+		pmi1Amount?: number
+	}[],
+	totals: {
+		matchRate: number
+		totalPrimaryMatching: number
+		totalSecondaryMatching: number
+		totalMatching: number
+		secondaryBase: number
+		pmi1Amount: number
+		grandTotal: number
+	}
+	settings: {
+		subhead: string
+		headline: string
+		tickerIntervalMs: number
+		directDonationLabel: string
+		gridBorderColor: string
+		gridHeader: string
+	}
+	debugMode: boolean
+	fetchedAt: string
+}
+
+type Submissions = {
+	data: {
+		id: number
+		documentId: string
+		Title: string
+		Slug: string
+		Phase: string
+		featuredAt: string | null
+		externalThumbnailUrl: string
+		publishedAt: string
+		isFeatured: boolean
+		isUpdated: string
+		oembed: {
+			oembed: {
+				title: string
+				thumbnail_url: string
+				html: string
+			}
+		}
+		charity: {
+			id: number
+			documentId: string
+			Title: string
+			URL: null
+		}
+		categories: {
+			id: number
+			documentId: string
+			name: string
+			slug: string
+		}[]
+		thumbnail: null
+	}[]
+	meta: {
+		pagination: {
+			page: number
+			pageSize: number
+			pageCount: number
+			total: number
+		}
+	}
+}
+
