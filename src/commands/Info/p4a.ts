@@ -84,12 +84,13 @@ ${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 		if (stats) {
 			embed.addFields([
 				{ name: 'Total Raised', value: stats.total, inline: true },
-				{ name: 'Total Videos Submitted', value: stats.submissions, inline: true }
+				{ name: 'Total Videos Submitted', value: stats.submissions, inline: true },
+				{ name: 'Videos Featured', value: stats.featuredCount }
 			]);
-			if (stats.featured) {
+			if (stats.currentlyFeatured) {
 				embed.addFields({
 					name: 'Featured Video',
-					value: `[${stats.featured.title}](${stats.featured.link})`,
+					value: `[${stats.currentlyFeatured.title}](${stats.currentlyFeatured.link})`,
 					inline: false
 				});
 			}
@@ -166,7 +167,8 @@ ${nextSlot ? `Next up, its ${nextSlot.hosts}` : ''}`)
 		return {
 			total: usDollar.format(summaryResponse.data.totals.grandTotal),
 			submissions: `${submissionResponse.data.meta.pagination.total}`,
-			featured
+			featuredCount: `${featuredResponse.data.meta.pagination.total}`,
+			currentlyFeatured: featured
 		};
 	}
 
@@ -182,7 +184,8 @@ type Timeslot = {
 type Stats = {
 	total: string,
 	submissions: string,
-	featured: {
+	featuredCount: string,
+	currentlyFeatured: {
 		title: string,
 		thumbnail: string,
 		link: string
