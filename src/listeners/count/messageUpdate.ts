@@ -10,7 +10,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 export class UserEvent extends Listener {
 
 	public async run(_: Message, msg: Message) {
-		if (this.container.client.countChannels.has(msg.channelId)) {
+		if (this.container.client.countChannels.has(msg.channelId) && !msg.author.bot) {
 			return resetCount(msg, 'Sorry mate but editing isn\'t allowed here.', true);
 		}
 		return;
