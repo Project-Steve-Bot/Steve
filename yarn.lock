@@ -661,7 +661,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/utilities@npm:3.18.2, @sapphire/utilities@npm:^3.13.0, @sapphire/utilities@npm:^3.15.3, @sapphire/utilities@npm:^3.18.1":
+"@sapphire/utilities@npm:3.18.3":
+  version: 3.18.3
+  resolution: "@sapphire/utilities@npm:3.18.3"
+  checksum: e42db0305a074e8c20d676d3cd380caf7d44ca43c8a2faa923b453839955295b6a8c4083a98dd89a9b29b154608948e9df6bb0d3ecaffbcaff21a7e47f3f7ee6
+  languageName: node
+  linkType: hard
+
+"@sapphire/utilities@npm:^3.13.0, @sapphire/utilities@npm:^3.15.3, @sapphire/utilities@npm:^3.18.1":
   version: 3.18.2
   resolution: "@sapphire/utilities@npm:3.18.2"
   checksum: 599b6d64989d2eb011a176f6a6b46a0cf2a2a4427f2d06f92fe7a361ea2351d3efc14caf40cd3bccb1d1511ddd4a60e5e51b594638ff4e49e74bacc433f3ef3e
@@ -700,9 +707,9 @@ __metadata:
   linkType: hard
 
 "@types/luxon@npm:^3.4.2":
-  version: 3.7.1
-  resolution: "@types/luxon@npm:3.7.1"
-  checksum: ec5181716f9a744d2be1a4a72c3509670e1030a9271736d95e9e04af075ac6f24f6b35f2934f6d7eab496c1eefd9f81b572ad63fd33fd17a100eb2b315702a77
+  version: 3.7.6
+  resolution: "@types/luxon@npm:3.7.6"
+  checksum: fc7d6a39f040143e65842903b4fd00ce9660a2187d4a874543c50b5fdfeb575f5924418970cce1ead37badf9a57de9a380f1940fdc12be83db8d329a42dd40e8
   languageName: node
   linkType: hard
 
@@ -722,12 +729,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.19.39":
-  version: 20.19.39
-  resolution: "@types/node@npm:20.19.39"
+"@types/node@npm:20.19.43":
+  version: 20.19.43
+  resolution: "@types/node@npm:20.19.43"
   dependencies:
     undici-types: ~6.21.0
-  checksum: ebd35fc49e79bb29b9af50b0ca442160c74e9b059e0f814240033b6b757dd15399d9fd1362e32c8246322b1c703f048af793656fc9dfd4c2484cf2b1702f6820
+  checksum: c959b5d256b073da95aa1892acb071b487c2f652f98b2cb75e92657d51b99bd691aa811023fb13acd6752bc1bcb75dc579db02190a4da70926cf6f372011bc4e
   languageName: node
   linkType: hard
 
@@ -754,12 +761,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.18.1":
-  version: 8.18.1
-  resolution: "@types/ws@npm:8.18.1"
+"@types/ws@npm:8.18.2":
+  version: 8.18.2
+  resolution: "@types/ws@npm:8.18.2"
   dependencies:
     "@types/node": "*"
-  checksum: 0331b14cde388e2805af66cad3e3f51857db8e68ed91e5b99750915e96fe7572e58296dc99999331bbcf08f0ff00a227a0bb214e991f53c2a5aca7b0e71173fa
+  checksum: 6b92ac97d46f9f7c87c209c28d7c10fc762dd8604e2e5440239ff6eb33410dc142a16d84c76943295f35f29294e67f97f8390f785c60f30308c4c302368b85ee
   languageName: node
   linkType: hard
 
@@ -4258,13 +4265,13 @@ __metadata:
     "@sapphire/time-utilities": 1.7.14
     "@sapphire/ts-config": ^5.0.0
     "@sapphire/type": ^2.6.0
-    "@sapphire/utilities": 3.18.2
+    "@sapphire/utilities": 3.18.3
     "@skyra/env-utilities": ^1.2.1
     "@types/common-tags": 1.8.4
     "@types/luxon": ^3.4.2
-    "@types/node": 20.19.39
+    "@types/node": 20.19.43
     "@types/node-cron": 3.0.11
-    "@types/ws": 8.18.1
+    "@types/ws": 8.18.2
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
     axios: 1.8.4
